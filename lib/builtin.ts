@@ -16,3 +16,23 @@ export const BUILTIN: BuiltinDef[] = [
   { slug: 'privacy', bn: 'গোপনীয়তা নীতি', en: 'Privacy policy', title: 'গোপনীয়তা নীতি', title_en: 'Privacy policy', text: '', text_en: '' },
 ];
 export const builtinBySlug = (s: string) => BUILTIN.find((b) => b.slug === s);
+
+/** পেজের মূল কন্টেন্টের তথ্য যেখান থেকে বদলায় (কোডে বাঁধা অংশ নয়, ডেটাবেসের তথ্য) */
+export const PAGE_DATA_LINKS: Record<string, [string, string][]> = {
+  transparency: [['হিসাব নিজে থেকে হালনাগাদ হয়। দান যোগ করতে', '/admin/donations'], ['ঋণ যোগ করতে', '/admin/loans']],
+  library: [['বই যোগ বা বদলাতে', '/admin/library']],
+  events: [['অনুষ্ঠান যোগ বা বদলাতে', '/admin/events']],
+  committee: [['কমিটির সদস্য বদলাতে', '/admin/content/committee']],
+  members: [['সদস্য পাতার সুইচ বদলাতে', '/admin/settings#set-members']],
+  news: [['সংবাদ যোগ বা বদলাতে', '/admin/content/posts']],
+  join: [['ভর্তি ফি, পেমেন্টের মাধ্যম ও শর্তাবলী বদলাতে', '/admin/settings']],
+};
+export const BLOCK_DATA_LINKS: Record<string, [string, string]> = {
+  hero: ['হিরোর লেখা বদলাতে সেটিংস', '/admin/settings#set-website'],
+  services: ['সেবা যোগ বা বদলাতে', '/admin/content/programs'], service_grid: ['সেবা যোগ বা বদলাতে', '/admin/content/programs'],
+  events: ['অনুষ্ঠান যোগ বা বদলাতে', '/admin/events'], library: ['বই যোগ বা বদলাতে', '/admin/library'],
+  committee: ['কমিটির সদস্য বদলাতে', '/admin/content/committee'], news: ['সংবাদ যোগ বা বদলাতে', '/admin/content/posts'],
+  contact_us: ['ফোন, ইমেইল, ঠিকানা বদলাতে', '/admin/contact-info'], two_lists: ['সেটিংসের শর্তাবলী বদলাতে', '/admin/settings#set-notify'],
+};
+
+export const TOKEN_HELP = '{reg_fee} ভর্তি ফি, {due_day} চাঁদার শেষ তারিখ, {freeze_months} স্থগিতের মাস, {org_name} সংগঠনের নাম, {phone}, {email}, {address}, {pay_info}';

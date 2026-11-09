@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { PageBuilder, type PageMeta } from './PageBuilder';
 import { ConfirmButton } from '../../../_components/ActionForm';
 import { resetBuiltin, savePage } from '../../../actions/pages';
-import { builtinBySlug } from '@/lib/builtin';
+import { builtinBySlug, PAGE_DATA_LINKS } from '@/lib/builtin';
+import { defaultBlocks } from '@/lib/builtin-content';
 import { CONTENT_ROLES } from '@/lib/content';
 import { requirePage } from '@/lib/guard';
 import { PageHead } from '@/lib/ui';
@@ -30,13 +31,14 @@ export default async function BuilderPage({ params }: { params: { id: string } }
     const saved = cleanBlocks(row?.blocks);
     const seo = (row?.seo ?? {}) as { draft?: boolean };
     const header = { ...newBlock('page_header'), props: { ...newBlock('page_header').props, title: def.title, title_en: def.title_en, text: def.text, text_en: def.text_en } };
-    const start = saved.length ? saved : [header, newBlock('page_body')];
+    const dflt = defaultBlocks(def.slug);
+    const start = saved.length ? saved : dflt ?? [header, newBlock('page_body')];
     return (
       <>
         <PageHead title={`পেজ সাজান: ${def.bn}`} sub="এই পেজের হেডার ও মূল কন্টেন্ট কম্পোনেন্ট হিসেবে সাজানো আছে। টেনে ছেড়ে ক্রম বদলান, ওপরে-নিচে নতুন কম্পোনেন্ট যোগ করুন, রং ও প্যাটার্ন দিন।">
           {row && <ConfirmButton action={resetBuiltin.bind(null, def.slug)} className="btn danger" label="ডিফল্টে ফিরুন (Reset)" confirm="আপনার সাজানো লেআউট মুছে এই পেজ আগের চেহারায় ফিরবে। নিশ্চিত?" />}
         </PageHead>
-        <PageBuilder initial={start} meta={null} action={savePage.bind(null, params.id)} target={params.id} builtin={{ slug: def.slug, use: !!row && !seo.draft }} />
+        <PageBuilder initial={start} meta={null} action={savePage.bind(null, params.id)} target={params.id} builtin={{ slug: def.slug, use: !!row && !seo.draft, hasBody: !dflt, links: PAGE_DATA_LINKS[def.slug] ?? [] }} />
       </>
     );
   }

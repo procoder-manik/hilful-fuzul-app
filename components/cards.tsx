@@ -74,7 +74,7 @@ export function NewsCard({ p }: { p: Post }) {
   );
 }
 
-export function Qard({ s }: { s: Settings }) {
+export function Qard({ s, over }: { s: Settings; over?: { tag?: string; heading?: string; text?: string; steps?: [string, string][] } }) {
   const t = getT();
   const steps = [
     [t('সদস্য হোন', 'Become a member'), t(`ফর্ম পূরণ করে ${tk(s.reg_fee)} ভর্তি ফি দিন।`, `Fill in the form and pay the ${tk(s.reg_fee)} joining fee.`)],
@@ -82,15 +82,16 @@ export function Qard({ s }: { s: Settings }) {
     [t('প্রয়োজনে আবেদন করুন', 'Apply when in need'), t('একজন জামিনদারসহ কোষাধ্যক্ষের কাছে আবেদন করুন।', 'Apply to the treasurer with one guarantor.')],
     [t('মেয়াদে ফেরত দিন', 'Repay on time'), t('৩, ৬ বা ১২ মাসে একবারে বা কিস্তিতে ফেরত।', 'Repay in 3, 6 or 12 months, in one go or by instalments.')],
   ];
+  const shown = over?.steps?.length ? over.steps : steps;
   return (
     <section className="sec" style={{ paddingTop: 10 }}>
       <div className="wrap"><div className="qard">
         <div style={{ padding: '30px 26px 6px' }}>
-          <span className="pill on-dark">{t('বিনা সুদে, শুধু সদস্যদের জন্য', 'Interest-free, for members only')}</span>
-          <h2>{t('করজে হাসানা কীভাবে পাবেন', 'How to get an interest-free loan')}</h2>
-          <p className="soft" style={{ maxWidth: '60ch' }}>{t('কোনো সুদ নেই, কোনো লুকানো খরচ নেই। যত টাকা নেবেন, ঠিক তত টাকাই ফেরত দেবেন।', 'No interest and no hidden charges. You repay exactly what you borrowed.')}</p>
+          <span className="pill on-dark">{over?.tag || t('বিনা সুদে, শুধু সদস্যদের জন্য', 'Interest-free, for members only')}</span>
+          <h2>{over?.heading || t('করজে হাসানা কীভাবে পাবেন', 'How to get an interest-free loan')}</h2>
+          <p className="soft" style={{ maxWidth: '60ch' }}>{over?.text || t('কোনো সুদ নেই, কোনো লুকানো খরচ নেই। যত টাকা নেবেন, ঠিক তত টাকাই ফেরত দেবেন।', 'No interest and no hidden charges. You repay exactly what you borrowed.')}</p>
         </div>
-        <ol className="steps">{steps.map(([a, d]) => <li className="step" key={a}><b>{a}</b><p className="soft small">{d}</p></li>)}</ol>
+        <ol className="steps">{shown.map(([a, d]) => <li className="step" key={a}><b>{a}</b><p className="soft small">{d}</p></li>)}</ol>
       </div></div>
     </section>
   );

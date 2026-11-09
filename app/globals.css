@@ -937,3 +937,10 @@ label.f span .en-hint,.chk-t .en-hint,.h2 .en-hint,.lbl .en-hint,.kpi span .en-h
 .page-title.ph2{border-bottom:0;margin-bottom:0}
 .page-title.ph2:not(.secbg-c)::after{display:block;content:"";position:absolute;left:0;right:0;bottom:0;top:30%;height:auto;background:linear-gradient(to bottom,transparent 0%,var(--bg) 100%);z-index:0;pointer-events:none}
 .page-title.ph2.secbg-c::after{display:block;content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--bg) 85%,transparent));z-index:0;pointer-events:none}
+
+/* কম্পোনেন্টের ওপরে-নিচে প্যাডিং ও মার্জিন (পেজ বিল্ডার থেকে বাছা) */
+.blk-pt section,.blk-pt .page-title{padding-top:var(--blk-pt)!important}
+.blk-pb section,.blk-pb .page-title{padding-bottom:var(--blk-pb)!important}
+.blk-pt .secbg,.blk-pb .secbg{padding-top:0;padding-bottom:0}
+.pb-sp{margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.pb-sp-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0 12px}

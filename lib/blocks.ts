@@ -20,10 +20,37 @@ export const BLOCKS: BlockDef[] = [
   { type: 'ledger', bn: 'স্বচ্ছতার খাতা', en: 'Open ledger', icon: 'eye', group: 'live', info: 'চার্ট, ঋণ ও দাতাদের চলমান তালিকা।', defaults: {}, fields: [] },
   { type: 'events', bn: 'আসন্ন অনুষ্ঠান', en: 'Upcoming events', icon: 'calendar', group: 'live', info: 'অনুষ্ঠান পাতায় বানানো আসন্ন অনুষ্ঠানের ব্যানার।', defaults: {}, fields: [] },
   { type: 'services', bn: 'সেবা', en: 'Services', icon: 'layers', group: 'live', info: 'সেবার তালিকার কার্ড।', defaults: {}, fields: [] },
-  { type: 'qard', bn: 'করজে হাসানা', en: 'Interest-free loans', icon: 'handshake', group: 'live', info: 'বিনা সুদের ঋণের ধাপ।', defaults: {}, fields: [] },
+  { type: 'qard', bn: 'করজে হাসানা (ধাপ)', en: 'Interest-free loans', icon: 'handshake', group: 'content', info: 'বিনা সুদের ঋণ পাওয়ার ধাপগুলো। ফাঁকা রাখলে আগের লেখাই দেখায়।', defaults: { tag: '', tag_en: '', heading: '', heading_en: '', text: '', text_en: '', steps: '', steps_en: '' },
+    fields: [
+      { k: 'tag', bn: 'ছোট ট্যাগ', en: 'Tag', kind: 'text' }, { k: 'tag_en', bn: 'ছোট ট্যাগ (English)', en: 'Tag (English)', kind: 'text' },
+      { k: 'heading', bn: 'শিরোনাম', en: 'Heading', kind: 'text' }, { k: 'heading_en', bn: 'শিরোনাম (English)', en: 'Heading (English)', kind: 'text' },
+      { k: 'text', bn: 'ছোট বিবরণ', en: 'Text', kind: 'textarea', rows: 2 }, { k: 'text_en', bn: 'ছোট বিবরণ (English)', en: 'Text (English)', kind: 'textarea', rows: 2 },
+      { k: 'steps', bn: 'ধাপগুলো', en: 'Steps', kind: 'textarea', rows: 5, info: 'প্রতি লাইনে একটি: ধাপের নাম | বিবরণ' }, { k: 'steps_en', bn: 'ধাপগুলো (English)', en: 'Steps (English)', kind: 'textarea', rows: 5 },
+    ] },
   { type: 'library', bn: 'পাঠাগার', en: 'Library', icon: 'book', group: 'live', info: 'নতুন বইয়ের সারি ও কুরআন শিক্ষার তথ্য।', defaults: {}, fields: [] },
   { type: 'committee', bn: 'কমিটি', en: 'Committee', icon: 'users', group: 'live', info: 'কমিটির সদস্যদের কার্ড।', defaults: {}, fields: [] },
   { type: 'news', bn: 'সংবাদ', en: 'News', icon: 'news', group: 'live', info: 'সাম্প্রতিক সংবাদ।', defaults: {}, fields: [] },
+  { type: 'prose', bn: 'লেখার কার্ড (শিরোনাম, অনুচ্ছেদ, তালিকা)', en: 'Text card', icon: 'file', group: 'content', info: 'একটি কার্ডে একাধিক শিরোনাম, অনুচ্ছেদ ও তালিকার লেখা।', defaults: { text: '## শিরোনাম\nএখানে অনুচ্ছেদের লেখা।\n## তালিকা\n- প্রথম পয়েন্ট\n- দ্বিতীয় পয়েন্ট', text_en: '', width: 'narrow' },
+    fields: [
+      { k: 'text', bn: 'লেখা', en: 'Text', kind: 'textarea', rows: 14, info: '## দিয়ে শুরু করলে শিরোনাম, - দিয়ে শুরু করলে তালিকার পয়েন্ট, নইলে সাধারণ অনুচ্ছেদ। {reg_fee}, {due_day}, {org_name} ইত্যাদি সেটিংসের মানে বদলে যায়।' },
+      { k: 'text_en', bn: 'লেখা (English)', en: 'Text (English)', kind: 'textarea', rows: 12, info: 'ইংরেজি সংস্করণের জন্য, একই ধাঁচে। ফাঁকা রাখলে বাংলাই দেখাবে।' },
+      { k: 'width', bn: 'প্রস্থ', en: 'Width', kind: 'select', options: [['narrow', 'সরু (Narrow)'], ['wide', 'চওড়া (Wide)']] },
+    ] },
+  { type: 'prose_cards', bn: 'পাশাপাশি দুই কার্ড', en: 'Two text cards', icon: 'layers', group: 'content', info: 'দুটি লেখার কার্ড পাশাপাশি, ডানেরটিতে চাইলে লাইভ পরিসংখ্যান (সদস্য, উপকৃত মানুষ, বই) দেখানো যায়।', defaults: { left: '## বাঁয়ের শিরোনাম\nএখানে লেখা।', left_en: '', right: '## ডানের শিরোনাম\nএখানে লেখা।', right_en: '', kpis: '0' },
+    fields: [
+      { k: 'left', bn: 'বাঁয়ের কার্ড', en: 'Left card', kind: 'textarea', rows: 12, info: '## শিরোনাম, - তালিকা, নইলে অনুচ্ছেদ। {org_name} ইত্যাদি চলে।' }, { k: 'left_en', bn: 'বাঁয়ের কার্ড (English)', en: 'Left card (English)', kind: 'textarea', rows: 10 },
+      { k: 'right', bn: 'ডানের কার্ড', en: 'Right card', kind: 'textarea', rows: 10 }, { k: 'right_en', bn: 'ডানের কার্ড (English)', en: 'Right card (English)', kind: 'textarea', rows: 8 },
+      { k: 'kpis', bn: 'ডানের কার্ডের নিচে লাইভ পরিসংখ্যান দেখান', en: 'Show live stats', kind: 'checkbox' },
+    ] },
+  { type: 'two_lists', bn: 'পাশাপাশি দুই তালিকা (শর্তাবলী)', en: 'Two numbered lists', icon: 'list', group: 'content', info: 'দুটি ক্রমিক তালিকা পাশাপাশি। সেটিংসের সদস্যপদ ও ঋণের শর্তাবলী নিজে থেকে আনা যায়, অথবা এখানে নিজের লেখা দেওয়া যায়।', defaults: { from_settings: '1', h1: 'সদস্যপদের শর্তাবলী', h1_en: 'Membership terms', items1: '', h2: 'করজে হাসানার শর্তাবলী', h2_en: 'Interest-free loan terms', items2: '' },
+    fields: [
+      { k: 'from_settings', bn: 'সেটিংসের শর্তাবলী ব্যবহার করুন', en: 'Use terms from Settings', kind: 'checkbox', info: 'টিক থাকলে নিচের নিজের তালিকা দেখাবে না, সেটিংস পাতার "সদস্যপদের শর্তাবলী" ও "ঋণের শর্তাবলী" দেখাবে।' },
+      { k: 'h1', bn: 'বাঁয়ের শিরোনাম', en: 'Left heading', kind: 'text' }, { k: 'h1_en', bn: 'বাঁয়ের শিরোনাম (English)', en: 'Left heading (English)', kind: 'text' }, { k: 'items1', bn: 'বাঁয়ের তালিকা (নিজের)', en: 'Left list', kind: 'textarea', rows: 6, info: 'প্রতি লাইনে একটি পয়েন্ট।' },
+      { k: 'h2', bn: 'ডানের শিরোনাম', en: 'Right heading', kind: 'text' }, { k: 'h2_en', bn: 'ডানের শিরোনাম (English)', en: 'Right heading (English)', kind: 'text' }, { k: 'items2', bn: 'ডানের তালিকা (নিজের)', en: 'Right list', kind: 'textarea', rows: 6 },
+    ] },
+  { type: 'contact_us', bn: 'যোগাযোগ (ফর্ম ও তথ্য)', en: 'Contact form & info', icon: 'contact', group: 'live', info: 'বার্তা পাঠানোর ফর্ম এবং ফোন, ইমেইল, ঠিকানা ইত্যাদির কার্ড। তথ্যগুলো "যোগাযোগের তথ্য" পাতা থেকে আসে।', defaults: { form_title: 'বার্তা পাঠান', form_title_en: 'Send a message', show_form: '1', show_cards: '1' },
+    fields: [{ k: 'form_title', bn: 'ফর্মের শিরোনাম', en: 'Form title', kind: 'text' }, { k: 'form_title_en', bn: 'ফর্মের শিরোনাম (English)', en: 'Form title (English)', kind: 'text' }, { k: 'show_form', bn: 'ফর্ম দেখান', en: 'Show form', kind: 'checkbox' }, { k: 'show_cards', bn: 'যোগাযোগের কার্ড দেখান', en: 'Show contact cards', kind: 'checkbox' }] },
+  { type: 'service_grid', bn: 'সেবার সব কার্ড', en: 'All services', icon: 'layers', group: 'live', info: 'সেবার তালিকার সব সেবা কার্ড হিসেবে। সেবা যোগ বা বদলাতে "সেবার তালিকা" পাতায় যান।', defaults: {}, fields: [] },
   { type: 'heading_text', bn: 'শিরোনাম ও লেখা', en: 'Heading & text', icon: 'file', group: 'content', info: 'ছোট ট্যাগ, বড় শিরোনাম, লেখা ও ঐচ্ছিক বোতাম।', defaults: { tag: '', heading: 'এখানে শিরোনাম', heading_en: '', text: 'এখানে আপনার লেখা বসান।', text_en: '', align: 'left', btn: '', btn_en: '', url: '' },
     fields: [
       { k: 'tag', bn: 'ছোট ট্যাগ', en: 'Small tag', kind: 'text' }, { k: 'heading', bn: 'শিরোনাম', en: 'Heading', kind: 'text' }, { k: 'heading_en', bn: 'শিরোনাম (English)', en: 'Heading (English)', kind: 'text' },
@@ -44,8 +71,8 @@ export const BLOCKS: BlockDef[] = [
     ] },
   { type: 'numbers', bn: 'নিজের সংখ্যার সারি', en: 'Custom numbers', icon: 'gauge', group: 'content', info: 'নিজের লেখা সংখ্যা ও নাম, পরিসংখ্যানের মতো রঙিন ঘরে।', defaults: { items: '১০০+ | সক্রিয় সদস্য\n৫০০+ | উপকৃত মানুষ\n২০+ | সেবামূলক কর্মসূচি' },
     fields: [{ k: 'items', bn: 'সংখ্যাগুলো', en: 'Numbers', kind: 'textarea', rows: 6, info: 'প্রতি লাইনে একটি: সংখ্যা | নাম' }] },
-  { type: 'faq', bn: 'প্রশ্নোত্তর', en: 'FAQ', icon: 'chat', group: 'content', info: 'চাপলে খোলে এমন প্রশ্ন ও উত্তরের তালিকা।', defaults: { heading: 'সচরাচর প্রশ্ন', heading_en: '', items: 'সদস্য হতে কত টাকা লাগে? | ভর্তি ফি ও মাসিক চাঁদা সেটিংসে ঠিক করা আছে। নিবন্ধন পাতায় দেখুন।\nকীভাবে ঋণ পাব? | সদস্য হয়ে একজন জামিনদারসহ কোষাধ্যক্ষের কাছে আবেদন করুন।' },
-    fields: [{ k: 'heading', bn: 'শিরোনাম', en: 'Heading', kind: 'text' }, { k: 'heading_en', bn: 'শিরোনাম (English)', en: 'Heading (English)', kind: 'text' }, { k: 'items', bn: 'প্রশ্ন ও উত্তর', en: 'Questions', kind: 'textarea', rows: 7, info: 'প্রতি লাইনে একটি: প্রশ্ন | উত্তর' }] },
+  { type: 'faq', bn: 'প্রশ্নোত্তর', en: 'FAQ', icon: 'chat', group: 'content', info: 'চাপলে খোলে এমন প্রশ্ন ও উত্তরের তালিকা।', defaults: { heading: 'সচরাচর প্রশ্ন', heading_en: '', items_en: '', items: 'সদস্য হতে কত টাকা লাগে? | ভর্তি ফি ও মাসিক চাঁদা সেটিংসে ঠিক করা আছে। নিবন্ধন পাতায় দেখুন।\nকীভাবে ঋণ পাব? | সদস্য হয়ে একজন জামিনদারসহ কোষাধ্যক্ষের কাছে আবেদন করুন।' },
+    fields: [{ k: 'heading', bn: 'শিরোনাম', en: 'Heading', kind: 'text' }, { k: 'heading_en', bn: 'শিরোনাম (English)', en: 'Heading (English)', kind: 'text' }, { k: 'items', bn: 'প্রশ্ন ও উত্তর', en: 'Questions', kind: 'textarea', rows: 9, info: 'প্রতি লাইনে একটি: প্রশ্ন | উত্তর' }, { k: 'items_en', bn: 'প্রশ্ন ও উত্তর (English)', en: 'Questions (English)', kind: 'textarea', rows: 7, info: 'ইংরেজি সংস্করণের জন্য, একই ধাঁচে। ফাঁকা রাখলে বাংলাই দেখাবে।' }] },
   { type: 'buttons', bn: 'বোতামের সারি', en: 'Button row', icon: 'link', group: 'content', info: 'এক বা একাধিক বোতাম, যেকোনো পাতায় নিয়ে যাওয়ার জন্য।', defaults: { items: 'সদস্য হোন | /join | primary\nহিসাব দেখুন | /transparency | ghost', align: 'center' },
     fields: [{ k: 'items', bn: 'বোতামগুলো', en: 'Buttons', kind: 'textarea', rows: 4, info: 'প্রতি লাইনে একটি: লেখা | লিংক | primary বা ghost' }, { k: 'align', bn: 'অবস্থান', en: 'Alignment', kind: 'select', options: ALIGN }] },
   { type: 'spacer', bn: 'ফাঁকা জায়গা', en: 'Spacer', icon: 'down', group: 'content', info: 'দুই অংশের মাঝে বাড়তি ফাঁক।', defaults: { h: '40' }, fields: [{ k: 'h', bn: 'উচ্চতা', en: 'Height', kind: 'select', options: [['20', 'ছোট (20px)'], ['40', 'মাঝারি (40px)'], ['80', 'বড় (80px)'], ['120', 'অনেক বড় (120px)']] }] },
@@ -62,8 +89,20 @@ export const BODY_BLOCK: BlockDef = { type: 'page_body', bn: 'পেজের �
 BLOCKS.push(BODY_BLOCK);
 export const BLOCK_MAP = Object.fromEntries(BLOCKS.map((b) => [b.type, b])) as Record<string, BlockDef>;
 
-export type Block = { id: string; type: string; on: boolean; props: Record<string, string> } & Partial<SecStyle>;
+export type Spacing = { pt?: number; pb?: number; mt?: number; mb?: number };
+export type Block = { id: string; type: string; on: boolean; props: Record<string, string> } & Partial<SecStyle> & Spacing;
 
+/** ওপরে-নিচে প্যাডিং ও মার্জিন (px, ০ থেকে ৩০০); ফাঁকা বা ভুল হলে ডিফল্ট */
+export function cleanSpacing(r: Record<string, unknown>): Spacing {
+  const out: Spacing = {};
+  for (const k of ['pt', 'pb', 'mt', 'mb'] as const) {
+    const v = r[k];
+    if (v === '' || v == null) continue;
+    const n = Math.round(Number(v));
+    if (Number.isFinite(n)) out[k] = Math.min(300, Math.max(0, n));
+  }
+  return out;
+}
 const safeUrl = (v: string) => (/^(https?:\/\/|\/|#|mailto:|tel:)/i.test(v.trim()) ? v.trim().slice(0, 300) : '');
 const newId = () => Math.random().toString(36).slice(2, 10);
 
@@ -92,7 +131,7 @@ export function cleanBlocks(raw: unknown, max = 60): Block[] {
       if (f.kind === 'image') v = /^https?:\/\//.test(v) ? v.slice(0, 500) : '';
       props[f.k] = v;
     }
-    out.push({ id, type, on: r.on !== false, props, ...cleanStyle(r as never) });
+    out.push({ id, type, on: r.on !== false, props, ...cleanStyle(r as never), ...cleanSpacing(r) });
   }
   return out;
 }

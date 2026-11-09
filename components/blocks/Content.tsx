@@ -122,3 +122,45 @@ export function CtaBlock({ p }: { p: P }) {
   );
 }
 void toBn;
+
+/** সরল মার্কডাউন: "## শিরোনাম", "- তালিকা", বাকি সব অনুচ্ছেদ */
+export function renderLite(text: string): React.ReactNode[] {
+  const out: React.ReactNode[] = [];
+  let list: string[] = [];
+  const flush = () => { if (list.length) { out.push(<ul key={`u${out.length}`}>{list.map((x, i) => <li key={i}>{x}</li>)}</ul>); list = []; } };
+  text.split('\n').map((x) => x.trim()).filter(Boolean).forEach((l, i) => {
+    if (l.startsWith('- ')) { list.push(l.slice(2)); return; }
+    flush();
+    if (l.startsWith('## ')) out.push(<h2 key={`h${i}`}>{l.slice(3)}</h2>);
+    else out.push(<p key={`p${i}`}>{l}</p>);
+  });
+  flush();
+  return out;
+}
+
+export function Prose({ p }: { p: P }) {
+  return (
+    <section style={{ padding: '20px 0 60px' }}><div className={`wrap card prose`} style={{ maxWidth: p.width === 'wide' ? undefined : 820 }}>{renderLite(L(p, 'text'))}</div></section>
+  );
+}
+
+export function ProseCards({ p, kpis }: { p: P; kpis?: React.ReactNode }) {
+  return (
+    <section className="sec" style={{ paddingTop: 20 }}><div className="wrap grid g2" style={{ alignItems: 'start' }}>
+      <div className="card prose">{renderLite(L(p, 'left'))}</div>
+      <div className="card prose">{renderLite(L(p, 'right'))}{p.kpis === '1' && kpis}</div>
+    </div></section>
+  );
+}
+
+export function TwoLists({ p, memberTerms, loanTerms }: { p: P; memberTerms: string[]; loanTerms: string[] }) {
+  const own = p.from_settings !== '1';
+  const a = own ? lines(L(p, 'items1') || p.items1) : memberTerms;
+  const b = own ? lines(L(p, 'items2') || p.items2) : loanTerms;
+  return (
+    <section style={{ padding: '20px 0 60px' }}><div className="wrap grid g2" style={{ alignItems: 'start' }}>
+      <div className="card"><h2 className="h2" style={{ marginTop: 0 }}>{L(p, 'h1')}</h2><ol className="terms">{a.map((x, i) => <li key={i}>{x}</li>)}</ol></div>
+      <div className="card"><h2 className="h2" style={{ marginTop: 0 }}>{L(p, 'h2')}</h2><ol className="terms">{b.map((x, i) => <li key={i}>{x}</li>)}</ol></div>
+    </div></section>
+  );
+}

@@ -5,6 +5,7 @@ import { ActionForm, Submit } from '../../../_components/ActionForm';
 import { Fld, Info, Tick } from '../../../_components/Fld';
 import { Icon } from '@/components/Icon';
 import { BLOCK_MAP, BLOCKS, newBlock, type Block, type Field } from '@/lib/blocks';
+import { BLOCK_DATA_LINKS, PAGE_DATA_LINKS, TOKEN_HELP } from '@/lib/builtin';
 import { PATTERNS, PRESETS } from '@/lib/eventdesign';
 import { cleanStyle, styleCss, type SecStyle } from '@/lib/sectionstyle';
 import { uploadBlockImage } from '../../../actions/pages';
@@ -36,6 +37,21 @@ function StyleBox({ b, set }: { b: Block; set: (p: Partial<Block>) => void }) {
         </>}
         <label className="f"><span>প্যাটার্ন<small className="en-hint">(Pattern)</small></span><select value={st.pat} onChange={(e) => set({ pat: e.target.value as SecStyle['pat'] })}>{PATTERNS.map(([k, n, en]) => <option key={k} value={k}>{n} ({en})</option>)}</select></label>
         <label className="f"><span>স্পষ্টতা: {Math.round(st.op * 100)}%<small className="en-hint">(Strength)</small></span><input type="range" min={3} max={30} value={Math.round(st.op * 100)} disabled={st.pat === 'none'} onChange={(e) => set({ op: Number(e.target.value) / 100 })} /></label>
+      </div>
+      <div className="pb-sp">
+        <b>ওপরে-নিচের ফাঁক<small className="en-hint">(Spacing, px)</small></b>
+        <p className="muted small" style={{ margin: '2px 0 8px' }}>প্যাডিং হলো কম্পোনেন্টের ভেতরের ফাঁক (ব্যাকগ্রাউন্ডসহ), মার্জিন হলো বাইরের ফাঁক। ফাঁকা রাখলে আগের ডিফল্ট ফাঁকই থাকে, ওপরে বেশি জায়গা মনে হলে ০ বা ছোট সংখ্যা দিন।</p>
+        <div className="pb-sp-g">
+          {([['pt', 'ওপরে প্যাডিং', 'Padding top'], ['pb', 'নিচে প্যাডিং', 'Padding bottom'], ['mt', 'ওপরে মার্জিন', 'Margin top'], ['mb', 'নিচে মার্জিন', 'Margin bottom']] as const).map(([k, bnL, enL]) => (
+            <label key={k} className="f"><span>{bnL}<small className="en-hint">({enL})</small></span>
+              <input type="number" min={0} max={300} step={4} placeholder="ডিফল্ট" value={typeof b[k] === 'number' ? b[k] : ''} onChange={(e) => set({ [k]: e.target.value === '' ? undefined : Math.min(300, Math.max(0, Number(e.target.value))) } as Partial<Block>)} /></label>
+          ))}
+        </div>
+        <div className="row" style={{ gap: 6 }}>
+          <button type="button" className="btn sm" onClick={() => set({ pt: 0, pb: 0 })}>ভেতরের ফাঁক ০ (No padding)</button>
+          <button type="button" className="btn sm" onClick={() => set({ pt: 24, pb: 24 })}>ছোট (24)</button>
+          <button type="button" className="btn sm" onClick={() => set({ pt: undefined, pb: undefined, mt: undefined, mb: undefined })}>ডিফল্টে ফিরুন (Reset)</button>
+        </div>
       </div>
     </div>
   );
@@ -73,7 +89,7 @@ function FieldInput({ f, v, set }: { f: Field; v: string; set: (v: string) => vo
   );
 }
 
-export function PageBuilder({ initial, meta, action, target, builtin }: { initial: Block[]; meta: PageMeta | null; action: Action; target: string; builtin?: { slug: string; use: boolean } }) {
+export function PageBuilder({ initial, meta, action, target, builtin }: { initial: Block[]; meta: PageMeta | null; action: Action; target: string; builtin?: { slug: string; use: boolean; hasBody: boolean; links: [string, string][] } }) {
   const [blocks, setBlocks] = useState<Block[]>(initial);
   const [open, setOpen] = useState<string | null>(null);
   const [over, setOver] = useState<{ id: string; after: boolean } | null>(null);
@@ -107,7 +123,7 @@ export function PageBuilder({ initial, meta, action, target, builtin }: { initia
       {builtin && (
         <div className="card" style={{ marginBottom: 16 }}>
           <Tick name="published" checked={use} onChange={setUse} bn="আমার সাজানো লেআউট ব্যবহার করুন" en="Use my layout" info="টিক দিয়ে সংরক্ষণ করলে ওয়েবসাইটের এই পেজে নিচের সাজ দেখাবে। টিক না থাকলে আগের মতো ডিফল্ট চেহারাই থাকবে।" />
-          {!blocks.some((b) => b.type === 'page_body') && <div className="notice warn" style={{ marginTop: 8 }}>সতর্কতা: "পেজের মূল কন্টেন্ট" কম্পোনেন্টটি তালিকায় নেই, তাই এই পেজের নিজস্ব অংশ (যেমন তালিকা বা ফর্ম) ওয়েবসাইটে আসবে না। বাঁয়ের তালিকা থেকে আবার যোগ করুন।</div>}
+          {builtin.hasBody && !blocks.some((b) => b.type === 'page_body') && <div className="notice warn" style={{ marginTop: 8 }}>সতর্কতা: "পেজের মূল কন্টেন্ট" কম্পোনেন্টটি তালিকায় নেই, তাই এই পেজের নিজস্ব অংশ (যেমন তালিকা বা ফর্ম) ওয়েবসাইটে আসবে না। বাঁয়ের তালিকা থেকে আবার যোগ করুন।</div>}
         </div>
       )}
       {m && (
@@ -170,6 +186,9 @@ export function PageBuilder({ initial, meta, action, target, builtin }: { initia
                 {isOpen && (
                   <div className="pb-body">
                     <p className="muted small" style={{ marginTop: 0 }}>{def.info}</p>
+                    {b.type === 'page_body' && builtin && (builtin.links.length ? builtin.links : PAGE_DATA_LINKS[builtin.slug] ?? []).map(([l, h]) => <p key={h} className="muted small" style={{ marginTop: 0 }}>এই অংশের তথ্য ডেটাবেস থেকে আসে। {l}: <a href={h} target="_blank" rel="noreferrer"><b>এখানে যান</b></a></p>)}
+                    {BLOCK_DATA_LINKS[b.type] && <p className="muted small" style={{ marginTop: 0 }}>{BLOCK_DATA_LINKS[b.type][0]}: <a href={BLOCK_DATA_LINKS[b.type][1]} target="_blank" rel="noreferrer"><b>এখানে যান</b></a></p>}
+                    {def.fields.some((f) => f.kind === 'textarea' || f.kind === 'text') && def.group === 'content' && <p className="muted small" style={{ marginTop: 0 }}>ছোট কোড: {TOKEN_HELP}</p>}
                     {def.fields.length > 0 && <div className="grid g2" style={{ gap: '0 12px' }}>{def.fields.map((f) => <div key={f.k} style={f.kind === 'textarea' || f.kind === 'image' ? { gridColumn: '1 / -1' } : undefined}><FieldInput f={f} v={b.props[f.k] ?? ''} set={(v) => setProp(b.id, f.k, v)} /></div>)}</div>}
                     {b.type !== 'page_header' || true ? <StyleBox b={b} set={(p) => upd(b.id, p)} /> : null}
                   </div>
