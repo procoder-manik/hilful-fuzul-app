@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { JsonLd } from '@/components/JsonLd';
-import { BookCover, PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
+import { BookCover } from '@/components/cards';
 import { getBooks, isNewBook } from '@/lib/public';
 import { getSiteSettings } from '@/lib/settings';
 import { graph, siteUrl } from '@/lib/schema';
@@ -27,7 +28,7 @@ export default async function LibraryPage({ searchParams }: { searchParams: { q?
   return (
     <>
       <JsonLd data={graph(s, [{ '@type': 'Library', name: `${s.org_name} ${t('পাঠাগার', 'Library')}`, parentOrganization: { '@id': `${siteUrl()}/#org` }, address: s.address ?? undefined, isAccessibleForFree: true }], [[t('পাঠাগার', 'Library'), '/library']])} />
-      <PageTitle title={t('পাঠাগার', 'Library')} sub={t('পাঠাগারে বসে পড়ার জন্য সবার জন্য উন্মুক্ত। কুরআন শিক্ষার ক্লাসও এখানেই হয়।', 'Open to everyone to read at the library. Quran classes are held here too.')} />
+      <BuiltinPage slug="library" title={t('পাঠাগার', 'Library')} sub={t('পাঠাগারে বসে পড়ার জন্য সবার জন্য উন্মুক্ত। কুরআন শিক্ষার ক্লাসও এখানেই হয়।', 'Open to everyone to read at the library. Quran classes are held here too.')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap">
         <div className="grid g4">
           <div className="kpi"><span>{t('শিরোনাম', 'Titles')}</span><b>{bn(all.length)}</b></div>
@@ -57,6 +58,7 @@ export default async function LibraryPage({ searchParams }: { searchParams: { q?
         </div>
         {s.quran_info && <div className="card row" style={{ marginTop: 24, flexWrap: 'nowrap' }}><div style={{ fontSize: '2rem' }} aria-hidden="true">📖</div><div><b>{t('কুরআন শিক্ষা', 'Quran classes')}</b><p className="muted small" style={{ margin: 0 }}>{s.quran_info}</p></div></div>}
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

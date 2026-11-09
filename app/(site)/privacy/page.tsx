@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { getSiteSettings } from '@/lib/settings';
 import { getT } from '@/lib/lang';
 
@@ -13,7 +13,7 @@ export default async function Privacy() {
   const s = await getSiteSettings();
   return (
     <>
-      <PageTitle title={t('গোপনীয়তা নীতি', 'Privacy policy')} />
+      <BuiltinPage slug="privacy" title={t('গোপনীয়তা নীতি', 'Privacy policy')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap card prose" style={{ maxWidth: 820 }}>
         <h2>{t('কোন তথ্য রাখা হয়', 'What we store')}</h2>
         <p>{t('নিবন্ধন ও সদস্যপদের জন্য নাম, পিতা-মাতার নাম, মোবাইল নম্বর, ইমেইল, ঠিকানা, জাতীয় পরিচয়পত্র নম্বর, ছবি ও স্বাক্ষর এবং চাঁদা ও ঋণের হিসাব। পাসওয়ার্ড কখনো সরাসরি সংরক্ষিত হয় না, এনক্রিপ্ট করা অবস্থায় থাকে।', 'For registration and membership: name, parents’ names, mobile number, email, address, national ID number, photo and signature, plus contribution and loan records. Passwords are never stored in plain text; they are kept encrypted.')}</p>
@@ -28,6 +28,7 @@ export default async function Privacy() {
         <h2>{t('যোগাযোগ', 'Contact')}</h2>
         <p>{t('তথ্য সংশোধন বা মুছে ফেলার অনুরোধ করতে', 'To ask for your data to be corrected or deleted, contact')} {s.email ?? s.phone ?? t('কমিটির', 'the committee')}{t(' এ যোগাযোগ করুন।', '.')}</p>
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

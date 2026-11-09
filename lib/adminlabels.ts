@@ -8,7 +8,7 @@ export const EN: Record<string, string> = {
   // সাইডবারের আইটেম
   'ড্যাশবোর্ড': 'Dashboard', 'রিপোর্ট': 'Reports', 'চাঁদা জমা': 'Payments', 'করজে হাসানা': 'Interest-free loans', 'দান': 'Donations', 'সেবার রেকর্ড': 'Service records',
   'সব সদস্য': 'All members', 'নতুন আবেদন': 'New applications', 'স্থগিত ও বকেয়া': 'Frozen & overdue', 'বিজ্ঞপ্তি': 'Notifications',
-  'বই ও ধার': 'Books & lending', 'সেবার তালিকা': 'Services list', 'কমিটি ও টিম': 'Committee & team', 'সংবাদ': 'News', 'অনুষ্ঠান ও কর্মসূচি': 'Events & programmes', 'সেকশন ও পেজ সাজ': 'Sections & page style', 'মেনু': 'Menus', 'হেডার ও ফুটার': 'Header & footer', 'যোগাযোগের তথ্য': 'Contact info',
+  'বই ও ধার': 'Books & lending', 'সেবার তালিকা': 'Services list', 'কমিটি ও টিম': 'Committee & team', 'সংবাদ': 'News', 'অনুষ্ঠান ও কর্মসূচি': 'Events & programmes', 'সেকশন ও পেজ সাজ': 'Sections & page style', 'পেজ বিল্ডার': 'Page builder', 'হোমপেজ সাজান': 'Edit home page', 'মেনু': 'Menus', 'হেডার ও ফুটার': 'Header & footer', 'যোগাযোগের তথ্য': 'Contact info',
   'বার্তা': 'Messages', 'চ্যাট লগ': 'Chat log', 'ইমপোর্ট ও ব্যাকআপ': 'Import & backup', 'সাইট হেলথ ও লগ': 'Site health & logs', 'কমিটির অ্যাক্সেস': 'Staff access', 'আমার অ্যাকাউন্ট': 'My account',
   'সেটিংস': 'Settings', 'বের হোন': 'Log out',
   // পাতার শিরোনাম

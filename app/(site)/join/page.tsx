@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { JsonLd } from '@/components/JsonLd';
 import { PayMethods } from '@/components/PayMethods';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { JoinForm } from './JoinForm';
 import { getSessionProfile, getSiteSettings } from '@/lib/settings';
 import { graph } from '@/lib/schema';
@@ -21,7 +21,7 @@ export default async function Join() {
   return (
     <>
       <JsonLd data={graph(s, [], [[t('সদস্য হোন', 'Join us'), '/join']])} />
-      <PageTitle title={t('সদস্য হোন', 'Join us')} sub={t(`এককালীন ${tk(s.reg_fee)} ভর্তি ফি এবং প্রতি মাসে আপনার সামর্থ্য অনুযায়ী চাঁদা।`, `A one-time ${tk(s.reg_fee)} joining fee and a monthly contribution that suits you.`)} />
+      <BuiltinPage slug="join" title={t('সদস্য হোন', 'Join us')} sub={t(`এককালীন ${tk(s.reg_fee)} ভর্তি ফি এবং প্রতি মাসে আপনার সামর্থ্য অনুযায়ী চাঁদা।`, `A one-time ${tk(s.reg_fee)} joining fee and a monthly contribution that suits you.`)}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap grid join-grid">
         <JoinForm fee={s.reg_fee} payList={s.pay_methods} payInfo={s.pay_info} />
         <div>
@@ -33,6 +33,7 @@ export default async function Join() {
           </div>
         </div>
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ActionForm, Submit } from '@/app/admin/_components/ActionForm';
 import { Icon } from '@/components/Icon';
 import { JsonLd } from '@/components/JsonLd';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { sendMessage } from './actions';
 import { getSiteSettings } from '@/lib/settings';
 import { graph } from '@/lib/schema';
@@ -33,7 +33,7 @@ export default async function Contact() {
   return (
     <>
       <JsonLd data={graph(s, [{ '@type': 'ContactPage', name: t('যোগাযোগ', 'Contact') }], [[t('যোগাযোগ', 'Contact'), '/contact']])} />
-      <PageTitle title={t('যোগাযোগ', 'Contact')} sub={t('প্রশ্ন, পরামর্শ বা দান করতে চাইলে যোগাযোগ করুন।', 'Reach out with questions, suggestions or if you would like to donate.')} />
+      <BuiltinPage slug="contact" title={t('যোগাযোগ', 'Contact')} sub={t('প্রশ্ন, পরামর্শ বা দান করতে চাইলে যোগাযোগ করুন।', 'Reach out with questions, suggestions or if you would like to donate.')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap grid g2" style={{ alignItems: 'start' }}>
         <ActionForm action={sendMessage} className="card" resetOnSuccess>
           <h2 className="h2" style={{ marginTop: 0 }}>{t('বার্তা পাঠান', 'Send a message')}</h2>
@@ -51,6 +51,7 @@ export default async function Contact() {
           })}
         </div>
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

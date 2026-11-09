@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { JsonLd } from '@/components/JsonLd';
-import { PageTitle, Qard, ServiceGrid } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
+import { Qard, ServiceGrid } from '@/components/cards';
 import { getPrograms } from '@/lib/public';
 import { getSiteSettings } from '@/lib/settings';
 import { graph, siteUrl } from '@/lib/schema';
@@ -18,9 +19,10 @@ export default async function ServicesPage() {
   return (
     <>
       <JsonLd data={graph(s, [{ '@type': 'OfferCatalog', name: t('সেবা ও কার্যক্রম', 'Services and activities'), itemListElement: offers }], [[t('সেবা', 'Services'), '/services']])} />
-      <PageTitle title={t('সেবা ও কার্যক্রম', 'Services and activities')} sub={t('বিনামূল্যে, সবার জন্য। আপনার দান এই কাজগুলোকে চালু রাখে।', 'Free, for everyone. Your donations keep this work going.')} />
+      <BuiltinPage slug="services" title={t('সেবা ও কার্যক্রম', 'Services and activities')} sub={t('বিনামূল্যে, সবার জন্য। আপনার দান এই কাজগুলোকে চালু রাখে।', 'Free, for everyone. Your donations keep this work going.')}>
       <section className="sec" style={{ paddingTop: 20 }}><div className="wrap"><ServiceGrid list={list} /></div></section>
       <Qard s={s} />
+      </BuiltinPage>
     </>
   );
 }

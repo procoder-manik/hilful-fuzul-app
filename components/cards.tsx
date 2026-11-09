@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Breadcrumb } from './Breadcrumb';
 import { getSettings } from '@/lib/settings';
-import { cleanStyle, DEFAULT_PAGEHEAD, styleCss } from '@/lib/sectionstyle';
+import { cleanStyle, DEFAULT_PAGEHEAD, styleCss, type SecStyle } from '@/lib/sectionstyle';
 import { fd, initials, tk, bn } from '@/lib/fmt';
 import { getT } from '@/lib/lang';
 import type { Settings } from '@/lib/types';
@@ -16,14 +16,15 @@ export function SectionHead({ title, sub, href, cta }: { title: string; sub?: st
   );
 }
 
-export async function PageTitle({ title, sub }: { title: string; sub?: string }) {
-  const st = cleanStyle((await getSettings()).theme?.pagehead as never, DEFAULT_PAGEHEAD);
+export async function PageTitle({ title, sub, style, crumbs = true, align }: { title: string; sub?: string; style?: Partial<SecStyle> | null; crumbs?: boolean; align?: string }) {
+  const own = style && (style.bg && style.bg !== 'none' || style.pat && style.pat !== 'none') ? cleanStyle(style) : null;
+  const st = own ?? cleanStyle((await getSettings()).theme?.pagehead as never, DEFAULT_PAGEHEAD);
   const c = styleCss(st);
   return (
-    <section className={`page-title ph2${c.tinted ? ' secbg-c' : ''}${c.deep ? ' secbg-deep' : ''}`} style={c.box}>
+    <section className={`page-title ph2${align === 'center' ? ' center' : ''}${c.tinted ? ' secbg-c' : ''}${c.deep ? ' secbg-deep' : ''}`} style={c.box}>
       {st.pat !== 'none' && <div className={`sec-pat bnp-${st.pat}`} style={{ opacity: st.op, color: c.patColor }} aria-hidden="true" />}
       <div className="wrap">
-        <Breadcrumb title={title} />
+        {crumbs && <Breadcrumb title={title} />}
         <h1>{title}</h1>
         {sub && <p className="lead">{sub}</p>}
       </div>

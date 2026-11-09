@@ -1,7 +1,7 @@
 import { PRESETS, type Pattern } from './eventdesign';
 
 /** হোমপেজের সেকশন ও পেজ-হেডারের রং ও প্যাটার্ন। bg = "none" (সাদামাটা) অথবা eventdesign এর রঙের নাম (mint, mango ...) */
-export type SecStyle = { bg: string; pat: Pattern; op: number };
+export type SecStyle = { bg: string; pat: Pattern; op: number; c1?: string; c2?: string; tx?: string };
 export type HomeSec = { k: string; on: boolean } & Partial<SecStyle>;
 export type PageHeadStyle = SecStyle;
 
@@ -20,17 +20,27 @@ export const SECTIONS: { k: string; bn: string; en: string; info: string }[] = [
 export const DEFAULT_ORDER = SECTIONS.map((s) => s.k);
 
 export const NO_STYLE: SecStyle = { bg: 'none', pat: 'none', op: 0.1 };
-export const DEFAULT_PAGEHEAD: PageHeadStyle = { bg: 'mint', pat: 'geo', op: 0.12 };
+/** পেজ-হেডারের ডিফল্ট: হিরো সেকশনের মতো সাদামাটা ব্যাকগ্রাউন্ডে শুধু হালকা প্যাটার্ন */
+export const DEFAULT_PAGEHEAD: PageHeadStyle = { bg: 'none', pat: 'geo', op: 0.07 };
 
 const PAT = ['none', 'geo', 'dots', 'stripes', 'waves', 'stars'];
-export const cleanStyle = (r: Partial<SecStyle> | null | undefined, d: SecStyle = NO_STYLE): SecStyle => ({
-  bg: typeof r?.bg === 'string' && (r.bg === 'none' || PRESETS.some((p) => p.id === r.bg)) ? r.bg : d.bg,
-  pat: (PAT.includes(String(r?.pat)) ? r!.pat : d.pat) as Pattern,
-  op: Math.min(0.4, Math.max(0.03, Number.isFinite(Number(r?.op)) ? Number(r?.op) : d.op)),
-});
+const HEX = /^#[0-9a-fA-F]{6}$/;
+export const cleanStyle = (r: Partial<SecStyle> | null | undefined, d: SecStyle = NO_STYLE): SecStyle => {
+  const bg = typeof r?.bg === 'string' && (r.bg === 'none' || r.bg === 'custom' || PRESETS.some((p) => p.id === r.bg)) ? r.bg : d.bg;
+  const out: SecStyle = {
+    bg, pat: (PAT.includes(String(r?.pat)) ? r!.pat : d.pat) as Pattern,
+    op: Math.min(0.4, Math.max(0.03, Number.isFinite(Number(r?.op)) ? Number(r?.op) : d.op)),
+  };
+  if (bg === 'custom') { out.c1 = HEX.test(String(r?.c1)) ? r!.c1 : '#0e5a43'; out.c2 = HEX.test(String(r?.c2)) ? r!.c2 : '#1b8a68'; out.tx = HEX.test(String(r?.tx)) ? r!.tx : '#ffffff'; }
+  return out;
+};
 
 /** শৈলী থেকে CSS: ব্যাকগ্রাউন্ড, লেখার রং ও প্যাটার্নের রং */
 export function styleCss(st: SecStyle): { box: React.CSSProperties | undefined; patColor: string; has: boolean; tinted: boolean; deep: boolean } {
+  if (st.bg === 'custom') {
+    const tx = st.tx ?? '#ffffff';
+    return { box: { background: `linear-gradient(135deg, ${st.c1 ?? '#0e5a43'}, ${st.c2 ?? '#1b8a68'})`, color: tx, ['--muted' as string]: `color-mix(in srgb, ${tx} 72%, transparent)` }, patColor: tx, has: true, tinted: true, deep: tx.toLowerCase() > '#808080' };
+  }
   const p = PRESETS.find((x) => x.id === st.bg);
   if (!p) return { box: undefined, patColor: 'var(--acc)', has: st.pat !== 'none', tinted: false, deep: false };
   return { box: { background: `linear-gradient(135deg, ${p.c1}, ${p.c2})`, color: p.text, ['--muted' as string]: `color-mix(in srgb, ${p.text} 72%, transparent)` }, patColor: p.text, has: true, tinted: true, deep: p.tone === 'deep' };

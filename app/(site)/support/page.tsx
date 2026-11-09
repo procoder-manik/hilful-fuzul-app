@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { JsonLd } from '@/components/JsonLd';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { getSiteSettings } from '@/lib/settings';
 import { faqSchema, graph } from '@/lib/schema';
 import { getT } from '@/lib/lang';
@@ -32,11 +32,12 @@ export default async function Support() {
   return (
     <>
       <JsonLd data={graph(s, [faqSchema(faq)], [[t('সহায়তা', 'Help'), '/support']])} />
-      <PageTitle title={t('সহায়তা ও প্রশ্নোত্তর', 'Help and FAQ')} />
+      <BuiltinPage slug="support" title={t('সহায়তা ও প্রশ্নোত্তর', 'Help and FAQ')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap" style={{ maxWidth: 820 }}>
         {faq.map(([q, a]) => <details key={q}><summary>{q}</summary><p className="muted" style={{ margin: '8px 0 0' }}>{a}</p></details>)}
         <p style={{ marginTop: 20 }}>{t('উত্তর না পেলে', 'If you cannot find an answer,')} <Link href="/contact">{t('যোগাযোগ করুন', 'contact us')}</Link>{t('।', '.')}</p>
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

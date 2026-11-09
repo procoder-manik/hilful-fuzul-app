@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { CollectionChart, MembersChart } from '@/components/Charts';
 import { JsonLd } from '@/components/JsonLd';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { getDonations, getLoans, getMonthly, getStats } from '@/lib/public';
 import { getSiteSettings } from '@/lib/settings';
 import { graph } from '@/lib/schema';
@@ -24,7 +24,7 @@ export default async function Transparency() {
   return (
     <>
       <JsonLd data={graph(s, [], [[t('স্বচ্ছতা', 'Transparency'), '/transparency']])} />
-      <PageTitle title={t('স্বচ্ছতা ও হিসাব', 'Transparency and accounts')} sub={t('প্রতিটি টাকার উৎস ও ব্যবহার সবার জন্য উন্মুক্ত। তথ্য প্রতিদিন হালনাগাদ হয়।', 'The source and use of every taka is open to all. Data is updated daily.')} />
+      <BuiltinPage slug="transparency" title={t('স্বচ্ছতা ও হিসাব', 'Transparency and accounts')} sub={t('প্রতিটি টাকার উৎস ও ব্যবহার সবার জন্য উন্মুক্ত। তথ্য প্রতিদিন হালনাগাদ হয়।', 'The source and use of every taka is open to all. Data is updated daily.')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap">
         <div className="grid g4">{kpis.map(([l, v]) => <div className="kpi" key={l}><span>{l}</span><b>{tk(v)}</b></div>)}</div>
         <div className="grid g2" style={{ marginTop: 16 }}>
@@ -50,6 +50,7 @@ export default async function Transparency() {
           </div>
         </div>
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

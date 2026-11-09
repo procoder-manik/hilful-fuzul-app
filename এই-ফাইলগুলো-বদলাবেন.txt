@@ -2,15 +2,27 @@
 তারপর Ctrl + C দিয়ে সার্ভার বন্ধ করে আবার npm run dev।
 
 README.md
+app/(site)/[slug]/page.tsx
+app/(site)/about/page.tsx
+app/(site)/committee/page.tsx
+app/(site)/contact/page.tsx
+app/(site)/events/page.tsx
 app/(site)/join/JoinForm.tsx
 app/(site)/join/actions.ts
 app/(site)/join/page.tsx
 app/(site)/layout.tsx
+app/(site)/library/page.tsx
 app/(site)/members/MembersGrid.tsx
 app/(site)/members/page.tsx
+app/(site)/news/page.tsx
 app/(site)/page.tsx
 app/(site)/portal/form/page.tsx
 app/(site)/portal/page.tsx
+app/(site)/privacy/page.tsx
+app/(site)/services/page.tsx
+app/(site)/support/page.tsx
+app/(site)/terms/page.tsx
+app/(site)/transparency/page.tsx
 app/admin/(panel)/applications/page.tsx
 app/admin/(panel)/chats/page.tsx
 app/admin/(panel)/contact-info/page.tsx
@@ -36,6 +48,9 @@ app/admin/(panel)/members/page.tsx
 app/admin/(panel)/menus/page.tsx
 app/admin/(panel)/notifications/page.tsx
 app/admin/(panel)/page.tsx
+app/admin/(panel)/pages/[id]/PageBuilder.tsx
+app/admin/(panel)/pages/[id]/page.tsx
+app/admin/(panel)/pages/page.tsx
 app/admin/(panel)/payments/page.tsx
 app/admin/(panel)/reports/page.tsx
 app/admin/(panel)/sections/SectionsStudio.tsx
@@ -52,6 +67,7 @@ app/admin/_components/PrintButton.tsx
 app/admin/_components/Sidebar.tsx
 app/admin/actions/events.ts
 app/admin/actions/members.ts
+app/admin/actions/pages.ts
 app/admin/actions/sections.ts
 app/admin/actions/settings.ts
 app/admin/print/MemberFormDoc.tsx
@@ -63,11 +79,16 @@ components/EventBanner.tsx
 components/EventBannerView.tsx
 components/Icon.tsx
 components/SecWrap.tsx
+components/blocks/Blocks.tsx
+components/blocks/BuiltinPage.tsx
+components/blocks/Content.tsx
 components/cards.tsx
 components/sections.tsx
 components/site/FooterView.tsx
 lib/adminlabels.ts
 lib/adminsearch.ts
+lib/blocks.ts
+lib/builtin.ts
 lib/eventdesign.ts
 lib/layoutcfg.ts
 lib/public.ts

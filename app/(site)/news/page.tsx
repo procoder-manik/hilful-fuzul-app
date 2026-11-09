@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { NewsCard, PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
+import { NewsCard } from '@/components/cards';
 import { getPosts } from '@/lib/public';
 import { getT } from '@/lib/lang';
 
@@ -14,10 +15,11 @@ export default async function NewsPage() {
   const posts = await getPosts(60);
   return (
     <>
-      <PageTitle title={t('সংবাদ ও কার্যক্রম', 'News and activities')} />
+      <BuiltinPage slug="news" title={t('সংবাদ ও কার্যক্রম', 'News and activities')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap">
         {posts.length === 0 ? <p className="muted">{t('এখনো কোনো সংবাদ প্রকাশ হয়নি।', 'No news has been published yet.')}</p> : <div className="grid g3">{posts.map((p) => <NewsCard key={p.id} p={p} />)}</div>}
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

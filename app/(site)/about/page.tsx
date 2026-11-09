@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { JsonLd } from '@/components/JsonLd';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { getStats } from '@/lib/public';
 import { getSiteSettings } from '@/lib/settings';
 import { graph, siteUrl } from '@/lib/schema';
@@ -18,7 +18,7 @@ export default async function About() {
   return (
     <>
       <JsonLd data={graph(s, [{ '@type': 'AboutPage', url: `${siteUrl()}/about`, about: { '@id': `${siteUrl()}/#org` } }], [[t('আমাদের কথা', 'About us'), '/about']])} />
-      <PageTitle title={t('আমাদের কথা', 'About us')} sub={t(`${s.org_name} একটি অরাজনৈতিক, স্বেচ্ছাসেবী সামাজিক সংগঠন।`, `${s.org_name} is a non-political, voluntary social organisation.`)} />
+      <BuiltinPage slug="about" title={t('আমাদের কথা', 'About us')} sub={t(`${s.org_name} একটি অরাজনৈতিক, স্বেচ্ছাসেবী সামাজিক সংগঠন।`, `${s.org_name} is a non-political, voluntary social organisation.`)}>
       <section className="sec" style={{ paddingTop: 20 }}><div className="wrap grid g2">
         <div className="card prose">
           <h2>{t('আমাদের লক্ষ্য', 'Our mission')}</h2>
@@ -43,6 +43,7 @@ export default async function About() {
           </div>
         </div>
       </div></section>
+      </BuiltinPage>
     </>
   );
 }

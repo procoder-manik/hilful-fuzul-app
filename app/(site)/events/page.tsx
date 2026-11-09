@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { EventBanner } from '@/components/EventBanner';
 import { JsonLd } from '@/components/JsonLd';
-import { PageTitle } from '@/components/cards';
+import { BuiltinPage } from '@/components/blocks/BuiltinPage';
 import { getEvents, past, upcoming } from '@/lib/public';
 import { getSiteSettings } from '@/lib/settings';
 import { eventSchema, graph, siteUrl } from '@/lib/schema';
@@ -20,7 +20,7 @@ export default async function EventsPage() {
   return (
     <>
       <JsonLd data={graph(s, up.map((e) => eventSchema(e, `${siteUrl()}/#org`)), [[t('অনুষ্ঠান', 'Events'), '/events']])} />
-      <PageTitle title={t('অনুষ্ঠান ও সভা', 'Events and meetings')} sub={t('সভা, সেমিনার ও কর্মসূচির সময়সূচি। সবাই আমন্ত্রিত।', 'Schedule of meetings, seminars and programmes. Everyone is invited.')} />
+      <BuiltinPage slug="events" title={t('অনুষ্ঠান ও সভা', 'Events and meetings')} sub={t('সভা, সেমিনার ও কর্মসূচির সময়সূচি। সবাই আমন্ত্রিত।', 'Schedule of meetings, seminars and programmes. Everyone is invited.')}>
       <section style={{ padding: '20px 0 60px' }}><div className="wrap">
         <h2>{t('আসন্ন', 'Upcoming')}</h2>
         {up.length === 0 ? <p className="muted">{t('এই মুহূর্তে কোনো আসন্ন অনুষ্ঠান নেই।', 'There are no upcoming events right now.')}</p> : (
@@ -28,6 +28,7 @@ export default async function EventsPage() {
         )}
         {done.length > 0 && <><h2 style={{ marginTop: 36 }}>{t('সম্পন্ন অনুষ্ঠান', 'Past events')}</h2><div className="grid g2">{done.map((e) => <EventBanner key={e.id} e={e} />)}</div></>}
       </div></section>
+      </BuiltinPage>
     </>
   );
 }
