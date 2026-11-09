@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
     // অ্যাডমিন হলে এই সেশনে OTP যাচাই না হলে প্যানেলে ঢুকতে দেওয়া হয় না
-    if (data.role === 'admin' && mfaRequired()) {
+    if (data.role === 'admin' && (await mfaRequired(supabase))) {
       const a = await adminAal(supabase);
       if (a !== 'ok') {
         const url = request.nextUrl.clone();

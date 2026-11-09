@@ -1,4 +1,5 @@
 'use server';
+import { decRow, encRow } from '@/lib/crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { isValidPassword, normalizeEmail, normalizePhone, PASSWORD_HINT } from '@/lib/auth';
@@ -20,11 +21,11 @@ function memberFields(f: FormData) {
   const emailRaw = str(f, 'email');
   const email = emailRaw ? normalizeEmail(emailRaw) : null;
   if (emailRaw && !email) throw new Error('সঠিক ইমেইল ঠিকানা দিন');
-  return {
+  return encRow({
     name: str(f, 'name'), father_name: opt(f, 'father_name'), mother_name: opt(f, 'mother_name'), email, phone, nid: opt(f, 'nid'), dob: opt(f, 'dob'),
     address: opt(f, 'address'), occupation: opt(f, 'occupation'), nominee: opt(f, 'nominee'),
     monthly_amount: monthly, join_date: str(f, 'join_date') || todayBD(), notes: opt(f, 'notes'),
-  };
+  });
 }
 
 export async function createMember(_: ActionState, f: FormData): Promise<ActionState> {
@@ -157,11 +158,11 @@ export async function approveApplication(appId: string, _: ActionState, f: FormD
     const fee = num(f, 'fee') || Number(s?.reg_fee ?? 200);
     const trx = opt(f, 'trx');
 
-    const { data: m, error } = await supabase.from('members').insert({
+    const { data: m, error } = await supabase.from('members').insert(encRow({
       name: a.name, father_name: a.father_name, mother_name: a.mother_name, email: a.email, phone: a.phone, nid: a.nid, dob: a.dob, address: a.address,
       occupation: a.occupation, nominee: a.nominee, monthly_amount: a.monthly_amount || 50, photo_url: a.photo_url, signature_url: a.signature_url,
       verified_at: new Date().toISOString(),
-    }).select('id, member_no').single();
+    })).select('id, member_no').single();
     if (error) throw error;
     memberId = m.id;
     await supabase.from('payments').insert({ member_id: m.id, type: 'registration', amount: fee, paid_on: todayBD(), method: str(f, 'method') || 'নগদ (হাতে)', note: trx ? `ট্রানজ্যাকশন: ${trx}` : null, created_by: user.id });

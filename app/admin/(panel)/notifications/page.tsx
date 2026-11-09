@@ -9,7 +9,7 @@ import { PageHead } from '@/lib/ui';
 export const metadata: Metadata = { title: 'বিজ্ঞপ্তি' };
 
 const KIND: Record<string, string> = { welcome: 'স্বাগত', approved: 'অনুমোদন', rejected: 'বাতিল', payment: 'জমা', overdue: 'বকেয়া', due_soon: 'শেষ তারিখ', freeze_warn_7: '৭ দিনের সতর্কতা', freeze_warn_3: '৩ দিনের সতর্কতা', frozen: 'স্থগিত', reactivated: 'সক্রিয়' };
-const SKIP: Record<string, string> = { 'no-email': 'ইমেইল নেই', 'no-phone': 'নম্বর নেই', off: 'বন্ধ', 'smtp-not-configured': 'SMTP নেই', 'sms-not-configured': 'গেটওয়ে নেই' };
+const SKIP: Record<string, string> = { 'no-email': 'ইমেইল নেই', 'no-phone': 'নম্বর নেই', off: 'বন্ধ', 'smtp-not-configured': 'ইমেইল ব্যবস্থা নেই', 'email-not-configured': 'ইমেইল ব্যবস্থা নেই', 'sms-not-configured': 'গেটওয়ে নেই' };
 
 function St({ v }: { v: string | null }) {
   if (!v) return <span className="badge b-mute">-</span>;

@@ -10,6 +10,8 @@ import { createClient } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { getT } from '@/lib/lang';
 import { uploadMedia, uploadSignature } from '@/lib/storage';
+import { encRow } from '@/lib/crypto';
+import { sendVerifyCode } from '@/lib/verifymail';
 
 export type RegisterState = { error?: string; loginHint?: boolean };
 
@@ -34,7 +36,7 @@ export async function registerAccount(_: RegisterState, f: FormData): Promise<Re
     if (name.length < 3) return { error: t('পূর্ণ নাম লিখুন', 'Enter your full name') };
     if (!str(f, 'father_name')) return { error: t('পিতার নাম লিখুন', 'Enter your father’s name') };
     if (!phone) return { error: t('সঠিক ১১ সংখ্যার মোবাইল নম্বর দিন (01XXXXXXXXX)', 'Enter a valid 11-digit mobile number') };
-    if (emailRaw && !email) return { error: t('সঠিক ইমেইল ঠিকানা দিন', 'Enter a valid email address') };
+    if (!email) return { error: t('সঠিক ইমেইল ঠিকানা দিন (লগইন ও বিজ্ঞপ্তি এই ইমেইলে হবে)', 'Enter a valid email address (used for login and notices)') };
     if (!str(f, 'address')) return { error: t('ঠিকানা লিখুন', 'Enter your address') };
     if (!isValidPassword(password)) return { error: t(PASSWORD_HINT, 'Password must be at least 6 characters') };
     if (password !== String(f.get('password2') ?? '')) return { error: t('দুইবার একই পাসওয়ার্ড লিখুন', 'Passwords do not match') };
@@ -56,13 +58,14 @@ export async function registerAccount(_: RegisterState, f: FormData): Promise<Re
     const signature_url = await uploadSignature(admin, str(f, 'signature'), 'applications');
 
     userId = await createLoginAccount({ phone, email, password, fullName: name, role: 'member', memberId: null });
-    const { error } = await admin.from('applications').insert({
+    const { error } = await admin.from('applications').insert(encRow({
       user_id: userId, name, father_name: str(f, 'father_name'), mother_name: opt(f, 'mother_name'), phone, email, nid: opt(f, 'nid'), dob: opt(f, 'dob'),
       address: str(f, 'address'), occupation: opt(f, 'occupation'), nominee: opt(f, 'nominee'), monthly_amount: monthly, photo_url, signature_url,
       ...(payMethod ? { pay_method: payMethod, pay_trx: payTrx || null, pay_claimed_at: new Date().toISOString() } : {}),
-    });
+    }));
     if (error) throw error;
 
+    void sendVerifyCode(userId, email).catch(() => {});          // ইমেইলের মালিকানা যাচাইয়ের কোড
     const { data: s } = await admin.from('settings').select('org_name, short_name, reg_fee').eq('id', 1).single();
     await notify({ userId, kind: 'welcome', key: userId, email, phone, ...T.welcome({ name, org: s?.short_name || s?.org_name || 'সংগঠন', fee: Number(s?.reg_fee ?? 200) }) });
 

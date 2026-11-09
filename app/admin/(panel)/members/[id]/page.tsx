@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { decRow } from '@/lib/crypto';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ActionForm, ConfirmButton, Submit } from '../../../_components/ActionForm';
@@ -15,14 +16,15 @@ const TYPE = { registration: 'ভর্তি ফি', reactivation: 'পুন�
 export default async function MemberProfile({ params, searchParams }: { params: { id: string }; searchParams: { warn?: string } }) {
   const { supabase, profile } = await requirePage(STAFF);
   const id = params.id;
-  const [{ data: m }, { data: pays }, { data: loans }, { data: login }, { data: s }] = await Promise.all([
+  const [{ data: m0 }, { data: pays }, { data: loans }, { data: login }, { data: s }] = await Promise.all([
     supabase.from('members').select('*').eq('id', id).single(),
     supabase.from('payments').select('*').eq('member_id', id).order('paid_on', { ascending: false }),
     supabase.from('loans').select('*, loan_repayments(amount)').eq('member_id', id).order('issued_on', { ascending: false }),
     supabase.from('profiles').select('id').eq('member_id', id).maybeSingle(),
     supabase.from('settings').select('due_day, reg_fee, freeze_months').eq('id', 1).single(),
   ]);
-  if (!m) notFound();
+  if (!m0) notFound();
+  const m = decRow(m0);
   const money = ['admin', 'treasurer'].includes(profile.role);
   const payments = pays ?? [];
   const d = computeDues({ joinDate: m.join_date, resetFrom: m.reset_from, monthlyAmount: Number(m.monthly_amount), paidMonths: payments.filter((p) => p.type === 'monthly').map((p) => p.for_month), dueDay: s?.due_day ?? 10 });

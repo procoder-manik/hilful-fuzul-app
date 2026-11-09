@@ -13,7 +13,7 @@ export default async function OtpPage({ searchParams }: { searchParams: { next?:
   const t = getT();
   const { supabase, user, profile } = await getSessionProfile();
   if (!user) redirect('/login?as=staff');
-  if (profile?.role !== 'admin' || !mfaRequired()) redirect('/admin');
+  if (profile?.role !== 'admin' || !(await mfaRequired(supabase))) redirect('/admin');
   const a = await adminAal(supabase);
   if (a === 'ok') redirect('/admin');
   if (a === 'setup') redirect(otpPath(a));

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { decRow } from '@/lib/crypto';
 import { ActionForm, ConfirmButton, Submit } from '../../_components/ActionForm';
 import { approveApplication, rejectApplication } from '../../actions/members';
 import { MONEY, requirePage } from '@/lib/guard';
@@ -15,7 +16,7 @@ export default async function Applications({ searchParams }: { searchParams: { a
   let q = supabase.from('applications').select('*').order('created_at', { ascending: false }).limit(100);
   if (!searchParams.all) q = q.eq('status', 'pending');
   const [{ data }, { data: s }] = await Promise.all([q, supabase.from('settings').select('reg_fee').eq('id', 1).single()]);
-  const list = (data ?? []) as Application[];
+  const list = decRow((data ?? []) as Application[]);
   return (
     <>
       <PageHead title="সদস্যপদের আবেদন" sub="ওয়েবসাইটে নিবন্ধন করা ব্যক্তিরা এখানে আসেন। ভর্তি ফি পেয়েছেন কিনা মিলিয়ে দেখে যাচাই করে অনুমোদন দিলে তিনি যাচাইকৃত সদস্য হবেন ও বিজ্ঞপ্তি পাবেন।">

@@ -1,4 +1,5 @@
 'use server';
+import { encRow } from '@/lib/crypto';
 import { revalidatePath } from 'next/cache';
 import { errMsg, logActivity, requireAction } from '@/lib/guard';
 import { IMPORTERS, toRecords, type Report } from '@/lib/importers';
@@ -34,7 +35,7 @@ export async function runImport(_: ImportState, f: FormData): Promise<ImportStat
     let inserted = 0;
     for (let i = 0; i < prep.rows.length; i += 200) {
       const chunk = prep.rows.slice(i, i + 200);
-      const { error } = await supabase.from(imp.table).insert(chunk);
+      const { error } = await supabase.from(imp.table).insert(imp.table === 'members' ? chunk.map((r: Record<string, unknown>) => encRow(r)) : chunk);
       if (error) { report.errors.unshift(`সারি ${i + 1} থেকে ${i + chunk.length} যোগ করা যায়নি: ${error.message}`); continue; }
       inserted += chunk.length;
     }

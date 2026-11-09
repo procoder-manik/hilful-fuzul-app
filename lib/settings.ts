@@ -5,7 +5,7 @@ import type { Role, Settings } from './types';
 
 const FALLBACK: Settings = {
   id: 1, org_name: 'হিলফুল ফুজুল পাঠাগার ও যুব সংঘ', short_name: 'হিলফুল ফুজুল', tagline: 'পাঠাগার, করজে হাসানা ও সমাজসেবা',
-  established: null, address: null, phone: null, email: null, whatsapp: null, facebook: null, logo_url: null,
+  established: null, address: 'রামচন্দ্রপুর (বাগান), কাহারোল, দিনাজপুর', phone: null, email: null, whatsapp: null, facebook: null, logo_url: null,
   reg_fee: 200, due_day: 10, freeze_months: 3, show_borrower_names: true,
   theme: { skin: 'mango' }, home_sections: [], hero: {}, ticker: [], member_terms: [], loan_terms: [], pay_info: null, quran_info: null,
   header_cfg: {}, footer_cfg: {},

@@ -17,7 +17,7 @@ export async function requirePage(roles: Role[]) {
   const s = await getSessionProfile();
   if (!s.user || !s.profile) redirect('/login?next=/admin');
   if (!roles.includes(s.profile.role)) redirect('/admin?denied=1');
-  if (s.profile.role === 'admin' && mfaRequired()) { const a = await adminAal(s.supabase); if (a !== 'ok') redirect(otpPath(a)); }
+  if (s.profile.role === 'admin' && (await mfaRequired(s.supabase))) { const a = await adminAal(s.supabase); if (a !== 'ok') redirect(otpPath(a)); }
   return s as typeof s & { user: NonNullable<typeof s.user>; profile: NonNullable<typeof s.profile> };
 }
 
@@ -25,7 +25,7 @@ export async function requirePage(roles: Role[]) {
 export async function requireAction(roles: Role[]) {
   const s = await getSessionProfile();
   if (!s.user || !s.profile || !roles.includes(s.profile.role)) throw new Error('এই কাজের অনুমতি আপনার নেই');
-  if (s.profile.role === 'admin' && mfaRequired() && (await adminAal(s.supabase)) !== 'ok') throw new Error('অ্যাডমিনের OTP যাচাই সম্পন্ন হয়নি। আবার লগইন করুন।');
+  if (s.profile.role === 'admin' && (await mfaRequired(s.supabase)) && (await adminAal(s.supabase)) !== 'ok') throw new Error('অ্যাডমিনের OTP যাচাই সম্পন্ন হয়নি। আবার লগইন করুন।');
   return s as typeof s & { user: NonNullable<typeof s.user>; profile: NonNullable<typeof s.profile> };
 }
 

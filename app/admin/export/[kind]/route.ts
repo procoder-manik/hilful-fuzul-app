@@ -13,7 +13,7 @@ export const maxDuration = 120;
 export async function GET(req: Request, { params }: { params: { kind: string } }) {
   const { supabase, user, profile } = await getSessionProfile();
   if (!user || !profile || profile.role === 'member') return new NextResponse('লগইন করুন', { status: 401 });
-  if (profile.role === 'admin' && mfaRequired() && (await adminAal(supabase)) !== 'ok') return new NextResponse('OTP যাচাই করুন', { status: 401 });
+  if (profile.role === 'admin' && (await mfaRequired(supabase)) && (await adminAal(supabase)) !== 'ok') return new NextResponse('OTP যাচাই করুন', { status: 401 });
 
   const url = new URL(req.url);
   const sp = Object.fromEntries(url.searchParams.entries());

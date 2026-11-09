@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { decRow } from '@/lib/crypto';
 import { PrintBar } from '../../../_components/PrintButton';
 import { DocHead, Sigs } from '../../DocHead';
 import { requirePage, MONEY } from '@/lib/guard';
@@ -11,7 +12,7 @@ export default async function LoanSlip({ params, searchParams }: { params: { id:
   const { supabase } = await requirePage(MONEY);
   const [s, { data: l }] = await Promise.all([getSettings(), supabase.from('loans').select('*, members(name, member_no, phone, father_name, address)').eq('id', params.id).single()]);
   if (!l) notFound();
-  const m = l.members as { name: string; member_no: string; phone: string; father_name: string | null; address: string | null };
+  const m = decRow(l.members) as { name: string; member_no: string; phone: string; father_name: string | null; address: string | null };
   const sig = await signedUrl(supabase, l.borrower_signature_url);
   const amt = Number(l.amount);
   const per = Math.round(amt / l.term_months);

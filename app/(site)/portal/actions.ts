@@ -7,6 +7,10 @@ import { getT } from '@/lib/lang';
 import { uploadMedia } from '@/lib/storage';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
+import { encRow } from '@/lib/crypto';
+import { checkCode } from '@/lib/emailcode';
+import { sendVerifyCode } from '@/lib/verifymail';
+import { limitKey } from '@/lib/ratelimit';
 
 /** সদস্য (বা আবেদনকারী) নিজের ব্যক্তিগত তথ্য সম্পাদনা করেন। টাকা-সংক্রান্ত ঘর (মাসিক চাঁদা, ফি) এখানে বদলানো যায় না। */
 export async function updateMyProfile(_: ActionState, f: FormData): Promise<ActionState> {
@@ -26,11 +30,11 @@ export async function updateMyProfile(_: ActionState, f: FormData): Promise<Acti
       if (clash) return { error: t('এই ইমেইলে অন্য একটি অ্যাকাউন্ট আছে', 'Another account already uses this email') };
     }
     const photo_url = await uploadMedia(admin, f.get('photo'), 'members');
-    const fields = {
+    const fields = encRow({
       name, father_name: opt(f, 'father_name'), mother_name: opt(f, 'mother_name'), nid: opt(f, 'nid'), dob: opt(f, 'dob'),
       address: opt(f, 'address'), occupation: opt(f, 'occupation'), nominee: opt(f, 'nominee'), email,
       ...(photo_url ? { photo_url } : {}),
-    };
+    });
     if (profile.member_id) {
       const { error } = await admin.from('members').update(fields).eq('id', profile.member_id);
       if (error) throw error;
@@ -89,4 +93,26 @@ export async function markNotificationsRead() {
   const q = admin.from('notifications').update({ read_at: new Date().toISOString() }).is('read_at', null);
   await (profile?.member_id ? q.or(`user_id.eq.${user.id},member_id.eq.${profile.member_id}`) : q.eq('user_id', user.id));
   revalidatePath('/portal');
+}
+
+export async function resendEmailCode(_: ActionState, _f: FormData): Promise<ActionState> {
+  const t = getT();
+  const { user, profile } = await getSessionProfile();
+  if (!user || !profile?.email) return { error: t('প্রোফাইলে ইমেইল দিন', 'Add an email to your profile first') };
+  if (limitKey(`vsend:${user.id}`, 4)) return { error: t('অনেকবার চাওয়া হয়েছে, কিছুক্ষণ পর চেষ্টা করুন', 'Too many requests, try again later') };
+  const ok = await sendVerifyCode(user.id, profile.email);
+  return ok ? { ok: t(`${profile.email} এ কোড পাঠানো হয়েছে`, `A code was sent to ${profile.email}`), ts: Date.now() } : { error: t('ইমেইল পাঠানো যায়নি। ইমেইল পাঠানোর ব্যবস্থা চালু আছে কিনা অ্যাডমিনকে জিজ্ঞেস করুন।', 'Could not send the email. Ask the admin whether email sending is set up.') };
+}
+
+export async function verifyEmail(_: ActionState, f: FormData): Promise<ActionState> {
+  const t = getT();
+  const { user, profile } = await getSessionProfile();
+  if (!user || !profile?.email) return { error: t('আবার লগইন করুন', 'Please log in again') };
+  if (limitKey(`vcheck:${user.id}`, 8)) return { error: t('অনেকবার ভুল কোড দেওয়া হয়েছে, কিছুক্ষণ পর চেষ্টা করুন', 'Too many wrong codes, try again later') };
+  if (!checkCode('verify', user.id, profile.email, str(f, 'code'))) return { error: t('কোড ভুল বা মেয়াদ শেষ। নতুন কোড চান।', 'Wrong or expired code. Request a new one.') };
+  const admin = createAdminClient();
+  const { error } = await admin.auth.admin.updateUserById(user.id, { app_metadata: { ...(user.app_metadata ?? {}), email_verified: profile.email } });
+  if (error) return { error: errMsg(error) };
+  revalidatePath('/portal');
+  return { ok: t('ইমেইল যাচাই হয়েছে। ধন্যবাদ!', 'Email verified. Thank you!'), ts: Date.now() };
 }

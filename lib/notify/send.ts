@@ -2,14 +2,31 @@ import 'server-only';
 import { createAdminClient } from '@/lib/supabase/admin';
 import type { Settings } from '@/lib/types';
 
-/* ---------- ইমেইল (SMTP) ---------- */
-export const emailConfigured = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+/* ---------- ইমেইল: Resend API (বিনামূল্যে শুরু করা যায়), না থাকলে SMTP ---------- */
+export const resendConfigured = () => !!process.env.RESEND_API_KEY;
+export const smtpConfigured = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+export const emailConfigured = () => resendConfigured() || smtpConfigured();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let transport: any = null;
 
+async function sendViaResend(to: string, subject: string, text: string): Promise<string> {
+  const from = process.env.RESEND_FROM || 'Hilful Fuzul <onboarding@resend.dev>';
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST', headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from, to: [to], subject, text }), signal: AbortSignal.timeout(15000),
+  });
+  if (res.ok) return 'sent';
+  const body = (await res.text()).slice(0, 160);
+  return `failed:resend ${res.status} ${body}`;
+}
+
 export async function sendEmail(to: string, subject: string, text: string): Promise<string> {
-  if (!emailConfigured()) return 'skipped:smtp-not-configured';
+  if (!emailConfigured()) return 'skipped:email-not-configured';
   try {
+    if (resendConfigured()) {
+      const r = await sendViaResend(to, subject, text);
+      if (r === 'sent' || !smtpConfigured()) return r;      // Resend ব্যর্থ হলে SMTP থাকলে সেটি চেষ্টা
+    }
     if (!transport) {
       const nodemailer = (await import('nodemailer')).default;
       const port = Number(process.env.SMTP_PORT || 587);

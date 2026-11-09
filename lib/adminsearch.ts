@@ -46,6 +46,7 @@ export const SEARCH_ITEMS: SearchItem[] = [
   { t: 'হিরো, সংবাদ-পট্টি ও কুরআন শিক্ষা', en: 'Hero, news ticker & Quran info', href: '/admin/settings#set-website', k: 'hero হিরো শিরোনাম ticker ব্রেকিং নিউজ quran কুরআন', roles: A, group: 'সেটিং' },
   { t: 'চ্যাট সহকারী সেটিং', en: 'Chat assistant settings', href: '/admin/settings#set-chat', k: 'chat bot gemini openrouter api মডেল model', roles: A, group: 'সেটিং' },
   { t: 'থিম রং ও ঋণগ্রহীতার নাম', en: 'Theme colour & privacy', href: '/admin/settings#set-look', k: 'theme থিম skin রং borrower ঋণগ্রহীতা নাম গোপনীয়তা privacy', roles: A, group: 'সেটিং' },
+  { t: 'নিরাপত্তা: অ্যাডমিন দুই-ধাপ (OTP) চালু/বন্ধ ও এনক্রিপশন', en: 'Security: 2-step login & encryption', href: '/admin/settings#set-security', k: 'otp 2fa mfa two factor দুই ধাপ অথেনটিকেটর encryption এনক্রিপ্ট নিরাপত্তা security', roles: A, group: 'সেটিং' },
   { t: 'ওয়েবসাইটের সদস্য পাতা (চালু/বন্ধ, টাকার অঙ্ক)', en: 'Public members page', href: '/admin/settings#set-members', k: 'members public সদস্য পাতা কার্ড money টাকা লুকান', roles: A, group: 'সেটিং' },
 ];
 

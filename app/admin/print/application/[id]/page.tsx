@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { decRow } from '@/lib/crypto';
 import { PrintBar } from '../../../_components/PrintButton';
 import { MemberFormDoc } from '../../MemberFormDoc';
 import { MONEY, requirePage } from '@/lib/guard';
@@ -10,7 +11,7 @@ import type { Application } from '@/lib/types';
 export default async function ApplicationPrint({ params }: { params: { id: string } }) {
   const { supabase } = await requirePage(MONEY);
   const [s, { data }] = await Promise.all([getSettings(), supabase.from('applications').select('*').eq('id', params.id).single()]);
-  const a = data as Application | null;
+  const a = decRow(data as Application | null);
   if (!a) notFound();
   const sig = await signedUrl(supabase, a.signature_url);
   return (

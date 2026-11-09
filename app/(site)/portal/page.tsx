@@ -7,6 +7,8 @@ import { PayMethods } from '@/components/PayMethods';
 import { ProfileEditor } from './ProfileEditor';
 import { ClaimForm } from './ClaimForm';
 import { PasswordForm } from './PasswordForm';
+import { EmailVerify } from './EmailVerify';
+import { decRow } from '@/lib/crypto';
 import { markNotificationsRead } from './actions';
 import { getSessionProfile, getSiteSettings } from '@/lib/settings';
 import { computeDues } from '@/lib/dues';
@@ -56,13 +58,14 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
   if (!user) redirect('/login?next=/portal');
   if (profile && profile.role !== 'member' && !profile.member_id) redirect('/admin');
   const s = await getSiteSettings();
+  const needVerify = !!profile?.email && !profile.email.endsWith(`@${process.env.MEMBER_EMAIL_DOMAIN || 'members.hilfulfuzul.org'}`) && (user.app_metadata as { email_verified?: string } | undefined)?.email_verified !== profile.email;
   const { data: nd } = await supabase.from('notifications').select('id, kind, title, body, read_at, created_at').order('created_at', { ascending: false }).limit(12);
   const notes = (nd ?? []) as Note[];
 
   /* ---------- যাচাইয়ের অপেক্ষায় থাকা আবেদনকারী ---------- */
   if (!profile?.member_id) {
     const { data } = await supabase.from('applications').select('*').eq('user_id', user.id).maybeSingle();
-    const a = data as Application | null;
+    const a = decRow(data as Application | null);
     if (!a) return <section className="wrap" style={{ padding: 40 }}><div className="notice">{t('এই অ্যাকাউন্টের সাথে কোনো সদস্য বা আবেদন যুক্ত নেই। কোষাধ্যক্ষের সাথে যোগাযোগ করুন।', 'No member or application is linked to this account. Please contact the treasurer.')}</div><SignOut /></section>;
     return (
       <section className="wrap" style={{ padding: '30px 18px 60px' }}>
@@ -93,6 +96,7 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
               </div>
             </div>
           )}
+        {needVerify && <EmailVerify email={profile!.email!} />}
         <div style={{ marginTop: 16 }}><Notifications list={notes} /></div>
         <div className="grid g2" style={{ marginTop: 16, alignItems: 'start' }}>
           <ProfileEditor p={{ name: a.name, father_name: a.father_name, mother_name: a.mother_name, nid: a.nid, dob: a.dob, address: a.address, occupation: a.occupation, nominee: a.nominee, email: a.email, phone: a.phone, photo_url: a.photo_url }} />
@@ -109,7 +113,7 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
     supabase.from('loans').select('*, loan_repayments(amount, paid_on)').eq('member_id', profile.member_id).order('issued_on', { ascending: false }),
     supabase.from('book_lendings').select('id, out_on, expected_on, returned_on, books(title)').eq('member_id', profile.member_id).order('out_on', { ascending: false }).limit(10),
   ]);
-  const member = m.data as Member | null;
+  const member = decRow(m.data as Member | null);
   if (!member) return <section className="wrap" style={{ padding: 40 }}><div className="notice">{t('সদস্যের তথ্য পাওয়া যায়নি। কোষাধ্যক্ষের সাথে যোগাযোগ করুন।', 'Member record not found. Please contact the treasurer.')}</div><SignOut /></section>;
   const books = (b.data ?? []) as unknown as { id: string; out_on: string; expected_on: string | null; returned_on: string | null; books: { title: string } | null }[];
   const payments = (p.data ?? []) as Payment[];
@@ -175,6 +179,7 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
         </div>
       </div>
 
+      {needVerify && <EmailVerify email={profile!.email!} />}
       <div style={{ marginTop: 16 }}><Notifications list={notes} /></div>
 
       <div className="grid g2" style={{ marginTop: 16, alignItems: 'start' }}>

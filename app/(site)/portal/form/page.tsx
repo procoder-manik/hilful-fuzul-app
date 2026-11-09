@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { decRow } from '@/lib/crypto';
 import { PrintBar } from '@/app/admin/_components/PrintButton';
 import { MemberFormDoc } from '@/app/admin/print/MemberFormDoc';
 import { getSessionProfile, getSettings } from '@/lib/settings';
@@ -16,14 +17,15 @@ export default async function MyForm() {
   const s = await getSettings();
 
   if (profile?.member_id) {
-    const { data: m } = await supabase.from('members').select('*').eq('id', profile.member_id).single();
-    if (!m) redirect('/portal');
+    const { data: m0 } = await supabase.from('members').select('*').eq('id', profile.member_id).single();
+    if (!m0) redirect('/portal');
+    const m = decRow(m0);
     const sig = await signedUrl(createAdminClient(), m.signature_url);       // সারি আগেই নিজের অধিকারে (RLS) পড়া হয়েছে, তাই স্বাক্ষরের লিংক নিরাপদ
     return <div className="print-wrap"><PrintBar back="/portal" /><div className="doc"><MemberFormDoc s={s} m={m} sig={sig} /></div></div>;
   }
 
   const { data } = await supabase.from('applications').select('*').eq('user_id', user.id).maybeSingle();
-  const a = data as Application | null;
+  const a = decRow(data as Application | null);
   if (!a) redirect('/portal');
   const sig = await signedUrl(createAdminClient(), a.signature_url);
   return (

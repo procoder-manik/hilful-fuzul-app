@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { decRow } from '@/lib/crypto';
 import { notFound } from 'next/navigation';
 import { ActionForm, Submit } from '../../../../_components/ActionForm';
 import { MemberFields } from '../../MemberFields';
@@ -10,8 +11,9 @@ export const metadata: Metadata = { title: 'সদস্য সম্পাদ�
 
 export default async function EditMember({ params }: { params: { id: string } }) {
   const { supabase } = await requirePage(MONEY);
-  const { data: m } = await supabase.from('members').select('*').eq('id', params.id).single();
-  if (!m) notFound();
+  const { data: m0 } = await supabase.from('members').select('*').eq('id', params.id).single();
+  if (!m0) notFound();
+  const m = decRow(m0);
   return (
     <>
       <PageHead title="সদস্য সম্পাদনা" sub={`${m.member_no}, ${m.name}`} />

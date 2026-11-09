@@ -2,11 +2,14 @@ import type { Metadata } from 'next';
 import { ActionForm, Submit } from '../../_components/ActionForm';
 import { Bi, Fld, Info, Sec, Tick } from '../../_components/Fld';
 import { runTranslations, saveMembersPage, saveSettings } from '../../actions/settings';
+import { encryptExisting, saveSecurity } from '../../actions/security';
+import { cryptoReady } from '@/lib/crypto';
+import { mfaEmergencyOff } from '@/lib/mfa';
 import { ADMIN, requirePage } from '@/lib/guard';
 import { PageHead } from '@/lib/ui';
 import type { Settings } from '@/lib/types';
 import { DEFAULT_MODEL, keyStatus } from '@/lib/chat/llm';
-import { emailConfigured, smsConfigured } from '@/lib/notify/send';
+import { emailConfigured, resendConfigured, smsConfigured } from '@/lib/notify/send';
 
 export const metadata: Metadata = { title: 'সেটিংস' };
 const SKINS = [['mango', 'আমপাতা', 'Mango green', '#0e5a43', '#e8b44a'], ['river', 'নদী', 'River blue', '#0b5cad', '#5ac8fa'], ['dusk', 'সন্ধ্যা', 'Dusk purple', '#4b3fb5', '#f0a6ca'], ['harvest', 'হেমন্ত', 'Harvest brown', '#9a4a0b', '#f2c14e']];
@@ -116,6 +119,19 @@ export default async function SettingsPage() {
         <Submit>সেটিংস সংরক্ষণ করুন</Submit>
       </ActionForm>
 
+      <ActionForm action={saveSecurity} className="card" style={{ maxWidth: 960, marginTop: 16 }}>
+        <Sec first id="set-security" bn="নিরাপত্তা" en="Security" info="অ্যাডমিন লগইনের দুই-ধাপ যাচাই এবং সংবেদনশীল তথ্যের এনক্রিপশন। সাধারণ সদস্য ও কমিটির লগইনে এর কোনো প্রভাব নেই, তারা আগের মতোই ইমেইল ও পাসওয়ার্ড দিয়ে ঢোকেন। (আগে SQL 009 চালাতে হবে।)" />
+        <Tick name="admin_mfa" defaultChecked={(s.admin_mfa ?? true) as boolean} bn="অ্যাডমিন লগইনে দুই-ধাপ (OTP) চালু রাখুন" en="Require 2-step login for admins" info="চালু থাকলে অ্যাডমিন পাসওয়ার্ডের পর অথেনটিকেটর অ্যাপের ৬ সংখ্যার কোড দেন। টিক তুলে সংরক্ষণ করলে OTP বন্ধ হয়ে যায়, তখন শুধু ইমেইল ও পাসওয়ার্ড লাগে। সুরক্ষার জন্য চালু রাখাই ভালো।" />
+        {mfaEmergencyOff() && <div className="notice warn">সার্ভারের .env এ ADMIN_MFA=off দেওয়া আছে, তাই ওপরের সেটিং যাই হোক OTP এখন বন্ধ। কাজ শেষে ওই লাইনটি মুছে দিন।</div>}
+        <Submit>সংরক্ষণ করুন (Save)</Submit>
+      </ActionForm>
+      <ActionForm action={encryptExisting} className="card" style={{ maxWidth: 960, marginTop: 16 }}>
+        <h2 className="h2" style={{ marginTop: 0 }}><Bi bn="তথ্য এনক্রিপশন" en="Data encryption" /></h2>
+        <p className="muted small">সদস্য ও আবেদনের এনআইডি, ঠিকানা, পিতা-মাতার নাম ও নমিনির নাম AES-256 দিয়ে এনক্রিপ্ট হয়ে ডেটাবেসে জমা হয়। কী (DATA_ENCRYPTION_KEY) থাকে শুধু সার্ভারের পরিবেশে, ডেটাবেসে নয়, তাই ডেটাবেস চুরি হলেও এই ঘরগুলো পড়া যায় না। কী হারালে এই তথ্য আর ফেরানো যাবে না, তাই কী নিরাপদ জায়গায় আলাদা করে রেখে দিন।</p>
+        <div className={`notice ${cryptoReady() ? 'ok' : ''}`}>{cryptoReady() ? '✅ এনক্রিপশন কী বসানো আছে, নতুন তথ্য এনক্রিপ্টেড হয়ে জমা হচ্ছে।' : '❌ এনক্রিপশন কী বসানো নেই। npm run gen-key চালিয়ে কী বানান, DATA_ENCRYPTION_KEY এ বসান, সার্ভার আবার চালু করুন।'}</div>
+        <Submit className="btn" pendingText="এনক্রিপ্ট হচ্ছে...">আগের জমা তথ্য এখনই এনক্রিপ্ট করুন (Encrypt existing data)</Submit>
+        <p className="muted small" style={{ margin: '8px 0 0' }}>একবার চালালেই হয়। বারবার চালালেও ক্ষতি নেই, যেগুলো আগেই এনক্রিপ্টেড সেগুলো বাদ যায়।</p>
+      </ActionForm>
       <ActionForm action={saveMembersPage} className="card" style={{ maxWidth: 960, marginTop: 16 }}>
         <Sec first id="set-members" bn="ওয়েবসাইটের সদস্য পাতা" en="Public members page" info="ওয়েবসাইটের /members পাতায় সদস্যদের কার্ড দেখায়; কার্ডে চাপলে পপআপে বিস্তারিত আসে। ফোন, এনআইডি, ঠিকানা ও ইমেইল কখনোই প্রকাশ হয় না। (আগে SQL 008 চালাতে হবে।)" />
         <Tick name="members_page_on" defaultChecked={(s.members_page_on ?? true) as boolean} bn="সদস্য পাতা চালু রাখুন" en="Show members page" info="বন্ধ করলে /members পাতা আর খুলবে না এবং কার্ডগুলো লুকিয়ে যাবে।" />

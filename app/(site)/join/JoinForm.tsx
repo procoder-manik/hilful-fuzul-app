@@ -40,11 +40,11 @@ export function JoinForm({ fee, payList, payInfo }: { fee: number; payList: PayM
       <h3 className="h2">{t('লগইনের তথ্য', 'Login details')}</h3>
       <div className="grid g2" style={{ gap: '0 12px' }}>
         <label className="f"><span>{t('মোবাইল নম্বর *', 'Mobile number *')}</span><input name="phone" required inputMode="tel" autoComplete="tel" placeholder="01XXXXXXXXX" /></label>
-        <label className="f"><span>{t('ইমেইল (ঐচ্ছিক)', 'Email (optional)')}</span><input name="email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" placeholder="name@email.com" /></label>
+        <label className="f"><span>{t('ইমেইল *', 'Email *')}</span><input name="email" type="email" required inputMode="email" autoComplete="email" autoCapitalize="none" placeholder="name@email.com" /></label>
         <label className="f"><span>{t('পাসওয়ার্ড * (কমপক্ষে ৬ অক্ষর)', 'Password * (at least 6 characters)')}</span><div className="pw"><input name="password" type={show ? 'text' : 'password'} minLength={6} required autoComplete="new-password" /><button type="button" className="pw-t" onClick={() => setShow((v) => !v)}>{show ? t('লুকান', 'Hide') : t('দেখান', 'Show')}</button></div></label>
         <label className="f"><span>{t('পাসওয়ার্ড আবার লিখুন *', 'Repeat password *')}</span><input name="password2" type={show ? 'text' : 'password'} minLength={6} required autoComplete="new-password" /></label>
       </div>
-      <p className="muted small" style={{ marginTop: -4 }}>{t('লগইনে মোবাইল নম্বর বা ইমেইল, যেকোনো একটি দিলেই চলবে। ইমেইল দিলে বিজ্ঞপ্তি ইমেইলেও পাবেন, মোবাইল নম্বরে SMS পাবেন।', 'You can log in with either your mobile number or email. If you give an email you also get notices by email, and by SMS on your mobile number.')}</p>
+      <p className="muted small" style={{ marginTop: -4 }}>{t('আপনার ইমেইল ও পাসওয়ার্ড দিয়েই লগইন করবেন। সব বিজ্ঞপ্তি, যাচাইয়ের কোড ও পাসওয়ার্ড রিসেট এই ইমেইলে আসবে। মোবাইল নম্বর শুধু যোগাযোগের জন্য।', 'You will log in with your email and password. All notices, verification codes and password resets come to this email. Your mobile number is only for contact.')}</p>
 
       <h3 className="h2">{t('সদস্যপদ', 'Membership')}</h3>
       <div className="grid g2" style={{ gap: '0 12px' }}>

@@ -1,22 +1,40 @@
-এই ফোল্ডারে শুধু নতুন বা বদলানো ফাইল আছে (আগের সব ধাপসহ)। একই জায়গায় কপি করে Replace করুন, package.json বদলাবেন না। নতুন SQL লাগবে না।
-তারপর Ctrl + C দিয়ে সার্ভার বন্ধ করে আবার npm run dev।
+এই ফোল্ডারে শুধু নতুন বা বদলানো ফাইল আছে (আগের সব ধাপসহ)। একই জায়গায় কপি করে Replace করুন। এবার package.json ও .env.example ও বদলেছে (শুধু নতুন লাইন যোগ হয়েছে), তাই ওগুলোও Replace করুন, কিন্তু আপনার নিজের .env.local ফাইল বদলাবেন না।
+
+জরুরি ধাপ (ক্রমানুসারে):
+1) Supabase > SQL Editor এ supabase/migrations/009_security_email.sql চালান।
+2) টার্মিনালে npm run gen-key চালিয়ে যে কী পাবেন, .env.local এ DATA_ENCRYPTION_KEY= এর পরে বসান (এবং কীটি আলাদা নিরাপদ জায়গায়ও রেখে দিন)।
+3) Resend এর RESEND_API_KEY ও RESEND_FROM .env.local এ বসান। Vercel এ থাকলে Vercel এর Environment Variables এও একই মান বসিয়ে Redeploy করুন।
+4) Ctrl + C দিয়ে সার্ভার বন্ধ করে আবার npm run dev।
+5) অ্যাডমিন > সেটিংস > নিরাপত্তা থেকে 'আগের জমা তথ্য এখনই এনক্রিপ্ট করুন' বোতাম একবার চাপুন।
 
 README.md
+.env.example
 app/(site)/[slug]/page.tsx
 app/(site)/about/page.tsx
 app/(site)/committee/page.tsx
 app/(site)/contact/ContactSection.tsx
 app/(site)/contact/page.tsx
 app/(site)/events/page.tsx
+app/(site)/forgot/ForgotForms.tsx
+app/(site)/forgot/actions.ts
+app/(site)/forgot/page.tsx
+app/(site)/forgot/reset/page.tsx
 app/(site)/join/JoinForm.tsx
 app/(site)/join/actions.ts
 app/(site)/join/page.tsx
 app/(site)/layout.tsx
 app/(site)/library/page.tsx
+app/(site)/login/LoginForm.tsx
+app/(site)/login/actions.ts
+app/(site)/login/otp/page.tsx
+app/(site)/login/page.tsx
+app/(site)/login/setup-otp/page.tsx
 app/(site)/members/MembersGrid.tsx
 app/(site)/members/page.tsx
 app/(site)/news/page.tsx
 app/(site)/page.tsx
+app/(site)/portal/EmailVerify.tsx
+app/(site)/portal/actions.ts
 app/(site)/portal/form/page.tsx
 app/(site)/portal/page.tsx
 app/(site)/privacy/page.tsx
@@ -67,12 +85,17 @@ app/admin/_components/PaymentForm.tsx
 app/admin/_components/PrintButton.tsx
 app/admin/_components/Sidebar.tsx
 app/admin/actions/events.ts
+app/admin/actions/import.ts
 app/admin/actions/members.ts
 app/admin/actions/pages.ts
 app/admin/actions/sections.ts
+app/admin/actions/security.ts
 app/admin/actions/settings.ts
+app/admin/export/[kind]/route.ts
 app/admin/print/MemberFormDoc.tsx
 app/admin/print/application/[id]/page.tsx
+app/admin/print/loan/[id]/page.tsx
+app/admin/print/member/[id]/page.tsx
 app/globals.css
 app/sitemap.ts
 components/Breadcrumb.tsx
@@ -92,11 +115,25 @@ lib/adminsearch.ts
 lib/blocks.ts
 lib/builtin-content.ts
 lib/builtin.ts
+lib/crypto.ts
+lib/datasets.ts
+lib/emailcode.ts
 lib/eventdesign.ts
+lib/guard.ts
 lib/layoutcfg.ts
+lib/mfa.ts
+lib/notify/send.ts
 lib/public.ts
+lib/ratelimit.ts
 lib/sectionstyle.ts
+lib/settings.ts
 lib/tokens.ts
 lib/types.ts
 lib/ui.tsx
+lib/verifymail.ts
+middleware.ts
+next.config.mjs
+package.json
+scripts/seed.ts
 supabase/migrations/008_public_members.sql
+supabase/migrations/009_security_email.sql

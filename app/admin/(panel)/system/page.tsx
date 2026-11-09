@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { ADMIN, requirePage, ROLE_BN } from '@/lib/guard';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { keyStatus } from '@/lib/chat/llm';
-import { emailConfigured, smsConfigured } from '@/lib/notify/send';
+import { emailConfigured, resendConfigured, smsConfigured } from '@/lib/notify/send';
+import { cryptoReady } from '@/lib/crypto';
 import { mfaRequired } from '@/lib/mfa';
 import { todayBD } from '@/lib/dates';
 import { bn, fd } from '@/lib/format';
@@ -32,20 +33,22 @@ export default async function System({ searchParams }: { searchParams: { log?: s
   ]);
   const roleCount = (r: Role) => (profiles ?? []).filter((p) => p.role === r).length;
   const admins = (profiles ?? []).filter((p) => p.role === 'admin');
-  const noMfa = admins.filter((a) => !users?.users.find((u) => u.id === a.id)?.factors?.some((f) => f.status === 'verified'));
+  const noMfa = admins.filter((a) => !users?.users?.find((u) => u.id === a.id)?.factors?.some((f) => f.status === 'verified'));
   const last = settings.data?.notify_last_run ?? null;
   const daysSince = last ? Math.round((Date.parse(todayBD()) - Date.parse(last)) / 864e5) : null;
   const keys = keyStatus();
+  const mfaOn = await mfaRequired(db);
   const checks: Check[] = [
     { ok: sOk ? 'ok' : 'bad', t: 'ডেটাবেস সংযোগ', d: sOk ? 'Supabase এর সাথে সংযোগ ঠিক আছে' : 'ডেটাবেস পড়া যাচ্ছে না', fix: '.env.local এর Supabase চাবি ও 001_init.sql দেখুন' },
     ...([['002_public_site.sql', m002], ['003_chatbot.sql', m003], ['004_accounts_notifications.sql', m004], ['005_menus_layout.sql', m005], ['006_records_admin.sql', m006]] as [string, boolean][])
       .map(([f, ok]) => ({ ok: ok ? 'ok' : 'bad', t: `SQL: ${f}`, d: ok ? 'চালানো হয়েছে' : 'এখনো চালানো হয়নি', fix: ok ? undefined : 'Supabase > SQL Editor এ ফাইলটি চালান' }) as Check),
     { ok: bucket.error ? 'bad' : 'ok', t: 'ছবি রাখার জায়গা (Storage)', d: bucket.error ? '"media" বাকেট পাওয়া যায়নি' : 'ঠিক আছে', fix: bucket.error ? '001_init.sql এর শেষের Storage অংশ চালান' : undefined },
-    { ok: !mfaRequired() ? 'bad' : noMfa.length ? 'warn' : 'ok', t: 'অ্যাডমিনের OTP', d: !mfaRequired() ? 'ADMIN_MFA=off: OTP বন্ধ আছে!' : noMfa.length ? `${noMfa.length} জন অ্যাডমিন এখনো অথেনটিকেটর অ্যাপ যুক্ত করেননি` : 'সব অ্যাডমিনের OTP চালু', fix: !mfaRequired() ? '.env.local থেকে ADMIN_MFA=off লাইন মুছে সার্ভার আবার চালু করুন' : undefined },
+    { ok: !mfaOn ? 'warn' : noMfa.length ? 'warn' : 'ok', t: 'অ্যাডমিনের OTP', d: !mfaOn ? 'OTP বন্ধ আছে (সেটিংস থেকে বন্ধ করা হয়েছে বা ADMIN_MFA=off)' : noMfa.length ? `${noMfa.length} জন অ্যাডমিন এখনো অথেনটিকেটর অ্যাপ যুক্ত করেননি` : 'সব অ্যাডমিনের OTP চালু', fix: !mfaOn ? 'সেটিংস > নিরাপত্তা থেকে আবার চালু করুন (এবং .env.local এ ADMIN_MFA=off থাকলে মুছুন)' : undefined },
+    { ok: cryptoReady() ? 'ok' : 'bad', t: 'ডেটা এনক্রিপশন (এনআইডি, ঠিকানা, পিতা-মাতা, নমিনি)', d: cryptoReady() ? 'DATA_ENCRYPTION_KEY বসানো আছে, নতুন তথ্য এনক্রিপ্টেড হয়ে জমা হয়' : 'কী বসানো নেই: সংবেদনশীল তথ্য সাধারণ লেখায় জমা হচ্ছে!', fix: cryptoReady() ? undefined : 'npm run gen-key চালিয়ে কী বানান, DATA_ENCRYPTION_KEY এ বসান (সার্ভার আবার চালু), তারপর সেটিংস > নিরাপত্তা থেকে বিদ্যমান তথ্য এনক্রিপ্ট করুন' },
     { ok: daysSince === null ? 'warn' : daysSince > 2 ? 'warn' : 'ok', t: 'দৈনিক বিজ্ঞপ্তি', d: last ? `শেষ চলেছে ${fd(last)}` : 'এখনো একবারও চলেনি', fix: daysSince === null || daysSince > 2 ? 'সার্ভার চালু রাখুন অথবা "বিজ্ঞপ্তি" পাতায় "এখনই চালান" চাপুন' : undefined },
     { ok: (failedNotes ?? 0) > 0 ? 'warn' : 'ok', t: 'বিজ্ঞপ্তি পৌঁছানো (৭ দিন)', d: (failedNotes ?? 0) > 0 ? `${failedNotes}টি ইমেইল/SMS ব্যর্থ হয়েছে` : 'কোনো ব্যর্থতা নেই', fix: (failedNotes ?? 0) > 0 ? '"বিজ্ঞপ্তি" পাতায় কারণ দেখুন, SMTP/SMS এর তথ্য যাচাই করুন' : undefined },
-    { ok: emailConfigured() ? 'ok' : 'warn', t: 'ইমেইল (SMTP)', d: emailConfigured() ? 'বসানো আছে' : 'বসানো নেই: ইমেইলে বিজ্ঞপ্তি যাবে না', fix: emailConfigured() ? undefined : '.env.local এ SMTP_ এর ঘরগুলো দিন' },
-    { ok: smsConfigured() ? 'ok' : 'warn', t: 'SMS গেটওয়ে', d: smsConfigured() ? 'বসানো আছে' : 'বসানো নেই: SMS যাবে না', fix: smsConfigured() ? undefined : '.env.local এ SMS_URL দিন' },
+    { ok: emailConfigured() ? 'ok' : 'bad', t: 'ইমেইল (Resend বা SMTP)', d: emailConfigured() ? (resendConfigured() ? 'Resend বসানো আছে' : 'SMTP বসানো আছে') : 'বসানো নেই: ইমেইলে বিজ্ঞপ্তি, যাচাইয়ের কোড ও পাসওয়ার্ড রিসেট যাবে না', fix: emailConfigured() ? undefined : 'RESEND_API_KEY ও RESEND_FROM বসান (বা SMTP_ এর ঘরগুলো)' },
+    { ok: 'ok', t: 'SMS গেটওয়ে (ঐচ্ছিক)', d: smsConfigured() ? 'বসানো আছে' : 'বসানো নেই: SMS যাবে না, বিজ্ঞপ্তি অ্যাপ ও ইমেইলে যাবে', fix: undefined },
     { ok: keys.gemini || keys.openrouter ? 'ok' : 'warn', t: 'এআই চাবি (চ্যাটবট ও ইংরেজি অনুবাদ)', d: keys.gemini || keys.openrouter ? `${keys.gemini ? 'Gemini ' : ''}${keys.openrouter ? 'OpenRouter' : ''}` : 'নেই: চ্যাটবট সাধারণ নিয়মে চলবে, অনুবাদ হবে না' },
     { ok: process.env.NEXT_PUBLIC_SITE_URL?.startsWith('https://') ? 'ok' : 'warn', t: 'ওয়েবসাইটের ঠিকানা', d: process.env.NEXT_PUBLIC_SITE_URL ?? 'দেওয়া নেই', fix: process.env.NEXT_PUBLIC_SITE_URL?.startsWith('https://') ? undefined : 'অনলাইনে চালু করলে NEXT_PUBLIC_SITE_URL এ https:// ঠিকানা দিন (গুগলে খোঁজার জন্য জরুরি)' },
   ];
@@ -54,7 +57,7 @@ export default async function System({ searchParams }: { searchParams: { log?: s
     db.from('activity_log').select('id, actor, action, created_at').order('created_at', { ascending: false }).limit(80),
     m006 ? db.from('login_events').select('*').order('created_at', { ascending: false }).limit(80) : Promise.resolve({ data: [] as Record<string, unknown>[] }),
   ]);
-  const nameOf = new Map((profiles ?? []).map((p) => [p.id, p.full_name || users?.users.find((u) => u.id === p.id)?.email || 'অজানা']));
+  const nameOf = new Map((profiles ?? []).map((p) => [p.id, p.full_name || users?.users?.find((u) => u.id === p.id)?.email || 'অজানা']));
   const failed24 = (logins.data ?? []).filter((l) => !l.ok && Date.parse(String(l.created_at)) > Date.now() - 864e5).length;
   const icon = { ok: '✅', warn: '⚠️', bad: '❌' };
   return (

@@ -9,7 +9,9 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "seed": "tsx scripts/seed.ts",
-    "reset-mfa": "tsx scripts/reset-mfa.ts"
+    "reset-mfa": "tsx scripts/reset-mfa.ts",
+    "gen-key": "node -e \"console.log(require('crypto').randomBytes(32).toString('base64'))\"",
+    "change-email": "tsx scripts/change-admin-email.ts"
   },
   "dependencies": {
     "@supabase/ssr": "0.5.2",

@@ -1,4 +1,5 @@
 import 'server-only';
+import { decRow } from './crypto';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { todayBD } from './dates';
 import { loanStatus } from './ui';
@@ -37,7 +38,7 @@ export const DATASETS: Record<string, Dataset> = {
         fetchAll<{ id: string; total_paid: number; overdue_months: number }>((a, b) => sb.from('v_member_dues').select('id, total_paid, overdue_months').range(a, b)),
       ]);
       const d = new Map(dues.map((v) => [v.id, v]));
-      return rows.filter((m: any) => has(r, m.name, m.phone, m.member_no, m.email)).map((m: any) => ({ ...m, status_bn: STATUS[m.status] ?? m.status, verified: !!m.verified_at, total_paid: Number(d.get(m.id)?.total_paid ?? 0), overdue_months: d.get(m.id)?.overdue_months ?? 0 }))
+      return rows.filter((m: any) => has(r, m.name, m.phone, m.member_no, m.email)).map((m: any) => ({ ...decRow(m), status_bn: STATUS[m.status] ?? m.status, verified: !!m.verified_at, total_paid: Number(d.get(m.id)?.total_paid ?? 0), overdue_months: d.get(m.id)?.overdue_months ?? 0 }))
         .filter((m: any) => !x.due || m.overdue_months > 0);
     },
   },
