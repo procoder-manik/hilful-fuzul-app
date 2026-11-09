@@ -745,3 +745,25 @@ label.f span .en-hint,.chk-t .en-hint,.h2 .en-hint,.lbl .en-hint,.kpi span .en-h
 .wrap .card{border-radius:24px}
 @media (max-width:520px){.pf-hero{padding:18px;border-radius:26px}.pf-id h1{font-size:1.35rem}.pf-av{width:68px;height:68px}}
 .mp-top .mc-av{display:inline-grid}
+
+/* ---------- রসিদ, ইনভয়েস ও ফর্ম: থিমের রঙ ও হিরোর প্যাটার্নে নতুন নকশা ---------- */
+.doc{--dc:var(--acc);--dl:color-mix(in srgb,var(--acc) 38%,#9aa59f);--dt:color-mix(in srgb,var(--acc) 9%,#fff);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.doc .copy{position:relative;border:1.5px solid var(--dc);border-radius:14px;overflow:hidden;background:#fff}
+.doc .copy::before{content:"";position:absolute;inset:0;background:var(--dc);opacity:.075;pointer-events:none;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.4'%3E%3Cpath d='M40 6l9.9 9.9H64v14.1L74 40l-10 9.9V64H49.9L40 74l-9.9-10H16V49.9L6 40l10-9.9V16h14.1z'/%3E%3Ccircle cx='40' cy='40' r='12'/%3E%3C/g%3E%3C/svg%3E") 0 0/80px 80px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.4'%3E%3Cpath d='M40 6l9.9 9.9H64v14.1L74 40l-10 9.9V64H49.9L40 74l-9.9-10H16V49.9L6 40l10-9.9V16h14.1z'/%3E%3Ccircle cx='40' cy='40' r='12'/%3E%3C/g%3E%3C/svg%3E") 0 0/80px 80px}
+.doc .copy>*{position:relative}
+.doc .copy::after{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:linear-gradient(90deg,var(--dc),var(--acc2))}
+.doc .dh{background:linear-gradient(135deg,var(--dt),#fff);border:1px solid var(--dl);border-bottom:2px solid var(--dc);border-radius:12px;padding:10px 12px;margin-top:6px}
+.doc h2{color:var(--dc)}
+.doc .dlogo{border-color:var(--dc);background:#fff}
+.doc table{border-collapse:separate;border-spacing:0;border:1px solid var(--dl);border-radius:10px;overflow:hidden;background:rgba(255,255,255,.82)}
+.doc td,.doc th{border:0;border-bottom:1px solid var(--dl);border-right:1px solid var(--dl)}
+.doc tr>*:last-child{border-right:0}.doc tr:last-child>*{border-bottom:0}
+.doc th{background:var(--dt);color:var(--dc);font-weight:700}
+.doc td:first-child:not([colspan]){background:rgba(255,255,255,.55);font-weight:600}
+.doc tr:nth-child(even) td{background:color-mix(in srgb,var(--acc) 3%,#fff)}
+.doc .tag{border-color:var(--dc);background:var(--dc);color:#fff;border-radius:999px;padding:1px 12px}
+.doc .sigs div{border-top:1px solid var(--dc);color:#333}
+.doc .cut{border-top:1.5px dashed var(--dl);color:#555}
+.doc .ph{border:1.5px solid var(--dc);border-radius:10px;background:rgba(255,255,255,.7)}
+.doc .line{border-bottom:1px dotted var(--dc)}
+.doc b{color:#111}

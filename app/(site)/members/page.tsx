@@ -26,7 +26,7 @@ export default async function MembersPage() {
       <PageTitle title={t('আমাদের সদস্য', 'Our members')} sub={list ? t(`${bn(list.length)} জন নিবন্ধিত সদস্য। কার্ডে চাপলে বিস্তারিত দেখুন।`, `${list.length} registered members. Tap a card to see details.`) : undefined} />
       <section style={{ padding: '20px 0 60px' }}><div className="wrap">
         {list === null
-          ? <div className="notice warn">{t('সদস্য পাতাটি এখনো চালু হয়নি। (অ্যাডমিন: Supabase এ supabase/migrations/008_public_members.sql চালান।)', 'The members page is not set up yet. (Admin: run supabase/migrations/008_public_members.sql in Supabase.)')}</div>
+          ? <div className="notice warn">{t('সদস্যদের তথ্য এই মুহূর্তে আনা যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।', 'Member details cannot be loaded right now. Please try again shortly.')}</div>
           : <MembersGrid list={list} />}
       </div></section>
     </>

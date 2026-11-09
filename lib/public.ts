@@ -1,6 +1,7 @@
 import 'server-only';
 import { cache } from 'react';
 import { publicClient } from './supabase/public';
+import { createAdminClient } from './supabase/admin';
 import { todayBD } from './dates';
 import { translateRows } from './translate';
 import type { PublicStats } from './types';
@@ -45,9 +46,49 @@ export type PublicMember = {
   books_borrowed: number; money_visible: boolean;
 };
 
-/** ওয়েবসাইটের সদস্য পাতা: পাবলিক ভিউ থেকে (ফোন, ঠিকানা, এনআইডি কখনোই নেই)। ভিউ না থাকলে (SQL 008 চালানো হয়নি) null */
+/**
+ * ওয়েবসাইটের সদস্য পাতা। প্রথমে পাবলিক ভিউ (SQL 008) থেকে পড়ে; ভিউ না থাকলে সার্ভার থেকে সরাসরি একই তথ্য হিসাব করে (ফোন, ঠিকানা, এনআইডি, ইমেইল কখনোই নেওয়া হয় না),
+ * তাই SQL চালানো না থাকলেও পাতা কাজ করে। শুধু "লুকানো" ও "টাকার অঙ্ক বন্ধ" সুইচ দুটি SQL 008 এর পরে কাজ করে।
+ */
 export const getPublicMembers = cache(async (): Promise<PublicMember[] | null> => {
-  const { data, error } = await publicClient().from('v_public_members').select('*').order('join_date', { ascending: true }).limit(2000);
-  if (error) return null;
-  return (data ?? []) as PublicMember[];
+  const v = await publicClient().from('v_public_members').select('*').order('join_date', { ascending: true }).limit(2000);
+  if (!v.error) return (v.data ?? []) as PublicMember[];
+  try {
+    const db = createAdminClient();
+    const st = await db.from('settings').select('members_page_on, members_show_money').eq('id', 1).single();
+    const on = st.error ? true : st.data?.members_page_on !== false;
+    const money = st.error ? true : st.data?.members_show_money !== false;
+    if (!on) return [];
+    let mq = await db.from('members').select('id, member_no, name, photo_url, join_date, status, verified_at, monthly_amount, public_hidden').neq('status', 'cancelled').order('join_date').limit(2000);
+    if (mq.error) mq = await db.from('members').select('id, member_no, name, photo_url, join_date, status, verified_at, monthly_amount').neq('status', 'cancelled').order('join_date').limit(2000) as typeof mq;
+    if (mq.error) return null;
+    const [pay, loans, reps, books] = await Promise.all([
+      db.from('payments').select('member_id, amount, type').limit(50000),
+      db.from('loans').select('id, member_id, amount').limit(20000),
+      db.from('loan_repayments').select('loan_id, amount').limit(50000),
+      db.from('book_lendings').select('member_id').not('member_id', 'is', null).limit(50000),
+    ]);
+    const paid = new Map<string, { sum: number; months: number }>();
+    (pay.data ?? []).forEach((p) => { const c = paid.get(p.member_id) ?? { sum: 0, months: 0 }; c.sum += Number(p.amount); if (p.type === 'monthly') c.months++; paid.set(p.member_id, c); });
+    const repaid = new Map<string, number>();
+    (reps.data ?? []).forEach((r) => repaid.set(r.loan_id, (repaid.get(r.loan_id) ?? 0) + Number(r.amount)));
+    const ln = new Map<string, { n: number; total: number; back: number }>();
+    (loans.data ?? []).forEach((l) => { const c = ln.get(l.member_id) ?? { n: 0, total: 0, back: 0 }; c.n++; c.total += Number(l.amount); c.back += repaid.get(l.id) ?? 0; ln.set(l.member_id, c); });
+    const bk = new Map<string, number>();
+    (books.data ?? []).forEach((b) => bk.set(b.member_id as string, (bk.get(b.member_id as string) ?? 0) + 1));
+    const now = new Date();
+    return (mq.data ?? []).filter((m) => !(m as { public_hidden?: boolean }).public_hidden).map((m) => {
+      const j = new Date(m.join_date);
+      const p = paid.get(m.id) ?? { sum: 0, months: 0 };
+      const l = ln.get(m.id) ?? { n: 0, total: 0, back: 0 };
+      return {
+        id: m.id, member_no: m.member_no, name: m.name, photo_url: m.photo_url, join_date: m.join_date, status: m.status, verified: !!m.verified_at,
+        months_since: Math.max(1, (now.getFullYear() - j.getFullYear()) * 12 + now.getMonth() - j.getMonth() + 1),
+        monthly_amount: money ? Number(m.monthly_amount) : null, total_paid: money ? p.sum : null, paid_months: p.months,
+        loan_count: l.n, loan_total: money ? l.total : null, loan_balance: money ? Math.max(l.total - l.back, 0) : null, books_borrowed: bk.get(m.id) ?? 0, money_visible: money,
+      } as PublicMember;
+    });
+  } catch {
+    return null;
+  }
 });

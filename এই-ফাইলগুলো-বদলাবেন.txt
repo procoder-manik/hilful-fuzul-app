@@ -1,6 +1,6 @@
-এই ফোল্ডারে শুধু নতুন বা বদলানো ফাইল আছে। প্রজেক্টে একই জায়গায় কপি করে Replace করুন (package.json বদলাবেন না)।
+এই ফোল্ডারে শুধু নতুন বা বদলানো ফাইল আছে (step8-2 ও step9 এর সব পরিবর্তনসহ, তাই আগের zip আলাদা বসাতে হবে না)। একই জায়গায় কপি করে Replace করুন, package.json বদলাবেন না।
 
-জরুরি: Supabase > SQL Editor এ supabase/migrations/008_public_members.sql চালান (ওয়েবসাইটের সদস্য পাতার জন্য)।
+ঐচ্ছিক: supabase/migrations/008_public_members.sql Supabase এর SQL Editor এ চালালে সদস্য লুকানো ও টাকার অঙ্ক বন্ধের সুইচ কাজ করবে। না চালালেও /members পাতা চলবে।
 তারপর Ctrl + C দিয়ে সার্ভার বন্ধ করে আবার npm run dev।
 
 README.md
