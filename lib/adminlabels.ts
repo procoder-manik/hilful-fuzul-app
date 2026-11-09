@@ -8,7 +8,7 @@ export const EN: Record<string, string> = {
   // সাইডবারের আইটেম
   'ড্যাশবোর্ড': 'Dashboard', 'রিপোর্ট': 'Reports', 'চাঁদা জমা': 'Payments', 'করজে হাসানা': 'Interest-free loans', 'দান': 'Donations', 'সেবার রেকর্ড': 'Service records',
   'সব সদস্য': 'All members', 'নতুন আবেদন': 'New applications', 'স্থগিত ও বকেয়া': 'Frozen & overdue', 'বিজ্ঞপ্তি': 'Notifications',
-  'বই ও ধার': 'Books & lending', 'সেবার তালিকা': 'Services list', 'কমিটি ও টিম': 'Committee & team', 'সংবাদ': 'News', 'অনুষ্ঠান ও কর্মসূচি': 'Events & programmes', 'মেনু': 'Menus', 'হেডার ও ফুটার': 'Header & footer', 'যোগাযোগের তথ্য': 'Contact info',
+  'বই ও ধার': 'Books & lending', 'সেবার তালিকা': 'Services list', 'কমিটি ও টিম': 'Committee & team', 'সংবাদ': 'News', 'অনুষ্ঠান ও কর্মসূচি': 'Events & programmes', 'সেকশন ও পেজ সাজ': 'Sections & page style', 'মেনু': 'Menus', 'হেডার ও ফুটার': 'Header & footer', 'যোগাযোগের তথ্য': 'Contact info',
   'বার্তা': 'Messages', 'চ্যাট লগ': 'Chat log', 'ইমপোর্ট ও ব্যাকআপ': 'Import & backup', 'সাইট হেলথ ও লগ': 'Site health & logs', 'কমিটির অ্যাক্সেস': 'Staff access', 'আমার অ্যাকাউন্ট': 'My account',
   'সেটিংস': 'Settings', 'বের হোন': 'Log out',
   // পাতার শিরোনাম
@@ -50,6 +50,8 @@ export const FIELD: Record<string, [string, string?]> = {
   'লেখা': ['Text', 'টপবারে যে ঘোষণা দেখাবে।'],
   'ফোন ও ইমেইল দেখান': ['Show phone & email', 'টপবারের ডানে "যোগাযোগের তথ্য" পাতার নম্বর ও ইমেইল দেখায়।'],
   // ফুটার
+  'প্যাটার্ন': ['Pattern', 'ফুটারের পেছনে হালকা নকশা, হিরো সেকশনের মতো। না চাইলে "কোনো প্যাটার্ন নয়"।'],
+  'প্যাটার্ন কতটা স্পষ্ট': ['Pattern strength', 'বেশি হলে নকশা গাঢ় দেখাবে।'],
   'নকশা': ['Style', 'ফুটারের সাজানোর ধরন। লাইভ প্রিভিউতে দেখে বেছে নিন।'],
   'আহ্বানের শিরোনাম': ['Call-to-action title', 'ফুটারের ওপরের রঙিন পট্টির বড় লেখা।'],
   'ছোট লেখা': ['Short text', 'শিরোনামের নিচের এক লাইনের বিবরণ।'],

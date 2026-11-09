@@ -147,13 +147,25 @@ export function News({ list }: { list: Post[] }) {
 
 export function JoinCta() {
   const t = getT();
+  const perks: [string, string, string][] = [['coins', t('মাসে মাত্র ৫০ টাকা থেকে', 'From just 50 taka a month'), ''], ['handshake', t('প্রয়োজনে বিনা সুদে ঋণ', 'Interest-free loans when needed'), ''], ['eye', t('প্রতিটি টাকার হিসাব সবার জন্য খোলা', 'Every taka accounted for, openly'), '']];
   return (
     <section className="sec" style={{ paddingTop: 10 }}>
-      <div className="wrap"><div className="card cta">
-        <h2>{t('মাসে ৫০ টাকায় সমাজ বদলের অংশ হোন', 'Be part of changing society for just 50 taka a month')}</h2>
-        <p className="muted">{t('আপনার ছোট সঞ্চয় বিপদে পড়া একজন প্রতিবেশীর বড় ভরসা। সদস্যরা প্রয়োজনে নিজেও বিনা সুদে ঋণ নিতে পারেন।', 'Your small saving can be a big support for a neighbour in trouble. Members can also borrow interest-free when they need to.')}</p>
-        <div className="row" style={{ justifyContent: 'center' }}><Link className="btn pri lg" href="/join">{t('সদস্য ফর্ম পূরণ করুন', 'Register as a member')}</Link><Link className="btn ghost lg" href="/form"><Icon name="print" /> {t('ফর্ম প্রিন্ট করুন', 'Print the form')}</Link></div>
-      </div></div>
+      <div className="wrap">
+        <div className="cta2">
+          <Pattern />
+          <span className="cta2-orb o1" aria-hidden="true" /><span className="cta2-orb o2" aria-hidden="true" />
+          <div className="cta2-in">
+            <span className="cta2-tag"><Icon name="heart" /> {t('আপনিও হোন এই পরিবারের অংশ', 'Become part of our family')}</span>
+            <h2>{t('মাসে ৫০ টাকায় সমাজ বদলের অংশ হোন', 'Be part of changing society for just 50 taka a month')}</h2>
+            <p>{t('আপনার ছোট সঞ্চয় বিপদে পড়া একজন প্রতিবেশীর বড় ভরসা। সদস্যরা প্রয়োজনে নিজেও বিনা সুদে ঋণ নিতে পারেন।', 'Your small saving can be a big support for a neighbour in trouble. Members can also borrow interest-free when they need to.')}</p>
+            <ul className="cta2-perks">{perks.map(([ic, tx]) => <li key={ic}><Icon name={ic} /> {tx}</li>)}</ul>
+            <div className="row" style={{ justifyContent: 'center', marginTop: 8 }}>
+              <Link className="btn cta2-pri lg" href="/join"><Icon name="user" /> {t('সদস্য ফর্ম পূরণ করুন', 'Register as a member')}</Link>
+              <Link className="btn cta2-gh lg" href="/form"><Icon name="print" /> {t('ফর্ম প্রিন্ট করুন', 'Print the form')}</Link>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

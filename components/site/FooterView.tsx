@@ -18,6 +18,7 @@ export function FooterView({ cfg, lang, year, org, menus, contact }: Props) {
   const en = lang === 'en';
   const t = (b: string, e: string) => (en ? e || b : b);
   const style = cfg.bg === 'custom' ? { background: cfg.bgColor, color: cfg.textColor } : undefined;
+  const pat = cfg.pattern && cfg.pattern !== 'none' ? <div className={`sec-pat bnp-${cfg.pattern}`} style={{ opacity: cfg.patternOpacity, color: cfg.bg === 'surface' ? 'var(--acc)' : cfg.bg === 'custom' ? cfg.textColor : '#fff' }} aria-hidden="true" /> : null;
   const links = (list: MenuNode[]) => list.map((n) => <Link key={n.id} href={n.url} target={n.newTab ? '_blank' : undefined}>{n.icon && <span aria-hidden="true">{n.icon} </span>}{n.label}</Link>);
   const col = (title: string, titleEn: string, list: MenuNode[]) => list.length > 0 && <div className="fv-col"><b>{t(title, titleEn)}</b>{links(list)}</div>;
   const youtube = contact.youtube || cfg.youtube;
@@ -64,6 +65,7 @@ export function FooterView({ cfg, lang, year, org, menus, contact }: Props) {
     const inline = [...menus.c1, ...menus.c2, ...menus.c3];
     return (
       <footer className={`foot fv fv-${cfg.bg} fv-centered`} style={style}>
+        {pat}
         <div className="wrap">
           {brand}{about}
           {inline.length > 0 && <nav className="fv-inline" aria-label={t('ফুটার মেনু', 'Footer menu')}>{links(inline)}</nav>}
@@ -76,6 +78,7 @@ export function FooterView({ cfg, lang, year, org, menus, contact }: Props) {
   if (cfg.style === 'minimal') {
     return (
       <footer className={`foot fv fv-${cfg.bg} fv-minimal`} style={style}>
+        {pat}
         <div className="wrap">
           <div className="fv-min-row">
             {brand}
@@ -89,6 +92,7 @@ export function FooterView({ cfg, lang, year, org, menus, contact }: Props) {
   }
   return (
     <footer className={`foot fv fv-${cfg.bg} fv-${cfg.style}`} style={style}>
+      {pat}
       <div className="wrap">
         {cfg.style === 'cta' && (
           <div className="fv-ctaband">

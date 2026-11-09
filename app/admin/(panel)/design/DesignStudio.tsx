@@ -88,6 +88,8 @@ export function FooterStudio({ initial, org, menus, contact, action }: { initial
         <div className="grid g3" style={{ gap: '0 14px' }}>
           <Pick label="ব্যাকগ্রাউন্ড" v={c.bg} set={u('bg')} opts={[['surface', 'সাদা/গাঢ় (থিম অনুযায়ী)'], ['accent', 'থিমের মূল রং'], ['dark', 'গাঢ় সবুজ'], ['custom', 'নিজের রং']]} />
           {c.bg === 'custom' && <><Col label="ব্যাকগ্রাউন্ডের রং" v={c.bgColor} set={u('bgColor')} /><Col label="লেখার রং" v={c.textColor} set={u('textColor')} /></>}
+          <Pick label="প্যাটার্ন" v={c.pattern} set={u('pattern')} opts={[['none', 'কোনো প্যাটার্ন নয়'], ['geo', 'জ্যামিতিক (হিরোর মতো)'], ['dots', 'বিন্দু'], ['stripes', 'কোণাকুণি দাগ'], ['waves', 'ঢেউ'], ['stars', 'তারা']]} />
+          {c.pattern !== 'none' && <Range label="প্যাটার্ন কতটা স্পষ্ট" v={Math.round(c.patternOpacity * 100)} set={(n) => u('patternOpacity')(n / 100)} min={3} max={30} unit="%" />}
           <Pick label="নকশা" v={c.style} set={u('style')} opts={[['columns', 'কলাম (লিংকের কয়েকটি কলাম)'], ['cta', 'ওপরে আহ্বানের পট্টি + কলাম'], ['centered', 'মাঝখানে সাজানো'], ['minimal', 'সাদামাটা এক সারি']]} />
         </div>
         {c.style === 'cta' && (

@@ -822,3 +822,59 @@ label.f span .en-hint,.chk-t .en-hint,.h2 .en-hint,.lbl .en-hint,.kpi span .en-h
 .tabbar a,.tabbar button{min-width:0}
 .tabbar a span,.tabbar button span{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
 .tabbar a,.tabbar button{white-space:nowrap}
+
+/* ---------- সেকশন ও ফুটারের রং/প্যাটার্ন ---------- */
+:root{--muted-base:#5f6d66}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--muted-base:#9aa8a1}}
+:root[data-theme="dark"]{--muted-base:#9aa8a1}
+.secbg,.foot{position:relative;isolation:isolate}
+.secbg{overflow:hidden}
+.sec-pat{position:absolute;inset:0;background:currentColor;pointer-events:none;z-index:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.secbg>*:not(.sec-pat),.foot>*:not(.sec-pat){position:relative;z-index:1}
+.secbg-c :is(.card,.stats,.mem,.hero-card,.kpi,.pm,.svc-i,.lrow,.news){color:var(--text);--muted:var(--muted-base)}
+.secbg-c .sec-h h2{color:inherit}
+.secbg-c .btn.ghost{color:inherit;border-color:currentColor;background:transparent}
+.secbg-deep .btn.pri{background:#fff;color:#13201b}
+.secbg-c a:not(.btn){color:inherit}
+
+/* ---------- পেজের হেডার এলাকা: পথ, শিরোনাম, বিবরণ ও প্যাটার্ন ---------- */
+.page-title.ph2{position:relative;overflow:hidden;isolation:isolate;padding:30px 0 40px;margin-bottom:6px;border-bottom:1px solid var(--line);background:var(--surface2)}
+.page-title.ph2::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--acc),var(--acc2));z-index:1}
+.page-title.ph2 .wrap{position:relative;z-index:1}
+.page-title.ph2 h1{font-size:clamp(1.9rem,4.6vw,2.8rem);margin:6px 0 0;line-height:1.25}
+.page-title.ph2 .lead{max-width:68ch;margin:10px 0 0;font-size:1.05rem;opacity:.86}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:2px 0;font-size:.86rem}
+.crumb{display:inline-flex;align-items:center}
+.crumb i{font-style:normal;margin:0 8px;opacity:.55}
+.crumb a{text-decoration:none;color:inherit;opacity:.8;font-weight:600}.crumb a:hover{opacity:1;text-decoration:underline}
+.crumb>span[aria-current]{font-weight:700;opacity:.95}
+/* সদস্য হওয়ার আহ্বান */
+.cta2{position:relative;overflow:hidden;isolation:isolate;border-radius:36px;padding:54px 24px;text-align:center;color:#fff;background:linear-gradient(135deg,#0a4632 0%,var(--acc) 48%,#1b8a68 100%);box-shadow:0 24px 60px rgba(14,90,67,.28)}
+.cta2 .hero-pattern{color:#fff;opacity:.09;z-index:0}
+.cta2-orb{position:absolute;border-radius:50%;z-index:0;filter:blur(2px)}
+.cta2-orb.o1{width:260px;height:260px;right:-70px;top:-90px;background:radial-gradient(circle,rgba(232,180,74,.55),transparent 68%)}
+.cta2-orb.o2{width:300px;height:300px;left:-100px;bottom:-140px;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 68%)}
+.cta2-in{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.cta2-tag{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:5px 16px;font-weight:600;font-size:.88rem}
+.cta2 h2{color:#fff;font-size:clamp(1.7rem,4vw,2.6rem);margin:16px 0 10px;line-height:1.25}
+.cta2 p{max-width:56ch;margin:0 auto 18px;opacity:.92;font-size:1.05rem}
+.cta2-perks{list-style:none;padding:0;margin:0 0 18px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.cta2-perks li{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.12);border-radius:999px;padding:7px 14px;font-size:.9rem;font-weight:500}
+.cta2-perks .ic{color:var(--acc2)}
+.btn.cta2-pri{background:var(--acc2);color:#2a1d00;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.btn.cta2-pri:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.btn.cta2-gh{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.4)}
+@media (max-width:520px){.cta2{padding:40px 18px;border-radius:28px}}
+
+/* ---------- অ্যাডমিন: সেকশন ও পেজ সাজ ---------- */
+.ss-list{display:grid;gap:12px;margin-top:12px}
+.ss-row{border:1px solid var(--line);border-radius:20px;padding:14px;background:var(--surface2)}
+.ss-row.off{opacity:.55}
+.ss-head{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.ss-mv{display:flex;flex-direction:column;gap:3px}
+.ss-mv button{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;width:30px;height:24px;cursor:pointer;color:var(--text)}
+.ss-mv button:disabled{opacity:.35;cursor:default}
+.ss-sw{position:relative;overflow:hidden;isolation:isolate;border-radius:14px;min-height:54px;display:flex;align-items:center;padding:12px 16px;background:var(--surface);border:1px dashed var(--line);margin-bottom:8px}
+.ss-sw b{position:relative;z-index:1}
+.ss-ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0 12px;margin-top:6px}
+.page-title.ph2 .lead{color:inherit}

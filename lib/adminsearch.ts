@@ -23,6 +23,7 @@ export const SEARCH_ITEMS: SearchItem[] = [
   { t: 'অনুষ্ঠান ও কর্মসূচি', en: 'Events & programmes', href: '/admin/events', k: 'event আসন্ন upcoming অনুষ্ঠান সভা সেমিনার বিগত কর্মসূচি past', roles: E, group: 'পাতা' },
   { t: 'পপআপ (হোমপেজে অনুষ্ঠানের পপআপ)', en: 'Event popup', href: '/admin/events#popup', k: 'popup পপ আপ pop-up banner ব্যানার টেমপ্লেট template', roles: E, group: 'সেটিং' },
   { t: 'ব্যানারের রং ও প্যাটার্ন', en: 'Banner colours & patterns', href: '/admin/events', k: 'color colour রং pattern প্যাটার্ন হালকা গাঢ় light deep ডিজাইন', roles: E, group: 'সেটিং' },
+  { t: 'সেকশন ও পেজ সাজ (রং, প্যাটার্ন, ক্রম)', en: 'Sections & page style', href: '/admin/sections', k: 'section সেকশন homepage হোমপেজ color রং pattern প্যাটার্ন page header পেজ হেডার breadcrumb ক্রম order cta', roles: E, group: 'পাতা' },
   { t: 'সেবার তালিকা', en: 'Services list', href: '/admin/content/programs', k: 'program সেবা কার্যক্রম', roles: E, group: 'পাতা' },
   { t: 'কমিটি ও টিম', en: 'Committee & team', href: '/admin/content/committee', k: 'committee কমিটি সভাপতি সম্পাদক', roles: E, group: 'পাতা' },
   { t: 'সংবাদ', en: 'News', href: '/admin/content/posts', k: 'news post সংবাদ খবর', roles: E, group: 'পাতা' },

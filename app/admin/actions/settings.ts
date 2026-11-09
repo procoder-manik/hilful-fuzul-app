@@ -30,11 +30,12 @@ export async function saveSettings(_: ActionState, f: FormData): Promise<ActionS
     if (freeze < 1 || freeze > 12) return { error: 'ফ্রিজের মাস ১ থেকে ১২ এর মধ্যে দিন' };
     if (str(f, 'chat_notes').length > 8000) return { error: 'চ্যাটবটের অতিরিক্ত তথ্য ৮০০০ অক্ষরের মধ্যে রাখুন' };
     const logo_url = await uploadMedia(supabase, f.get('logo'), 'branding');
+    const { data: cur } = await supabase.from('settings').select('theme').eq('id', 1).single();     // পেজ-হেডারের রঙের মতো অন্য সেটিং যেন মুছে না যায়
     const { error } = await supabase.from('settings').update({
       org_name: org, short_name: opt(f, 'short_name'), tagline: opt(f, 'tagline'), established: opt(f, 'established'),
       address: opt(f, 'address'), phone: opt(f, 'phone'), email: opt(f, 'email'), whatsapp: opt(f, 'whatsapp'), facebook: opt(f, 'facebook'),
       reg_fee: num(f, 'reg_fee'), due_day: due, freeze_months: freeze, show_borrower_names: !!f.get('show_borrower_names'),
-      theme: { skin: str(f, 'skin') || 'mango' }, hero: { title: str(f, 'hero_title'), title2: str(f, 'hero_title2'), sub: str(f, 'hero_sub') }, ticker: lines(f, 'ticker'), member_terms: lines(f, 'member_terms'), loan_terms: lines(f, 'loan_terms'),
+      theme: { ...((cur?.theme as Record<string, unknown> | null) ?? {}), skin: str(f, 'skin') || 'mango' }, hero: { title: str(f, 'hero_title'), title2: str(f, 'hero_title2'), sub: str(f, 'hero_sub') }, ticker: lines(f, 'ticker'), member_terms: lines(f, 'member_terms'), loan_terms: lines(f, 'loan_terms'),
       chat_enabled: !!f.get('chat_enabled'), chat_provider: str(f, 'chat_provider') === 'openrouter' ? 'openrouter' : 'gemini', chat_model: opt(f, 'chat_model'), chat_notes: opt(f, 'chat_notes'),
       pay_methods: payMethods(f), notify_email: !!f.get('notify_email'), notify_sms: !!f.get('notify_sms'),
       pay_info: opt(f, 'pay_info'), quran_info: opt(f, 'quran_info'), updated_at: new Date().toISOString(),

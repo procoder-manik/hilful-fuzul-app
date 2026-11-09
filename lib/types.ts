@@ -5,7 +5,7 @@ export type Settings = {
   id: number; org_name: string; short_name: string | null; tagline: string | null; established: string | null;
   address: string | null; phone: string | null; email: string | null; whatsapp: string | null; facebook: string | null;
   logo_url: string | null; reg_fee: number; due_day: number; freeze_months: number; show_borrower_names: boolean; members_page_on?: boolean; members_show_money?: boolean;
-  theme: { skin?: string }; home_sections: { k: string; on: boolean }[]; hero: Record<string, string>;
+  theme: { skin?: string; pagehead?: { bg?: string; pat?: string; op?: number } }; home_sections: { k: string; on: boolean; bg?: string; pat?: string; op?: number }[]; hero: Record<string, string>;
   ticker: string[]; member_terms: string[]; loan_terms: string[]; pay_info: string | null; quran_info: string | null;
   phone2?: string | null; youtube?: string | null; map_url?: string | null; office_hours?: string | null;
   header_cfg: Record<string, unknown>; footer_cfg: Record<string, unknown>;

@@ -5,10 +5,10 @@ import { Committee, Events, Hero, JoinCta, Ledger, Library, News, Qard, Services
 import { getBooks, getCommittee, getDonations, getEvents, getLoans, getMonthly, getPosts, getPrograms, getStats, upcoming } from '@/lib/public';
 import { getSiteSettings } from '@/lib/settings';
 import { graph } from '@/lib/schema';
+import { SecWrap } from '@/components/SecWrap';
+import { DEFAULT_ORDER } from '@/lib/sectionstyle';
 
 export const dynamic = 'force-dynamic';
-
-const DEFAULT_ORDER = ['hero', 'stats', 'ledger', 'events', 'services', 'qard', 'library', 'committee', 'news', 'cta'];
 
 export default async function Home() {
   const [s, st, monthly, loans, donations, programs, committee, posts, books, events] = await Promise.all([
@@ -17,7 +17,7 @@ export default async function Home() {
   const up = upcoming(events);
   const popup = up.find((e) => e.show_popup);
   const heroEvent = up.find((e) => e.show_in_hero) ?? up[0];
-  const order = s.home_sections?.length ? s.home_sections.filter((x) => x.on).map((x) => x.k) : DEFAULT_ORDER;
+  const cfg = s.home_sections?.length ? s.home_sections.filter((x) => x.on) : DEFAULT_ORDER.map((k) => ({ k, on: true } as { k: string; on: boolean; bg?: string; pat?: string; op?: number }));
   const P: Record<string, React.ReactNode> = {
     hero: <Hero s={s} st={st} monthly={monthly} next={heroEvent} />,
     stats: <Stats st={st} />,
@@ -33,7 +33,7 @@ export default async function Home() {
   return (
     <>
       <JsonLd data={graph(s)} />
-      {order.map((k) => <div key={k}>{P[k]}</div>)}
+      {cfg.filter((x) => P[x.k]).map((x) => <SecWrap key={x.k} st={x as never}><div>{P[x.k]}</div></SecWrap>)}
       {popup && <EventPopup id={popup.id} outcome={popup.outcome}><EventBanner e={popup} /></EventPopup>}
     </>
   );

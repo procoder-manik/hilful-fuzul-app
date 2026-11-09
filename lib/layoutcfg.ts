@@ -20,6 +20,7 @@ export type FooterCfg = {
   col1Title: string; col1TitleEn: string; col2Title: string; col2TitleEn: string; col3Title: string; col3TitleEn: string;
   showContact: boolean; showSocial: boolean; youtube: string; showLang: boolean;
   showBottomLinks: boolean; copyright: string; copyrightEn: string;
+  pattern: 'none' | 'geo' | 'dots' | 'stripes' | 'waves' | 'stars'; patternOpacity: number;
 };
 
 export const HEADER_DEFAULT: HeaderCfg = {
@@ -42,6 +43,7 @@ export const FOOTER_DEFAULT: FooterCfg = {
   col1Title: 'সংগঠন', col1TitleEn: 'Organisation', col2Title: 'সেবা', col2TitleEn: 'Services', col3Title: 'আরও', col3TitleEn: 'More',
   showContact: true, showSocial: true, youtube: '', showLang: true,
   showBottomLinks: true, copyright: '', copyrightEn: '',
+  pattern: 'none', patternOpacity: 0.1,
 };
 
 const clamp = (n: unknown, lo: number, hi: number, d: number) => { const x = Number(n); return Number.isFinite(x) ? Math.min(hi, Math.max(lo, Math.round(x))) : d; };
@@ -76,6 +78,7 @@ export function footerCfg(raw: unknown): FooterCfg {
     extraText: str(r.extraText, d.extraText, 300), extraTextEn: str(r.extraTextEn, d.extraTextEn, 300),
     bg: pick(r.bg, ['surface', 'accent', 'dark', 'custom'], d.bg), bgColor: color(r.bgColor, d.bgColor), textColor: color(r.textColor, d.textColor),
     showLogo: bool(r.showLogo, d.showLogo), showAbout: bool(r.showAbout, d.showAbout), aboutText: str(r.aboutText, d.aboutText, 400), aboutTextEn: str(r.aboutTextEn, d.aboutTextEn, 400),
+    pattern: pick(r.pattern, ['none', 'geo', 'dots', 'stripes', 'waves', 'stars'], d.pattern), patternOpacity: Math.min(0.4, Math.max(0.03, Number.isFinite(Number(r.patternOpacity)) ? Number(r.patternOpacity) : d.patternOpacity)),
     columns: ([2, 3, 4].includes(Number(r.columns)) ? Number(r.columns) : d.columns) as 2 | 3 | 4,
     col1Title: str(r.col1Title, d.col1Title, 40), col1TitleEn: str(r.col1TitleEn, d.col1TitleEn, 40), col2Title: str(r.col2Title, d.col2Title, 40), col2TitleEn: str(r.col2TitleEn, d.col2TitleEn, 40),
     col3Title: str(r.col3Title, d.col3Title, 40), col3TitleEn: str(r.col3TitleEn, d.col3TitleEn, 40),
