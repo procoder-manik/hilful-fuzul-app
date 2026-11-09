@@ -45,7 +45,7 @@ export default async function Menus({ searchParams }: { searchParams: { loc?: st
       <div className="seg wrapable" style={{ marginBottom: 16 }}>{LOCATIONS.map(([k, n]) => <Link key={k} href={`/admin/menus?loc=${k}`} className={loc === k ? 'on' : ''}>{n}</Link>)}</div>
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 360px', alignItems: 'start' }}>
         <div className="card">
-          <div className="row" style={{ justifyContent: 'space-between' }}><b>{LOCATIONS.find(([k]) => k === loc)![1]}</b><Link className="btn pri sm" href={`/admin/menus?loc=${loc}&new=1`}>+ নতুন আইটেম</Link></div>
+          <div className="row" style={{ justifyContent: 'space-between' }}><b>{LOCATIONS.find(([k]) => k === loc)![1]}</b><Link className="btn pri sm" href={`/admin/menus?loc=${loc}&new=1`}>+ নতুন আইটেম (New item)</Link></div>
           {top.length === 0 && <p className="muted">এই মেনুতে এখনো কোনো আইটেম নেই। ডানের ফর্ম থেকে যোগ করুন।</p>}
           {top.map((r) => <div key={r.id}>{item(r)}{kids(r.id).map((c) => item(c, true))}</div>)}
           <p className="muted small" style={{ marginBottom: 0 }}>ওপর-নিচ বোতামে ক্রম বদলান। কোনো আইটেমের ভেতরে "+ ভেতরে" দিয়ে আইটেম যোগ করলে সেটি ড্রপডাউন হয়ে যায়; "মেগা মেনু" চালু করলে বড় প্যানেল হয়।</p>
@@ -53,17 +53,17 @@ export default async function Menus({ searchParams }: { searchParams: { loc?: st
         {(editing || adding) ? (
           <ActionForm action={saveMenuItem.bind(null, editing?.id ?? null, loc)} className="card" key={editing?.id ?? 'new'}>
             <div className="row" style={{ justifyContent: 'space-between' }}><b>{editing ? 'আইটেম সম্পাদনা' : 'নতুন আইটেম'}</b><Link className="btn sm" href={`/admin/menus?loc=${loc}`}>বন্ধ</Link></div>
-            <label className="f" style={{ marginTop: 10 }}><span>নাম (বাংলা) *</span><input name="label" defaultValue={editing?.label ?? ''} required maxLength={60} /></label>
+            <label className="f" style={{ marginTop: 10 }}><span>নাম (বাংলা) *<small className="en-hint">(Name in Bangla)</small></span><input name="label" defaultValue={editing?.label ?? ''} required maxLength={60} /></label>
             <label className="f"><span>নাম (English, ঐচ্ছিক)</span><input name="label_en" defaultValue={editing?.label_en ?? ''} maxLength={60} /></label>
-            <label className="f"><span>লিংক (পেজের ঠিকানা বা https://...)</span><input name="url" list="pages" defaultValue={editing?.url ?? ''} placeholder="/about" /></label>
+            <label className="f"><span>লিংক (পেজের ঠিকানা বা https://...)<small className="en-hint">(Link)</small></span><input name="url" list="pages" defaultValue={editing?.url ?? ''} placeholder="/about" /></label>
             <datalist id="pages">{PAGES.map(([u, n]) => <option key={u} value={u}>{n}</option>)}</datalist>
-            <label className="f"><span>কোনটির ভেতরে থাকবে (ড্রপডাউনের জন্য)</span>
+            <label className="f"><span>কোনটির ভেতরে থাকবে (ড্রপডাউনের জন্য)<small className="en-hint">(Parent item, for dropdown)</small></span>
               <select name="parent_id" defaultValue={parentDefault}><option value="">কোনোটির ভেতরে নয় (মূল আইটেম)</option>{top.filter((r) => r.id !== editing?.id).map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}</select></label>
             <div className="grid g2" style={{ gap: '0 10px' }}>
-              <label className="f"><span>আইকন (ইমোজি)</span><input name="icon" defaultValue={editing?.icon ?? ''} maxLength={4} placeholder="📚" /></label>
+              <label className="f"><span>আইকন (ইমোজি)<small className="en-hint">(Icon)</small></span><input name="icon" defaultValue={editing?.icon ?? ''} maxLength={4} placeholder="📚" /></label>
               <div />
             </div>
-            <label className="f"><span>ছোট বিবরণ (ড্রপডাউন/মেগা মেনুর ভেতরে দেখায়)</span><input name="descr" defaultValue={editing?.descr ?? ''} maxLength={120} /></label>
+            <label className="f"><span>ছোট বিবরণ (ড্রপডাউন/মেগা মেনুর ভেতরে দেখায়)<small className="en-hint">(Short description)</small></span><input name="descr" defaultValue={editing?.descr ?? ''} maxLength={120} /></label>
             <label className="f"><span>ছোট বিবরণ (English)</span><input name="descr_en" defaultValue={editing?.descr_en ?? ''} maxLength={120} /></label>
             <label className="chk"><input type="checkbox" name="visible" defaultChecked={editing?.visible ?? true} /> <span>মেনুতে দেখান</span></label>
             <label className="chk"><input type="checkbox" name="new_tab" defaultChecked={editing?.new_tab ?? false} /> <span>নতুন ট্যাবে খুলুন</span></label>
@@ -73,21 +73,21 @@ export default async function Menus({ searchParams }: { searchParams: { loc?: st
                 <label className="chk"><input type="checkbox" name="is_mega" defaultChecked={editing?.is_mega ?? false} /> <span>এই আইটেমকে মেগা মেনু করুন (ভেতরের আইটেমগুলো বাঁয়ে, ডানে নিচের ব্লক)</span></label>
                 {[1, 2].map((i) => { const b = blocks[i - 1]; return (
                   <fieldset key={i} className="mfs"><legend>ব্লক {i}</legend>
-                    <label className="f"><span>কী দেখাবে</span><select name={`b${i}_type`} defaultValue={b?.type ?? ''}><option value="">কিছু না</option><option value="books">নতুন বই</option><option value="events">আসন্ন অনুষ্ঠান</option><option value="news">সাম্প্রতিক সংবাদ</option><option value="card">নিজের কার্ড (নতুন ফিচার, ঘোষণা)</option></select></label>
+                    <label className="f"><span>কী দেখাবে<small className="en-hint">(What to show)</small></span><select name={`b${i}_type`} defaultValue={b?.type ?? ''}><option value="">কিছু না</option><option value="books">নতুন বই</option><option value="events">আসন্ন অনুষ্ঠান</option><option value="news">সাম্প্রতিক সংবাদ</option><option value="card">নিজের কার্ড (নতুন ফিচার, ঘোষণা)</option></select></label>
                     <div className="grid g2" style={{ gap: '0 8px' }}>
-                      <label className="f"><span>শিরোনাম</span><input name={`b${i}_title`} defaultValue={b?.title ?? ''} /></label>
+                      <label className="f"><span>শিরোনাম<small className="en-hint">(Title)</small></span><input name={`b${i}_title`} defaultValue={b?.title ?? ''} /></label>
                       <label className="f"><span>Title (English)</span><input name={`b${i}_title_en`} defaultValue={b?.title_en ?? ''} /></label>
-                      <label className="f"><span>কয়টি দেখাবে (১-৬)</span><input name={`b${i}_count`} type="number" min={1} max={6} defaultValue={b?.count ?? 3} /></label>
+                      <label className="f"><span>কয়টি দেখাবে (১-৬)<small className="en-hint">(How many to show)</small></span><input name={`b${i}_count`} type="number" min={1} max={6} defaultValue={b?.count ?? 3} /></label>
                       <div />
                     </div>
                     <p className="muted small" style={{ margin: '0 0 6px' }}>নিচের ঘরগুলো শুধু "নিজের কার্ড" এর জন্য:</p>
-                    <label className="f"><span>লেখা</span><textarea name={`b${i}_text`} rows={2} defaultValue={b?.text ?? ''} /></label>
+                    <label className="f"><span>লেখা<small className="en-hint">(Text)</small></span><textarea name={`b${i}_text`} rows={2} defaultValue={b?.text ?? ''} /></label>
                     <label className="f"><span>Text (English)</span><textarea name={`b${i}_text_en`} rows={2} defaultValue={b?.text_en ?? ''} /></label>
                     <div className="grid g2" style={{ gap: '0 8px' }}>
-                      <label className="f"><span>বাটনের লেখা</span><input name={`b${i}_cta`} defaultValue={b?.cta ?? ''} /></label>
+                      <label className="f"><span>বাটনের লেখা<small className="en-hint">(Button text)</small></span><input name={`b${i}_cta`} defaultValue={b?.cta ?? ''} /></label>
                       <label className="f"><span>Button (English)</span><input name={`b${i}_cta_en`} defaultValue={b?.cta_en ?? ''} /></label>
                     </div>
-                    <label className="f"><span>বাটনের লিংক</span><input name={`b${i}_href`} list="pages" defaultValue={b?.href ?? ''} /></label>
+                    <label className="f"><span>বাটনের লিংক<small className="en-hint">(Button link)</small></span><input name={`b${i}_href`} list="pages" defaultValue={b?.href ?? ''} /></label>
                     <label className="f"><span>ব্যাকগ্রাউন্ড ছবি {b?.image ? '(বদলাতে চাইলে নতুন দিন)' : ''}</span><input name={`b${i}_image`} type="file" accept="image/jpeg,image/png,image/webp" /><input type="hidden" name={`b${i}_image_old`} value={b?.image ?? ''} /></label>
                   </fieldset>); })}
               </details>

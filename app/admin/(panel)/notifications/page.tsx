@@ -46,21 +46,21 @@ export default async function Notifications() {
         <ActionForm action={runNow} className="card">
           <b>এখনই যাচাই চালান</b>
           <p className="muted small">সব সদস্যের বকেয়া ও স্থগিতের সময় দেখে দরকারি বিজ্ঞপ্তি পাঠায়। একই বিজ্ঞপ্তি কখনো দুইবার যায় না, তাই যতবার ইচ্ছা চালানো যায়।</p>
-          <Submit pendingText="যাচাই হচ্ছে...">এখনই চালান</Submit>
+          <Submit pendingText="যাচাই হচ্ছে...">এখনই চালান (Run now)</Submit>
         </ActionForm>
         <ActionForm action={testSend} className="card">
           <b>পরীক্ষামূলক বার্তা</b>
           <div className="grid g2" style={{ gap: '0 10px', marginTop: 8 }}>
-            <label className="f"><span>ইমেইল বা মোবাইল নম্বর</span><input name="to" required autoCapitalize="none" /></label>
-            <label className="f"><span>বার্তা (ঐচ্ছিক)</span><input name="msg" /></label>
+            <label className="f"><span>ইমেইল বা মোবাইল নম্বর<small className="en-hint">(Email or mobile)</small></span><input name="to" required autoCapitalize="none" /></label>
+            <label className="f"><span>বার্তা (ঐচ্ছিক)<small className="en-hint">(Message, optional)</small></span><input name="msg" /></label>
           </div>
-          <Submit className="btn" pendingText="পাঠানো হচ্ছে...">টেস্ট পাঠান</Submit>
+          <Submit className="btn" pendingText="পাঠানো হচ্ছে...">টেস্ট পাঠান (Send test)</Submit>
         </ActionForm>
       </div>
       <div className="card" style={{ marginTop: 16 }}>
         <b>সাম্প্রতিক বিজ্ঞপ্তি</b>
         <div className="scroll"><table className="tbl">
-          <thead><tr><th>সময়</th><th>প্রাপক</th><th>ধরন</th><th>শিরোনাম</th><th>ইমেইল</th><th>SMS</th></tr></thead>
+          <thead><tr><th>সময়<small className="en-hint">(Time)</small></th><th>প্রাপক<small className="en-hint">(Recipient)</small></th><th>ধরন<small className="en-hint">(Type)</small></th><th>শিরোনাম<small className="en-hint">(Title)</small></th><th>ইমেইল<small className="en-hint">(Email)</small></th><th>SMS</th></tr></thead>
           <tbody>
             {list.length === 0 && <tr><td colSpan={6} className="empty">এখনো কোনো বিজ্ঞপ্তি যায়নি</td></tr>}
             {list.map((r) => (

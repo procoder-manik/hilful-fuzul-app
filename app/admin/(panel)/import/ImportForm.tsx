@@ -14,8 +14,8 @@ export function ImportForm({ kinds }: { kinds: [string, string][] }) {
     <form action={action} className="card">
       <b>ফাইল থেকে যোগ করুন</b>
       <div className="grid g2" style={{ gap: '0 12px', marginTop: 10 }}>
-        <label className="f"><span>কী ইমপোর্ট করবেন</span><select name="kind" required>{kinds.map(([k, n]) => <option key={k} value={k}>{n}</option>)}</select></label>
-        <label className="f"><span>ফাইল (.xlsx বা .csv, সর্বোচ্চ ৫ MB)</span><input name="file" type="file" accept=".csv,.xlsx" required /></label>
+        <label className="f"><span>কী ইমপোর্ট করবেন<small className="en-hint">(What to import)</small></span><select name="kind" required>{kinds.map(([k, n]) => <option key={k} value={k}>{n}</option>)}</select></label>
+        <label className="f"><span>ফাইল (.xlsx বা .csv, সর্বোচ্চ ৫ MB)<small className="en-hint">(File)</small></span><input name="file" type="file" accept=".csv,.xlsx" required /></label>
       </div>
       <div className="row"><Btn mode="check">১. আগে যাচাই করুন</Btn><Btn mode="import" pri>২. ইমপোর্ট করুন</Btn></div>
       {s.error && <div className="notice" role="alert" style={{ marginTop: 12 }}>{s.error}</div>}

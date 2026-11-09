@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { SignOut } from '@/components/SignOut';
+import { Icon } from '@/components/Icon';
 import { PayMethods } from '@/components/PayMethods';
 import { ProfileEditor } from './ProfileEditor';
 import { ClaimForm } from './ClaimForm';
@@ -65,9 +66,15 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
     if (!a) return <section className="wrap" style={{ padding: 40 }}><div className="notice">{t('এই অ্যাকাউন্টের সাথে কোনো সদস্য বা আবেদন যুক্ত নেই। কোষাধ্যক্ষের সাথে যোগাযোগ করুন।', 'No member or application is linked to this account. Please contact the treasurer.')}</div><SignOut /></section>;
     return (
       <section className="wrap" style={{ padding: '30px 18px 60px' }}>
-        {searchParams.welcome && <div className="notice ok" role="status">{t('নিবন্ধন সফল হয়েছে। আপনার প্রোফাইল তৈরি হয়েছে।', 'Registration successful. Your profile has been created.')}</div>}
+        {searchParams.welcome && (
+          <div className="notice ok" role="status" style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            <span>{t('নিবন্ধন সফল হয়েছে। আপনার প্রোফাইল তৈরি হয়েছে। চাইলে এখনই পূরণ করা ফর্মটি প্রিন্ট বা PDF করে রাখুন।', 'Registration successful. Your profile has been created. You can print or save your filled form as a PDF right now.')}</span>
+            <Link className="btn pri" href="/portal/form"><Icon name="print" /> {t('আমার ফর্ম প্রিন্ট করুন', 'Print my form')}</Link>
+          </div>
+        )}
         <Header name={a.name} photo={a.photo_url} line={`${t('আবেদন নং', 'Application no.')} ${bn(a.app_no)}`}
-          badge={a.status === 'rejected' ? <span className="badge b-bad">{t('আবেদন বাতিল', 'Application rejected')}</span> : <span className="badge b-warn">{t('যাচাই অপেক্ষমাণ', 'Verification pending')}</span>} />
+          badge={a.status === 'rejected' ? <span className="badge b-bad">{t('আবেদন বাতিল', 'Application rejected')}</span> : <span className="badge b-warn">{t('যাচাই অপেক্ষমাণ', 'Verification pending')}</span>}
+          extra={<Link className="btn" href="/portal/form"><Icon name="print" /> {t('ফর্ম প্রিন্ট', 'Print form')}</Link>} />
         {a.status === 'rejected'
           ? <div className="notice" style={{ marginTop: 16 }}>{t('দুঃখিত, আপনার আবেদনটি গ্রহণ করা হয়নি। বিস্তারিত জানতে কমিটির সাথে যোগাযোগ করুন।', 'Sorry, your application was not accepted. Please contact the committee for details.')}</div>
           : (
@@ -127,20 +134,17 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
         <div className="notice" style={{ marginTop: 16 }}>{t(`টানা ${bn(s.freeze_months)} মাস চাঁদা বকেয়া থাকায় সদস্যপদ স্থগিত আছে। ${tk(s.reg_fee)} দিয়ে পুনরায় সক্রিয় করুন। ভুলবশত হয়ে থাকলে কোষাধ্যক্ষকে জানান।`, `Your membership is suspended because contributions were overdue for ${bn(s.freeze_months)} consecutive months. Pay ${tk(s.reg_fee)} to reactivate. If this is a mistake, tell the treasurer.`)}</div>
       )}
 
-      <div className="card" style={{ marginTop: 16 }}>
-        <b>{t('সদস্যপদের অবস্থা', 'Membership status')}</b>
-        <div className="grid g3" style={{ marginTop: 10 }}>
-          <div className="kpi" style={{ boxShadow: 'none', background: 'var(--surface2)' }}><span>{t('যাচাই', 'Verification')}</span><b style={{ fontSize: '1.1rem', color: verified ? 'var(--ok)' : 'var(--warn)' }}>{verified ? t('✓ যাচাইকৃত সদস্য', '✓ Verified member') : t('যাচাই হয়নি', 'Not verified')}</b>{verified && <span>{fd(member.verified_at)}</span>}</div>
-          <div className="kpi" style={{ boxShadow: 'none', background: 'var(--surface2)' }}><span>{t('ভর্তি ফি', 'Joining fee')}</span><b style={{ fontSize: '1.1rem', color: reg ? 'var(--ok)' : 'var(--danger)' }}>{reg ? t('পরিশোধিত', 'Paid') : t('বকেয়া', 'Unpaid')}</b><span>{reg ? `${tk(reg.amount)}, ${fd(reg.paid_on)}` : tk(s.reg_fee)}</span></div>
-          <div className="kpi" style={{ boxShadow: 'none', background: 'var(--surface2)' }}><span>{t('এই মাসের চাঁদা', 'This month’s contribution')}</span><b style={{ fontSize: '1.1rem', color: d.paidThisMonth ? 'var(--ok)' : 'var(--warn)' }}>{d.paidThisMonth ? t('পরিশোধিত (Paid)', 'Paid') : t('বাকি', 'Due')}</b><span>{d.paidThisMonth ? t(`পরবর্তী শেষ তারিখ ${fd(d.nextDueDate)}`, `Next due ${fd(d.nextDueDate)}`) : t(`শেষ তারিখ ${fd(d.nextDueDate)}`, `Due by ${fd(d.nextDueDate)}`)}</span></div>
-        </div>
+      <div className="pf-steps">
+        <div className={`pf-st ${verified ? 'ok' : 'warn'}`}><span className="pf-ic">{verified ? '✓' : '!'}</span><div><small>{t('যাচাই', 'Verification')}</small><b>{verified ? t('যাচাইকৃত সদস্য', 'Verified member') : t('যাচাই হয়নি', 'Not verified')}</b>{verified && <em>{fd(member.verified_at)}</em>}</div></div>
+        <div className={`pf-st ${reg ? 'ok' : 'bad'}`}><span className="pf-ic">{reg ? '✓' : '৳'}</span><div><small>{t('ভর্তি ফি', 'Joining fee')}</small><b>{reg ? t('পরিশোধিত', 'Paid') : t('বকেয়া', 'Unpaid')}</b><em>{reg ? `${tk(reg.amount)}, ${fd(reg.paid_on)}` : tk(s.reg_fee)}</em></div></div>
+        <div className={`pf-st ${d.paidThisMonth ? 'ok' : 'warn'}`}><span className="pf-ic">{d.paidThisMonth ? '✓' : '…'}</span><div><small>{t('এই মাসের চাঁদা', 'This month’s contribution')}</small><b>{d.paidThisMonth ? t('পরিশোধিত', 'Paid') : t('বাকি', 'Due')}</b><em>{d.paidThisMonth ? t(`পরবর্তী শেষ তারিখ ${fd(d.nextDueDate)}`, `Next due ${fd(d.nextDueDate)}`) : t(`শেষ তারিখ ${fd(d.nextDueDate)}`, `Due by ${fd(d.nextDueDate)}`)}</em></div></div>
       </div>
 
-      <div className="grid g4" style={{ marginTop: 16 }}>
-        <div className="kpi"><span>{t('মোট জমা', 'Total paid')}</span><b>{tk(total)}</b></div>
-        <div className="kpi"><span>{t('মাসিক চাঁদা', 'Monthly contribution')}</span><b>{tk(member.monthly_amount)}</b></div>
-        <div className="kpi"><span>{t('বকেয়া', 'Overdue')}</span><b style={{ color: d.dueAmount ? 'var(--danger)' : 'var(--ok)' }}>{tk(d.dueAmount)}</b><span>{bn(d.overdue.length)} {t('মাস', d.overdue.length === 1 ? 'month' : 'months')}</span></div>
-        <div className="kpi"><span>{t('পরবর্তী জমার শেষ তারিখ', 'Next due date')}</span><b style={{ fontSize: '1.15rem' }}>{fd(d.nextDueDate)}</b><span>{d.paidThisMonth ? t('এই মাসের চাঁদা পরিশোধিত', 'This month is paid') : t('এই মাসের চাঁদা বাকি', 'This month is due')}</span></div>
+      <div className="pf-kpis">
+        <div className="pf-k k1"><span>{t('মোট জমা', 'Total paid')}</span><b>{tk(total)}</b></div>
+        <div className="pf-k k2"><span>{t('মাসিক চাঁদা', 'Monthly contribution')}</span><b>{tk(member.monthly_amount)}</b></div>
+        <div className={`pf-k ${d.dueAmount ? 'k3' : 'k4'}`}><span>{t('বকেয়া', 'Overdue')}</span><b>{tk(d.dueAmount)}</b><em>{bn(d.overdue.length)} {t('মাস', d.overdue.length === 1 ? 'month' : 'months')}</em></div>
+        <div className="pf-k k5"><span>{t('পরবর্তী জমার শেষ তারিখ', 'Next due date')}</span><b>{fd(d.nextDueDate)}</b><em>{d.paidThisMonth ? t('এই মাসের চাঁদা পরিশোধিত', 'This month is paid') : t('এই মাসের চাঁদা বাকি', 'This month is due')}</em></div>
       </div>
 
       {needsPay && (
@@ -223,15 +227,14 @@ export default async function Portal({ searchParams }: { searchParams: { welcome
 
 function Header({ name, photo, line, badge, extra }: { name: string; photo: string | null; line: string; badge: React.ReactNode; extra?: React.ReactNode }) {
   return (
-    <div className="card row" style={{ borderRadius: 32, gap: 16 }}>
-      <div className="logo" style={{ width: 72, height: 72, borderRadius: '50%', fontSize: '1.6rem', background: 'var(--accSoft)', color: 'var(--acc)', overflow: 'hidden' }}>
-        {photo ? <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials(name)}
+    <div className="pf-hero">
+      <div className="pf-av">{photo ? <img src={photo} alt="" /> : initials(name)}</div>
+      <div className="pf-id">
+        <h1>{name}</h1>
+        <span className="pf-line">{line}</span>
+        <div className="pf-badges">{badge}</div>
       </div>
-      <div style={{ flex: 1, minWidth: 200 }}>
-        <h1 style={{ fontSize: '1.6rem', margin: 0 }}>{name}</h1>
-        <span className="muted">{line}</span> {badge}
-      </div>
-      <div className="row" style={{ gap: 8 }}>{extra}<SignOut /></div>
+      <div className="pf-acts">{extra}<SignOut /></div>
     </div>
   );
 }

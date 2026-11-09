@@ -55,7 +55,7 @@ export default async function Reports({ searchParams }: { searchParams: Record<s
       <h2 className="h2">সেবা: কতজন কী সেবা নিলেন</h2>
       <div className="card">
         {svcBy.size === 0 ? <p className="muted" style={{ margin: 0 }}>এই সময়ে কোনো সেবার রেকর্ড নেই। <Link href="/admin/services">সেবার রেকর্ড</Link> পাতায় যোগ করুন।</p> : (
-          <div className="scroll"><table className="tbl"><thead><tr><th>সেবা</th><th>কতজন মানুষ</th><th>মোট সংখ্যা</th></tr></thead><tbody>
+          <div className="scroll"><table className="tbl"><thead><tr><th>সেবা<small className="en-hint">(Service)</small></th><th>কতজন মানুষ<small className="en-hint">(People)</small></th><th>মোট সংখ্যা<small className="en-hint">(Total count)</small></th></tr></thead><tbody>
             {[...svcBy.entries()].sort((a, b) => b[1].n - a[1].n).map(([s, v]) => <tr key={s}><td><Link href={`/admin/services?${rangeQS(range, { service: s })}`}>{s}</Link></td><td>{bn(v.people.size)} জন</td><td>{bn(v.n)}</td></tr>)}
           </tbody></table></div>
         )}

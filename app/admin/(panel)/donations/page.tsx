@@ -38,7 +38,7 @@ export default async function Donations({ searchParams }: { searchParams: Record
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 340px', alignItems: 'start' }}>
         <div>
           <div className="card"><div className="scroll"><table className="tbl">
-            <thead><tr><th>তারিখ</th><th>দাতা</th><th>খাত</th><th>পরিমাণ</th><th></th></tr></thead>
+            <thead><tr><th>তারিখ<small className="en-hint">(Date)</small></th><th>দাতা<small className="en-hint">(Donor)</small></th><th>খাত<small className="en-hint">(Purpose)</small></th><th>পরিমাণ<small className="en-hint">(Amount)</small></th><th></th></tr></thead>
             <tbody>
               {rows.length === 0 && <Empty cols={5} text="এই সময়ে কোনো দান নেই" />}
               {rows.slice(0, SHOW).map((d) => (
@@ -61,16 +61,16 @@ export default async function Donations({ searchParams }: { searchParams: Record
         </div>
         <ActionForm action={createDonation} className="card">
           <b>দান গ্রহণ</b>
-          <label className="f" style={{ marginTop: 10 }}><span>দাতার নাম *</span><input name="donor_name" required /></label>
-          <label className="f"><span>পদবী / পরিচয় (যেমন: শিক্ষক, প্রবাসী, ব্যবসায়ী)</span><input name="donor_title" maxLength={80} /></label>
-          <label className="f"><span>মোবাইল</span><input name="phone" inputMode="tel" /></label>
-          <label className="f"><span>সদস্য নম্বর (দাতা সদস্য হলে, যেমন HF-101)</span><input name="member_no" autoCapitalize="characters" /></label>
-          <label className="f"><span>পরিমাণ (৳) *</span><input name="amount" type="number" min={1} required /></label>
-          <label className="f"><span>খাত</span><select name="purpose">{PURPOSES.map((p) => <option key={p}>{p}</option>)}</select></label>
-          <label className="f"><span>মাধ্যম</span><select name="method"><option>নগদ (হাতে)</option><option>বিকাশ</option><option>নগদ</option><option>রকেট</option><option>ব্যাংক</option></select></label>
-          <label className="f"><span>তারিখ</span><input name="donated_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
+          <label className="f" style={{ marginTop: 10 }}><span>দাতার নাম *<small className="en-hint">(Donor name)</small></span><input name="donor_name" required /></label>
+          <label className="f"><span>পদবী / পরিচয় (যেমন: শিক্ষক, প্রবাসী, ব্যবসায়ী)<small className="en-hint">(Title / identity)</small></span><input name="donor_title" maxLength={80} /></label>
+          <label className="f"><span>মোবাইল<small className="en-hint">(Mobile)</small></span><input name="phone" inputMode="tel" /></label>
+          <label className="f"><span>সদস্য নম্বর (দাতা সদস্য হলে, যেমন HF-101)<small className="en-hint">(Member no.)</small></span><input name="member_no" autoCapitalize="characters" /></label>
+          <label className="f"><span>পরিমাণ (৳) *<small className="en-hint">(Amount)</small></span><input name="amount" type="number" min={1} required /></label>
+          <label className="f"><span>খাত<small className="en-hint">(Purpose)</small></span><select name="purpose">{PURPOSES.map((p) => <option key={p}>{p}</option>)}</select></label>
+          <label className="f"><span>মাধ্যম<small className="en-hint">(Method)</small></span><select name="method"><option>নগদ (হাতে)</option><option>বিকাশ</option><option>নগদ</option><option>রকেট</option><option>ব্যাংক</option></select></label>
+          <label className="f"><span>তারিখ<small className="en-hint">(Date)</small></span><input name="donated_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
           <label className="chk"><input type="checkbox" name="anonymous" /> <span>ওয়েবসাইটে নাম প্রকাশ করা হবে না</span></label>
-          <Submit>সংরক্ষণ ও রসিদ</Submit>
+          <Submit>সংরক্ষণ ও রসিদ (Save & receipt)</Submit>
         </ActionForm>
       </div>
     </>

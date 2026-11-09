@@ -23,7 +23,7 @@ export default async function Payments({ searchParams }: { searchParams: Record<
   return (
     <>
       <PageHead title="চাঁদা জমা" sub="সদস্যদের মাসিক চাঁদা, ভর্তি ফি ও পুনঃসক্রিয়করণ ফি। সময়সীমা বেছে দেখুন, Excel বা CSV তে নামিয়ে রাখুন।">
-        <Link className="btn pri" href="/admin/payments/new">চাঁদা জমা নিন</Link>
+        <Link className="btn pri" href="/admin/payments/new">চাঁদা জমা নিন (Take payment)</Link>
       </PageHead>
       <FilterBar base="/admin/payments" range={range} extra={extra} exportKind="payments" search="নাম, মোবাইল, সদস্য বা রসিদ নম্বর" />
       <Summary items={[['মোট জমা', tk(total)], ['জমার সংখ্যা', bn(rows.length)], ['কতজন সদস্য', `${bn(people)} জন`], ['গড় জমা', tk(rows.length ? total / rows.length : 0)]]} />
@@ -31,7 +31,7 @@ export default async function Payments({ searchParams }: { searchParams: Record<
         {[['', 'সব ধরন'], ['monthly', 'মাসিক চাঁদা'], ['registration', 'ভর্তি ফি'], ['reactivation', 'পুনঃসক্রিয়করণ']].map(([k, n]) => <Link key={k} href={typeLink(k)} className={(searchParams.type ?? '') === k ? 'on' : ''}>{n}</Link>)}
       </div>
       <div className="card"><div className="scroll"><table className="tbl">
-        <thead><tr><th>তারিখ</th><th>সদস্য</th><th>বিবরণ</th><th>মাধ্যম</th><th>পরিমাণ</th><th></th></tr></thead>
+        <thead><tr><th>তারিখ<small className="en-hint">(Date)</small></th><th>সদস্য<small className="en-hint">(Member)</small></th><th>বিবরণ<small className="en-hint">(Details)</small></th><th>মাধ্যম<small className="en-hint">(Method)</small></th><th>পরিমাণ<small className="en-hint">(Amount)</small></th><th></th></tr></thead>
         <tbody>
           {rows.length === 0 && <Empty cols={6} text="এই সময়ে কোনো জমা নেই" />}
           {rows.slice(0, SHOW).map((p) => (

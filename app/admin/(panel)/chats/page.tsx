@@ -20,7 +20,7 @@ export default async function Chats({ searchParams }: { searchParams: { f?: stri
   return (
     <>
       <PageHead title="চ্যাট লগ" sub="অতিথি ও সদস্যরা চ্যাট সহকারীকে যা জিজ্ঞেস করেছেন। উত্তর না পাওয়া প্রশ্নের সঠিক উত্তর শিখিয়ে দিলে বট ভবিষ্যতে সবাইকে সেটাই বলবে।">
-        <Link className={`btn sm ${onlyUnknown ? '' : 'pri'}`} href="/admin/chats">সব প্রশ্ন</Link>
+        <Link className={`btn sm ${onlyUnknown ? '' : 'pri'}`} href="/admin/chats">সব প্রশ্ন (All questions)</Link>
         <Link className={`btn sm ${onlyUnknown ? 'pri' : ''}`} href="/admin/chats?f=unknown">উত্তর পায়নি ({bn(count ?? 0)})</Link>
       </PageHead>
       {rows.length === 0 && <div className="card muted">{onlyUnknown ? 'উত্তর না পাওয়া কোনো প্রশ্ন নেই।' : 'এখনো কেউ চ্যাট করেনি।'}</div>}
@@ -36,8 +36,8 @@ export default async function Chats({ searchParams }: { searchParams: { f?: stri
             {c.unanswered && (
               <ActionForm action={teachBot} resetOnSuccess style={{ marginTop: 10 }}>
                 <input type="hidden" name="id" value={c.id} /><input type="hidden" name="q" value={c.question} />
-                <label className="f"><span>সঠিক উত্তর (বটকে শেখান)</span><textarea name="a" rows={2} placeholder="যেমন: কুরআন শিক্ষা সপ্তাহে ৩ দিন, বিকাল ৪টায়" /></label>
-                <Submit pendingText="শেখানো হচ্ছে...">বটকে শেখান</Submit>
+                <label className="f"><span>সঠিক উত্তর (বটকে শেখান)<small className="en-hint">(Correct answer, teach the bot)</small></span><textarea name="a" rows={2} placeholder="যেমন: কুরআন শিক্ষা সপ্তাহে ৩ দিন, বিকাল ৪টায়" /></label>
+                <Submit pendingText="শেখানো হচ্ছে...">বটকে শেখান (Teach the bot)</Submit>
               </ActionForm>
             )}
             <div className="acts" style={{ justifyContent: 'flex-start', marginTop: 8 }}>

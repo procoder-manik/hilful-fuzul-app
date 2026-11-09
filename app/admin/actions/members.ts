@@ -196,3 +196,14 @@ export async function rejectApplication(appId: string, _f: FormData) {
   }
   revalidatePath('/admin', 'layout');
 }
+
+/** এই সদস্যকে ওয়েবসাইটের "আমাদের সদস্য" পাতায় লুকান বা আবার দেখান (SQL 008 লাগে) */
+export async function setMemberPublic(id: string, hide: boolean, _f: FormData) {
+  const { supabase, user } = await requireAction(MONEY);
+  const { data: m } = await supabase.from('members').select('name').eq('id', id).single();
+  const { error } = await supabase.from('members').update({ public_hidden: hide }).eq('id', id);
+  if (error) throw new Error(/column|schema cache/i.test(error.message) ? 'আগে Supabase এ supabase/migrations/008_public_members.sql চালান' : errMsg(error));
+  await logActivity(supabase, user.id, `${m?.name} কে ওয়েবসাইটের সদস্য পাতায় ${hide ? 'লুকানো হয়েছে' : 'দেখানো হচ্ছে'}`);
+  revalidatePath('/members');
+  revalidatePath(`/admin/members/${id}`);
+}

@@ -17,7 +17,7 @@ export default async function EditMember({ params }: { params: { id: string } })
       <PageHead title="সদস্য সম্পাদনা" sub={`${m.member_no}, ${m.name}`} />
       <ActionForm action={updateMember.bind(null, m.id)} className="card" style={{ maxWidth: 820 }}>
         <MemberFields m={m} />
-        <Submit>পরিবর্তন সংরক্ষণ করুন</Submit>
+        <Submit>পরিবর্তন সংরক্ষণ করুন (Save changes)</Submit>
       </ActionForm>
     </>
   );

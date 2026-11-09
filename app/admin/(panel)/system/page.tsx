@@ -76,21 +76,21 @@ export default async function System({ searchParams }: { searchParams: { log?: s
           <div className="check"><span>📝</span><Link href="/admin/applications">অপেক্ষমাণ আবেদন: {bn(pendingApps ?? 0)}টি</Link></div>
           <div className="check"><span>✉️</span><Link href="/admin/messages">না-পড়া বার্তা: {bn(unread ?? 0)}টি</Link></div>
           <div className="check"><span>🔐</span><span>গত ২৪ ঘণ্টায় ব্যর্থ লগইন চেষ্টা: {bn(failed24)}টি {failed24 >= 10 && <b style={{ color: 'var(--danger)' }}>(অস্বাভাবিক বেশি!)</b>}</span></div>
-          <div className="check"><span>💾</span><Link href="/admin/import">পুরো ব্যাকআপ নামান</Link></div>
+          <div className="check"><span>💾</span><Link href="/admin/import">পুরো ব্যাকআপ নামান (Download full backup)</Link></div>
           {noMfa.length > 0 && <div className="check"><span>⚠️</span><span>OTP যুক্ত করেননি: {noMfa.map((a) => a.full_name || 'অ্যাডমিন').join(', ')}</span></div>}
         </div>
       </div>
       <div className="seg" style={{ margin: '18px 0 12px' }}>
-        <Link href="/admin/system" className={tab === 'activity' ? 'on' : ''}>কাজের লগ</Link>
-        <Link href="/admin/system?log=login" className={tab === 'login' ? 'on' : ''}>লগইনের ইতিহাস</Link>
+        <Link href="/admin/system" className={tab === 'activity' ? 'on' : ''}>কাজের লগ (Activity log)</Link>
+        <Link href="/admin/system?log=login" className={tab === 'login' ? 'on' : ''}>লগইনের ইতিহাস (Login history)</Link>
       </div>
       <div className="card"><div className="scroll"><table className="tbl">
         {tab === 'activity' ? (
-          <><thead><tr><th>সময়</th><th>কে</th><th>কী করলেন</th></tr></thead><tbody>
+          <><thead><tr><th>সময়<small className="en-hint">(Time)</small></th><th>কে<small className="en-hint">(Who)</small></th><th>কী করলেন<small className="en-hint">(Action)</small></th></tr></thead><tbody>
             {(acts ?? []).map((a) => <tr key={a.id}><td className="small">{time(a.created_at)}</td><td>{nameOf.get(a.actor) ?? '-'}</td><td>{a.action}</td></tr>)}
           </tbody></>
         ) : (
-          <><thead><tr><th>সময়</th><th>পরিচয়</th><th>রোল</th><th>ফল</th><th>আইপি / ডিভাইস</th></tr></thead><tbody>
+          <><thead><tr><th>সময়<small className="en-hint">(Time)</small></th><th>পরিচয়<small className="en-hint">(Identity)</small></th><th>রোল<small className="en-hint">(Role)</small></th><th>ফল<small className="en-hint">(Result)</small></th><th>আইপি / ডিভাইস<small className="en-hint">(IP / device)</small></th></tr></thead><tbody>
             {!m006 && <tr><td colSpan={5} className="empty">লগইনের ইতিহাস রাখতে 006_records_admin.sql চালান</td></tr>}
             {(logins.data ?? []).map((l) => (
               <tr key={String(l.id)}><td className="small">{time(String(l.created_at))}</td><td>{String(l.identifier ?? '-')}<div className="muted small">{l.audience === 'staff' ? 'কমিটির ট্যাব' : 'সদস্যের ট্যাব'}</div></td>

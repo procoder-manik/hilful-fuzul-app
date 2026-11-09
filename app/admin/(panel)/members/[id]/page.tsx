@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ActionForm, ConfirmButton, Submit } from '../../../_components/ActionForm';
-import { deleteMember, quickPay, setMemberLogin, setMemberStatus } from '../../../actions/members';
+import { deleteMember, quickPay, setMemberLogin, setMemberPublic, setMemberStatus } from '../../../actions/members';
 import { requirePage, STAFF } from '@/lib/guard';
 import { computeDues } from '@/lib/dues';
 import { todayBD } from '@/lib/dates';
@@ -42,7 +42,7 @@ export default async function MemberProfile({ params, searchParams }: { params: 
         <div className="row" style={{ gap: 6 }}>
           {money && <Link className="btn pri" href={`/admin/payments/new?member=${m.id}`}>চাঁদা জমা</Link>}
           {money && <Link className="btn" href={`/admin/members/${m.id}/edit`}>সম্পাদনা</Link>}
-          <Link className="btn" href={`/admin/print/member/${m.id}`}>ফর্ম প্রিন্ট</Link>
+          <Link className="btn" href={`/admin/print/member/${m.id}`}>ফর্ম প্রিন্ট (Print form)</Link>
         </div>
       </div>
 
@@ -72,7 +72,7 @@ export default async function MemberProfile({ params, searchParams }: { params: 
       <div className="grid g2" style={{ marginTop: 16, alignItems: 'start' }}>
         <div className="card">
           <b>জমার ইতিহাস</b>
-          <div className="scroll"><table className="tbl"><thead><tr><th>তারিখ</th><th>বিবরণ</th><th>পরিমাণ</th><th></th></tr></thead><tbody>
+          <div className="scroll"><table className="tbl"><thead><tr><th>তারিখ<small className="en-hint">(Date)</small></th><th>বিবরণ<small className="en-hint">(Details)</small></th><th>পরিমাণ<small className="en-hint">(Amount)</small></th><th></th></tr></thead><tbody>
             {payments.length === 0 && <Empty cols={4} />}
             {payments.map((p) => (
               <tr key={p.id}><td>{fd(p.paid_on)}<div className="muted small">{p.method}</div></td><td>{p.type === 'monthly' ? `${ymLabel(p.for_month)} এর চাঁদা` : TYPE[p.type]}</td><td>{tk(p.amount)}</td>
@@ -82,7 +82,7 @@ export default async function MemberProfile({ params, searchParams }: { params: 
         </div>
         <div className="grid" style={{ gap: 16 }}>
           <div className="card">
-            <div className="row" style={{ justifyContent: 'space-between' }}><b>করজে হাসানা</b>{money && m.status === 'active' && <Link className="btn sm" href={`/admin/loans/new?member=${m.id}`}>নতুন ঋণ</Link>}</div>
+            <div className="row" style={{ justifyContent: 'space-between' }}><b>করজে হাসানা</b>{money && m.status === 'active' && <Link className="btn sm" href={`/admin/loans/new?member=${m.id}`}>নতুন ঋণ (New loan)</Link>}</div>
             {(loans ?? []).length === 0 && <p className="muted">কোনো ঋণ নেই।</p>}
             {(loans ?? []).map((l) => {
               const rep = (l.loan_repayments as { amount: number }[]).reduce((a, r) => a + Number(r.amount), 0);
@@ -111,6 +111,11 @@ export default async function MemberProfile({ params, searchParams }: { params: 
                 <input name="password" type="text" minLength={6} autoComplete="off" placeholder="নতুন পাসওয়ার্ড" required style={{ width: 190 }} aria-label="পাসওয়ার্ড" />
                 <Submit className="btn">{login ? 'পাসওয়ার্ড রিসেট' : 'লগইন তৈরি'}</Submit>
               </ActionForm>
+              <div style={{ marginTop: 18 }}>
+                <b style={{ display: 'block' }}>ওয়েবসাইটের সদস্য পাতা<small className="en-hint">(Public members page)</small></b>
+                <p className="muted small" style={{ margin: '4px 0 8px' }}>{(m as { public_hidden?: boolean }).public_hidden ? 'এই সদস্য এখন ওয়েবসাইটের সদস্য পাতায় লুকানো আছে।' : 'এই সদস্য ওয়েবসাইটের সদস্য পাতায় কার্ড হিসেবে দেখা যাচ্ছে (ফোন, ঠিকানা ও এনআইডি ছাড়া)।'}</p>
+                <ConfirmButton action={setMemberPublic.bind(null, m.id, !(m as { public_hidden?: boolean }).public_hidden)} className="btn sm" label={(m as { public_hidden?: boolean }).public_hidden ? 'ওয়েবসাইটে দেখান (Show)' : 'ওয়েবসাইটে লুকান (Hide)'} />
+              </div>
               {profile.role === 'admin' && (
                 <div style={{ marginTop: 18 }}>
                   <ConfirmButton action={deleteMember.bind(null, m.id)} className="btn sm danger" label="সদস্য মুছে ফেলুন" confirm="এই সদস্য ও তার সব চাঁদার হিসাব স্থায়ীভাবে মুছে যাবে। নিশ্চিত?" />

@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/Icon';
+import { hint } from '@/lib/adminlabels';
 import type { Role } from '@/lib/types';
 
 const ALL: Role[] = ['admin', 'treasurer', 'librarian', 'editor'];
@@ -45,13 +46,17 @@ const GROUPS: { title: string; icon: string; items: Item[] }[] = [
 const BOTTOM: Item = { href: '/admin/settings', label: 'সেটিংস', icon: 'gear', roles: ['admin'] };
 const HREFS = [TOP, BOTTOM, ...GROUPS.flatMap((g) => g.items)].map((i) => i.href);
 
-export function Sidebar({ role, pending, unread = 0, unanswered = 0 }: { role: Role; pending: number; unread?: number; unanswered?: number }) {
+export function Sidebar({ role, pending, claimed = 0, unread = 0, unanswered = 0 }: { role: Role; pending: number; claimed?: number; unread?: number; unanswered?: number }) {
   const path = usePathname();
   const best = HREFS.filter((h) => (h === '/admin' ? path === '/admin' : path === h || path.startsWith(h + '/'))).sort((a, b) => b.length - a.length)[0];
   const badge = (h: string) => (h === '/admin/applications' ? pending : h === '/admin/chats' ? unanswered : h === '/admin/messages' ? unread : 0);
+  const num = (n: number) => (n > 99 ? '৯৯+' : n.toLocaleString('bn-BD'));
+  const tip = (h: string) => (h === '/admin/applications' && pending > 0 ? `${num(pending)}টি আবেদন অপেক্ষমাণ${claimed ? `, এর মধ্যে ${num(claimed)} জন ফি পাঠানোর কথা জানিয়েছেন` : ''}` : h === '/admin/messages' && unread ? `${num(unread)}টি না-পড়া বার্তা` : h === '/admin/chats' && unanswered ? `${num(unanswered)}টি প্রশ্নের উত্তর বট দিতে পারেনি` : undefined);
   const link = (i: Item, main = false) => (
-    <Link key={i.href} href={i.href} className={`${main ? 'side-main' : 'side-sub'}${best === i.href ? ' on' : ''}`} aria-current={best === i.href ? 'page' : undefined}>
-      <Icon name={i.icon} /><span>{i.label}</span>{badge(i.href) > 0 && <span className="cnt">{badge(i.href).toLocaleString('bn-BD')}</span>}
+    <Link key={i.href} href={i.href} title={tip(i.href)} className={`${main ? 'side-main' : 'side-sub'}${best === i.href ? ' on' : ''}`} aria-current={best === i.href ? 'page' : undefined}>
+      <Icon name={i.icon} /><span className="side-t">{i.label}{hint(i.label) && <small className="en-hint">{hint(i.label)}</small>}</span>
+      {badge(i.href) > 0 && <span className="cnt" aria-label={tip(i.href)}>{num(badge(i.href))}</span>}
+      {i.href === '/admin/applications' && claimed > 0 && <span className="cnt cnt-ok" aria-hidden="true" title="ফি পাঠানোর কথা জানিয়েছেন">৳{num(claimed)}</span>}
     </Link>
   );
   return (
@@ -62,14 +67,14 @@ export function Sidebar({ role, pending, unread = 0, unanswered = 0 }: { role: R
         if (!items.length) return null;
         return (
           <div key={g.title} className="side-g" role="group" aria-label={g.title}>
-            <span className="side-h"><Icon name={g.icon} />{g.title}</span>
+            <span className="side-h"><Icon name={g.icon} /><span>{g.title}{hint(g.title) && <small className="en-hint">{hint(g.title)}</small>}</span></span>
             {items.map((i) => link(i))}
           </div>
         );
       })}
       <div className="side-foot">
         {BOTTOM.roles.includes(role) && link(BOTTOM, true)}
-        <form action="/auth/signout" method="post"><button className="side-main side-out"><Icon name="logout" /><span>বের হোন</span></button></form>
+        <form action="/auth/signout" method="post"><button className="side-main side-out"><Icon name="logout" /><span className="side-t">বের হোন<small className="en-hint">(Log out)</small></span></button></form>
       </div>
     </nav>
   );

@@ -7,6 +7,7 @@ import { DATASETS } from '@/lib/datasets';
 import { parseRange } from '@/lib/range';
 import { bn, fd, tk } from '@/lib/format';
 import { Empty, PageHead } from '@/lib/ui';
+import { Icon } from '@/components/Icon';
 
 export const metadata: Metadata = { title: 'সদস্যদের সাথে যোগাযোগ' };
 type Row = { id: string; member_no: string; name: string; phone: string; email: string | null; status: string; frozen_at: string | null; overdue_months: number; monthly_amount: number };
@@ -36,7 +37,7 @@ export default async function Contact({ searchParams }: { searchParams: { group?
   return (
     <>
       <PageHead title="স্থগিত ও বকেয়া সদস্যদের সাথে যোগাযোগ" sub="এক চাপে কল, SMS বা হোয়াটসঅ্যাপ, অথবা বাছাই করা সবাইকে একসাথে বার্তা (প্রোফাইলে, ইমেইলে ও SMS এ)।">
-        <Link className="btn" href="/admin/members">সদস্য তালিকা</Link>
+        <Link className="btn" href="/admin/members">সদস্য তালিকা (Member list)</Link>
       </PageHead>
       <div className="seg wrapable" style={{ marginBottom: 12 }}>
         <Link href="/admin/members/contact?group=frozen" className={group === 'frozen' ? 'on' : ''}>স্থগিত ({bn(groups.frozen.length)})</Link>
@@ -44,20 +45,20 @@ export default async function Contact({ searchParams }: { searchParams: { group?
         <Link href="/admin/members/contact?group=due" className={group === 'due' ? 'on' : ''}>বকেয়া আছে ({bn(groups.due.length)})</Link>
       </div>
       <ActionForm action={sendBulk} key={group}>
-        <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 360px', alignItems: 'start' }}>
+        <div className="contact-grid">
           <div className="card"><div className="scroll"><table className="tbl">
-            <thead><tr><th><input type="checkbox" aria-label="সবাই" className="pick-all" defaultChecked /></th><th>সদস্য</th><th>{group === 'frozen' ? 'স্থগিত হয়েছেন' : 'বকেয়া'}</th><th>যোগাযোগ</th></tr></thead>
+            <thead><tr><th><input type="checkbox" aria-label="সবাই" className="pick-all" defaultChecked /></th><th>সদস্য<small className="en-hint">(Member)</small></th><th>{group === 'frozen' ? 'স্থগিত হয়েছেন' : 'বকেয়া'}</th><th>যোগাযোগ<small className="en-hint">(Contact)</small></th></tr></thead>
             <tbody>
               {rows.length === 0 && <Empty cols={4} text="এই তালিকায় কেউ নেই, আলহামদুলিল্লাহ" />}
               {rows.map((m) => (
                 <tr key={m.id}>
                   <td><input type="checkbox" name="ids" value={m.id} defaultChecked aria-label={m.name} /></td>
-                  <td><Link href={`/admin/members/${m.id}`}><b>{m.name}</b></Link><div className="muted small">{m.member_no}, {bn(m.phone)}{m.email ? `, ${m.email}` : ''}</div></td>
-                  <td>{group === 'frozen' ? fd(m.frozen_at) : <><span className="badge b-bad">{bn(m.overdue_months)} মাস</span><div className="muted small">{tk(m.overdue_months * Number(m.monthly_amount))}</div></>}</td>
-                  <td><div className="acts" style={{ justifyContent: 'flex-start' }}>
-                    <a className="btn sm" href={`tel:${m.phone}`}>📞 কল</a>
-                    <a className="btn sm" href={`sms:${m.phone}?body=${encodeURIComponent(body)}`}>💬 SMS</a>
-                    <a className="btn sm" href={`${wa(m.phone)}?text=${encodeURIComponent(body)}`} target="_blank" rel="noopener noreferrer">হোয়াটসঅ্যাপ</a>
+                  <td><div className="ct-who"><span className="av">{m.name.charAt(0)}</span><div><Link href={`/admin/members/${m.id}`} className="ct-name"><b>{m.name}</b></Link><div className="muted small">{m.member_no} · {bn(m.phone)}</div>{m.email && <div className="muted small">{m.email}</div>}</div></div></td>
+                  <td>{group === 'frozen' ? fd(m.frozen_at) : <><span className="badge b-bad nowrap">{bn(m.overdue_months)} মাস বকেয়া</span><div className="muted small">{tk(m.overdue_months * Number(m.monthly_amount))}</div></>}</td>
+                  <td><div className="ct-acts">
+                    <a className="ct-b ct-call" href={`tel:${m.phone}`}><Icon name="phone" /> কল</a>
+                    <a className="ct-b ct-sms" href={`sms:${m.phone}?body=${encodeURIComponent(body)}`}><Icon name="chat" /> SMS</a>
+                    <a className="ct-b ct-wa" href={`${wa(m.phone)}?text=${encodeURIComponent(body)}`} target="_blank" rel="noopener noreferrer"><Icon name="send" /> হোয়াটসঅ্যাপ</a>
                   </div></td>
                 </tr>
               ))}
@@ -66,10 +67,10 @@ export default async function Contact({ searchParams }: { searchParams: { group?
           <p className="muted small" style={{ marginBottom: 0 }}>"কল" চাপলে ফোন থেকে সরাসরি কল যাবে (মোবাইলে বা কল-সুবিধাসহ কম্পিউটারে)। "SMS" ও "হোয়াটসঅ্যাপ" লেখা বার্তাসহ খোলে।</p></div>
           <div className="card">
             <b>বাছাই করা সবাইকে বার্তা</b>
-            <label className="f" style={{ marginTop: 10 }}><span>শিরোনাম</span><input name="title" defaultValue={title} maxLength={80} required /></label>
-            <label className="f"><span>বার্তা</span><textarea name="body" rows={6} defaultValue={body} maxLength={600} required /></label>
+            <label className="f" style={{ marginTop: 10 }}><span>শিরোনাম<small className="en-hint">(Title)</small></span><input name="title" defaultValue={title} maxLength={80} required /></label>
+            <label className="f"><span>বার্তা<small className="en-hint">(Message)</small></span><textarea name="body" rows={6} defaultValue={body} maxLength={600} required /></label>
             <p className="muted small">সদস্যের প্রোফাইলে বিজ্ঞপ্তি যাবে; ইমেইল থাকলে ইমেইলে এবং সেটিংসে SMS চালু ও গেটওয়ে বসানো থাকলে SMS এও যাবে।</p>
-            <Submit pendingText="পাঠানো হচ্ছে...">পাঠান</Submit>
+            <Submit pendingText="পাঠানো হচ্ছে...">পাঠান (Send)</Submit>
           </div>
         </div>
       </ActionForm>

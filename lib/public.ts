@@ -38,3 +38,16 @@ export const getEvents = cache(async () => translateRows(((await publicClient().
 export const upcoming = (ev: EventRow[]) => ev.filter((e) => e.event_date >= todayBD());
 export const past = (ev: EventRow[]) => ev.filter((e) => e.event_date < todayBD()).reverse();
 export const isNewBook = (b: Book) => b.added_on >= new Date(Date.now() - 60 * 864e5).toISOString().slice(0, 10);
+
+export type PublicMember = {
+  id: string; member_no: string; name: string; photo_url: string | null; join_date: string; status: string; verified: boolean; months_since: number;
+  monthly_amount: number | null; total_paid: number | null; paid_months: number; loan_count: number; loan_total: number | null; loan_balance: number | null;
+  books_borrowed: number; money_visible: boolean;
+};
+
+/** ওয়েবসাইটের সদস্য পাতা: পাবলিক ভিউ থেকে (ফোন, ঠিকানা, এনআইডি কখনোই নেই)। ভিউ না থাকলে (SQL 008 চালানো হয়নি) null */
+export const getPublicMembers = cache(async (): Promise<PublicMember[] | null> => {
+  const { data, error } = await publicClient().from('v_public_members').select('*').order('join_date', { ascending: true }).limit(2000);
+  if (error) return null;
+  return (data ?? []) as PublicMember[];
+});

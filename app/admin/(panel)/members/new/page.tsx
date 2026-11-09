@@ -14,7 +14,7 @@ export default async function NewMember() {
       <PageHead title="নতুন সদস্য" sub="অফিসে সরাসরি আসা সদস্যদের জন্য। অনলাইন আবেদন অনুমোদন করতে আবেদন পেজে যান।" />
       <ActionForm action={createMember} className="card" style={{ maxWidth: 820 }}>
         <MemberFields isNew />
-        <Submit>সদস্য তৈরি করুন</Submit>
+        <Submit>সদস্য তৈরি করুন (Create member)</Submit>
       </ActionForm>
     </>
   );

@@ -11,10 +11,12 @@ export function Badge({ map, k }: { map: Record<string, [string, string]>; k: st
   return <span className={`badge ${c}`}>{t}</span>;
 }
 
+import { hint } from './adminlabels';
+
 export function PageHead({ title, sub, children }: { title: string; sub?: React.ReactNode; children?: React.ReactNode }) {
   return (
     <div className="phead">
-      <div><h1>{title}</h1>{sub && <div className="muted small">{sub}</div>}</div>
+      <div><h1>{title}{hint(title) && <small className="en-hint">{hint(title)}</small>}</h1>{sub && <div className="muted small">{sub}</div>}</div>
       {children && <div className="row" style={{ gap: 8 }}>{children}</div>}
     </div>
   );

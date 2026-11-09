@@ -23,7 +23,7 @@ export default async function Join() {
       <JsonLd data={graph(s, [], [[t('সদস্য হোন', 'Join us'), '/join']])} />
       <PageTitle title={t('সদস্য হোন', 'Join us')} sub={t(`এককালীন ${tk(s.reg_fee)} ভর্তি ফি এবং প্রতি মাসে আপনার সামর্থ্য অনুযায়ী চাঁদা।`, `A one-time ${tk(s.reg_fee)} joining fee and a monthly contribution that suits you.`)} />
       <section style={{ padding: '20px 0 60px' }}><div className="wrap grid join-grid">
-        <JoinForm />
+        <JoinForm fee={s.reg_fee} payList={s.pay_methods} payInfo={s.pay_info} />
         <div>
           <div className="card"><h2 className="h2" style={{ marginTop: 0 }}>{t('সদস্যপদের নিয়ম', 'Membership rules')}</h2><ol className="terms">{s.member_terms.map((x, i) => <li key={i}>{x}</li>)}</ol></div>
           <div className="card" style={{ marginTop: 16 }}>

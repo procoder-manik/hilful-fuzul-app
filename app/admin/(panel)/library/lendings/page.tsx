@@ -32,7 +32,7 @@ export default async function Lendings({ searchParams }: { searchParams: { all?:
       <LibraryTabs on="lend" />
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 340px', alignItems: 'start' }}>
         <div className="card"><div className="scroll"><table className="tbl">
-          <thead><tr><th>বই</th><th>পাঠক</th><th>নিয়েছেন</th><th>ফেরতের কথা</th><th>অবস্থা</th><th></th></tr></thead>
+          <thead><tr><th>বই<small className="en-hint">(Book)</small></th><th>পাঠক<small className="en-hint">(Reader)</small></th><th>নিয়েছেন<small className="en-hint">(Borrowed)</small></th><th>ফেরতের কথা<small className="en-hint">(Due back)</small></th><th>অবস্থা<small className="en-hint">(Status)</small></th><th></th></tr></thead>
           <tbody>
             {(data ?? []).length === 0 && <Empty cols={6} text="কোনো বই এখন বাইরে নেই" />}
             {(data ?? []).map((x) => {
@@ -54,15 +54,15 @@ export default async function Lendings({ searchParams }: { searchParams: { all?:
         </table></div></div>
         <ActionForm action={lendBook} className="card" resetOnSuccess>
           <b>বই দিন</b>
-          <label className="f" style={{ marginTop: 10 }}><span>বই *</span><select name="book_id" required>{available.map((b) => <option key={b.id} value={b.id}>{b.title}</option>)}</select></label>
-          <label className="f"><span>সদস্য হলে বেছে নিন</span><select name="member_id"><option value="">সদস্য নন</option>{(members ?? []).map((m) => <option key={m.id} value={m.id}>{m.name} ({m.member_no})</option>)}</select></label>
-          <label className="f"><span>পাঠকের নাম (সদস্য না হলে)</span><input name="borrower_name" /></label>
-          <label className="f"><span>মোবাইল</span><input name="borrower_phone" inputMode="tel" /></label>
+          <label className="f" style={{ marginTop: 10 }}><span>বই *<small className="en-hint">(Book)</small></span><select name="book_id" required>{available.map((b) => <option key={b.id} value={b.id}>{b.title}</option>)}</select></label>
+          <label className="f"><span>সদস্য হলে বেছে নিন<small className="en-hint">(Choose if a member)</small></span><select name="member_id"><option value="">সদস্য নন</option>{(members ?? []).map((m) => <option key={m.id} value={m.id}>{m.name} ({m.member_no})</option>)}</select></label>
+          <label className="f"><span>পাঠকের নাম (সদস্য না হলে)<small className="en-hint">(Reader name, non-member)</small></span><input name="borrower_name" /></label>
+          <label className="f"><span>মোবাইল<small className="en-hint">(Mobile)</small></span><input name="borrower_phone" inputMode="tel" /></label>
           <div className="grid g2" style={{ gap: '0 10px' }}>
-            <label className="f"><span>নেওয়ার তারিখ</span><input name="out_on" type="date" defaultValue={today} /></label>
-            <label className="f"><span>ফেরতের তারিখ</span><input name="expected_on" type="date" defaultValue={in14} /></label>
+            <label className="f"><span>নেওয়ার তারিখ<small className="en-hint">(Borrow date)</small></span><input name="out_on" type="date" defaultValue={today} /></label>
+            <label className="f"><span>ফেরতের তারিখ<small className="en-hint">(Return date)</small></span><input name="expected_on" type="date" defaultValue={in14} /></label>
           </div>
-          <Submit>সংরক্ষণ</Submit>
+          <Submit>সংরক্ষণ (Save)</Submit>
         </ActionForm>
       </div>
     </>

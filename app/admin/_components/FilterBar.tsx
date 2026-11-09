@@ -30,13 +30,13 @@ export function FilterBar({ base, range, extra = {}, exportKind, search = 'ন�
             {range.r === 'custom' && <><input type="hidden" name="from" value={range.from ?? ''} /><input type="hidden" name="to" value={range.to} /></>}
             {range.sort === 'old' && <input type="hidden" name="sort" value="old" />}
             <input name="q" defaultValue={range.q} placeholder={search} aria-label="খুঁজুন" style={{ width: 220 }} />
-            <button className="btn sm">খুঁজুন</button>
+            <button className="btn sm">খুঁজুন (Search)</button>
             {range.q && <Link className="btn sm" href={link({ q: '' })}>মুছুন</Link>}
           </form>
         )}
         <div className="seg">
-          <Link href={link({ sort: 'new' })} className={range.sort === 'new' ? 'on' : ''}>নতুন আগে</Link>
-          <Link href={link({ sort: 'old' })} className={range.sort === 'old' ? 'on' : ''}>পুরোনো আগে</Link>
+          <Link href={link({ sort: 'new' })} className={range.sort === 'new' ? 'on' : ''}>নতুন আগে (Newest first)</Link>
+          <Link href={link({ sort: 'old' })} className={range.sort === 'old' ? 'on' : ''}>পুরোনো আগে (Oldest first)</Link>
         </div>
         {exportKind && <div className="row" style={{ gap: 6, marginLeft: 'auto' }}>
           <a className="btn sm" href={exp('xlsx')} download>⬇ Excel</a>

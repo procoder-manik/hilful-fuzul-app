@@ -13,6 +13,9 @@ import { uploadMedia, uploadSignature } from '@/lib/storage';
 
 export type RegisterState = { error?: string; loginHint?: boolean };
 
+/** ফি পাঠানোর মাধ্যম (পোর্টালের ClaimForm ও অ্যাডমিনের আবেদন পাতার সাথে একই নাম) */
+const PAY_METHODS = ['বিকাশ', 'নগদ', 'রকেট', 'ব্যাংক', 'হাতে নগদ (কোষাধ্যক্ষকে)'];
+
 /** নিবন্ধন: অ্যাকাউন্ট ও প্রোফাইল তৈরি হয়, সাথে সাথে লগইন হয়ে প্রোফাইলে যায়। ভর্তি ফি দিয়ে কমিটির যাচাইয়ের পর সদস্যপদ চালু হয়। */
 export async function registerAccount(_: RegisterState, f: FormData): Promise<RegisterState> {
   let userId: string | null = null;
@@ -38,6 +41,14 @@ export async function registerAccount(_: RegisterState, f: FormData): Promise<Re
     if (monthly < 50) return { error: t('মাসিক চাঁদা কমপক্ষে ৫০ টাকা', 'Monthly contribution must be at least 50 taka') };
     if (!f.get('agree')) return { error: t('শর্তাবলীতে সম্মতি দিন', 'Please accept the terms') };
 
+    // ভর্তি ফি জমার তথ্য (ঐচ্ছিক): মাধ্যম বাছলে মোবাইল ব্যাংকিং ও ব্যাংকে ট্রানজ্যাকশন আইডি লাগে
+    const payMethod = str(f, 'pay_method');
+    let payTrx = str(f, 'pay_trx').toUpperCase().replace(/\s+/g, '');
+    if (payMethod && !PAY_METHODS.includes(payMethod)) return { error: t('পেমেন্টের মাধ্যম বেছে নিন', 'Choose a payment method') };
+    const cash = payMethod === PAY_METHODS[4];
+    if (cash) payTrx = '';
+    if (payMethod && !cash && !/^[A-Z0-9._-]{4,40}$/.test(payTrx)) return { error: t('ট্রানজ্যাকশন আইডি সঠিকভাবে লিখুন (৪-৪০ অক্ষর, ইংরেজি অক্ষর ও সংখ্যা)', 'Enter a valid transaction ID (4 to 40 letters or digits)') };
+
     const { count: isMember } = await admin.from('members').select('id', { count: 'exact', head: true }).eq('phone', phone);
     if (isMember) return { error: t('এই মোবাইল নম্বরে আগেই একজন সদস্য আছেন। লগইন করুন।', 'A member with this number already exists. Please log in.'), loginHint: true };
 
@@ -48,6 +59,7 @@ export async function registerAccount(_: RegisterState, f: FormData): Promise<Re
     const { error } = await admin.from('applications').insert({
       user_id: userId, name, father_name: str(f, 'father_name'), mother_name: opt(f, 'mother_name'), phone, email, nid: opt(f, 'nid'), dob: opt(f, 'dob'),
       address: str(f, 'address'), occupation: opt(f, 'occupation'), nominee: opt(f, 'nominee'), monthly_amount: monthly, photo_url, signature_url,
+      ...(payMethod ? { pay_method: payMethod, pay_trx: payTrx || null, pay_claimed_at: new Date().toISOString() } : {}),
     });
     if (error) throw error;
 

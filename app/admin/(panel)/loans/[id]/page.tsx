@@ -22,7 +22,7 @@ export default async function LoanDetail({ params }: { params: { id: string } })
   return (
     <>
       <PageHead title={`ঋণ ${l.slip_no}`} sub={<><Link href={`/admin/members/${m.id}`}>{m.name}</Link>, {m.member_no}, {bn(m.phone)}</>}>
-        <Link className="btn" href={`/admin/print/loan/${l.id}`}>রসিদ প্রিন্ট</Link>
+        <Link className="btn" href={`/admin/print/loan/${l.id}`}>রসিদ প্রিন্ট (Print receipt)</Link>
       </PageHead>
       <div className="grid g4">
         <div className="kpi"><span>ঋণের পরিমাণ</span><b>{tk(l.amount)}</b></div>
@@ -43,7 +43,7 @@ export default async function LoanDetail({ params }: { params: { id: string } })
         </div>
         <div className="card">
           <b>ফেরতের হিসাব</b>
-          <div className="scroll"><table className="tbl"><thead><tr><th>তারিখ</th><th>রসিদ</th><th>পরিমাণ</th><th></th></tr></thead><tbody>
+          <div className="scroll"><table className="tbl"><thead><tr><th>তারিখ<small className="en-hint">(Date)</small></th><th>রসিদ<small className="en-hint">(Receipt)</small></th><th>পরিমাণ<small className="en-hint">(Amount)</small></th><th></th></tr></thead><tbody>
             {reps.length === 0 && <Empty cols={4} text="এখনো কোনো ফেরত আসেনি" />}
             {reps.map((r) => (
               <tr key={r.id}><td>{fd(r.paid_on)}</td><td className="small">{r.receipt_no}</td><td>{tk(r.amount)}</td>
@@ -52,9 +52,9 @@ export default async function LoanDetail({ params }: { params: { id: string } })
           </tbody></table></div>
           {bal > 0 && (
             <ActionForm action={addRepayment.bind(null, l.id)} className="row" style={{ marginTop: 14, alignItems: 'flex-end' }} resetOnSuccess>
-              <label className="f" style={{ margin: 0 }}><span>পরিমাণ</span><input name="amount" type="number" min={1} max={bal} defaultValue={Math.min(inst, bal)} style={{ width: 130 }} required /></label>
-              <label className="f" style={{ margin: 0 }}><span>তারিখ</span><input name="paid_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
-              <Submit>ফেরত গ্রহণ</Submit>
+              <label className="f" style={{ margin: 0 }}><span>পরিমাণ<small className="en-hint">(Amount)</small></span><input name="amount" type="number" min={1} max={bal} defaultValue={Math.min(inst, bal)} style={{ width: 130 }} required /></label>
+              <label className="f" style={{ margin: 0 }}><span>তারিখ<small className="en-hint">(Date)</small></span><input name="paid_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
+              <Submit>ফেরত গ্রহণ (Take repayment)</Submit>
             </ActionForm>
           )}
         </div>

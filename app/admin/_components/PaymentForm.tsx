@@ -39,7 +39,7 @@ export function PaymentForm({ members, initial, today, action }: { members: PayM
       <label className="f"><span className="lbl">নোট (ঐচ্ছিক, যেমন বিকাশ ট্রানজেকশন আইডি)</span><input name="note" /></label>
       {m?.frozen && <label className="chk"><input type="checkbox" name="unfreeze" /> <span>জমার সাথে আনফ্রিজ করুন (ভুলবশত বকেয়া দেখানো হলে)</span></label>}
       <p className="muted small">মোট: <b>৳{bn(count * amount)}</b>। সবচেয়ে পুরোনো বকেয়া মাস থেকে ক্রমানুসারে জমা হবে।</p>
-      <Submit>জমা নিন ও রসিদ প্রিন্ট</Submit>
+      <Submit>জমা নিন ও রসিদ প্রিন্ট (Collect & print receipt)</Submit>
     </ActionForm>
   );
 }

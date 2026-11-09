@@ -22,7 +22,7 @@ export default async function Design({ searchParams }: { searchParams: { tab?: s
   return (
     <>
       <PageHead title="হেডার ও ফুটার ডিজাইন" sub="রং, লেআউট, মেনুর ধরন, ঘোষণা-বার ও ফুটারের কলাম নিজের মতো সাজান। বদলানোর সাথে সাথে নিচে প্রিভিউ দেখা যাবে।">
-        <Link className="btn" href="/admin/menus">মেনু সম্পাদনা</Link>
+        <Link className="btn" href="/admin/menus">মেনু সম্পাদনা (Edit menu)</Link>
       </PageHead>
       <div className="seg" style={{ marginBottom: 16 }}>
         <Link href="/admin/design" className={tab === 'header' ? 'on' : ''}>হেডার</Link>

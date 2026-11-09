@@ -25,22 +25,22 @@ export default async function Members({ searchParams }: { searchParams: Record<s
   return (
     <>
       <PageHead title="সদস্য" sub="টানা বকেয়া হলে সদস্যপদ প্রতিদিন সকালে স্বয়ংক্রিয়ভাবে স্থগিত হয়। তারিখের ফিল্টার যোগদানের তারিখ ধরে।">
-        {canEdit && <Link className="btn pri" href="/admin/members/new">নতুন সদস্য</Link>}
-        {canEdit && <Link className="btn" href="/admin/members/contact">স্থগিত ও বকেয়াদের সাথে যোগাযোগ</Link>}
-        <Link className="btn" href="/admin/print/member/blank">খালি ফর্ম প্রিন্ট</Link>
+        {canEdit && <Link className="btn pri" href="/admin/members/new">নতুন সদস্য (New member)</Link>}
+        {canEdit && <Link className="btn" href="/admin/members/contact">স্থগিত ও বকেয়াদের সাথে যোগাযোগ (Contact frozen & overdue)</Link>}
+        <Link className="btn" href="/admin/print/member/blank">খালি ফর্ম প্রিন্ট (Print blank form)</Link>
       </PageHead>
       <Summary items={[['মোট সদস্য', cnt(() => true)], ['সক্রিয়', cnt((m) => m.status === 'active')], ['স্থগিত', cnt((m) => m.status === 'frozen')], ['বকেয়া আছে', cnt((m) => m.overdue_months > 0)]]} />
       <FilterBar base="/admin/members" range={range} extra={extra} exportKind={canEdit ? 'members' : undefined} search="নাম, মোবাইল, সদস্য নম্বর বা ইমেইল" />
       <div className="seg wrapable" style={{ marginBottom: 12 }}>
-        <Link className={!searchParams.status && !searchParams.due ? 'on' : ''} href={seg({})}>সব</Link>
-        <Link className={searchParams.status === 'active' ? 'on' : ''} href={seg({ status: 'active' })}>সক্রিয়</Link>
-        <Link className={searchParams.status === 'frozen' ? 'on' : ''} href={seg({ status: 'frozen' })}>স্থগিত</Link>
-        <Link className={searchParams.due ? 'on' : ''} href={seg({ due: '1' })}>বকেয়া আছে</Link>
+        <Link className={!searchParams.status && !searchParams.due ? 'on' : ''} href={seg({})}>সব (All)</Link>
+        <Link className={searchParams.status === 'active' ? 'on' : ''} href={seg({ status: 'active' })}>সক্রিয় (Active)</Link>
+        <Link className={searchParams.status === 'frozen' ? 'on' : ''} href={seg({ status: 'frozen' })}>স্থগিত (Frozen)</Link>
+        <Link className={searchParams.due ? 'on' : ''} href={seg({ due: '1' })}>বকেয়া আছে (Overdue)</Link>
       </div>
       <div className="card">
         <div className="muted small" style={{ marginBottom: 6 }}>এই ফিল্টারে {bn(rows.length)} জন</div>
         <div className="scroll"><table className="tbl">
-          <thead><tr><th>সদস্য</th><th>যোগদান</th><th>মাসিক</th><th>মোট জমা</th><th>বকেয়া</th><th>অবস্থা</th></tr></thead>
+          <thead><tr><th>সদস্য<small className="en-hint">(Member)</small></th><th>যোগদান<small className="en-hint">(Joined)</small></th><th>মাসিক<small className="en-hint">(Monthly)</small></th><th>মোট জমা<small className="en-hint">(Total paid)</small></th><th>বকেয়া<small className="en-hint">(Overdue)</small></th><th>অবস্থা<small className="en-hint">(Status)</small></th></tr></thead>
           <tbody>
             {rows.length === 0 && <Empty cols={6} text="কোনো সদস্য পাওয়া যায়নি" />}
             {rows.slice(0, SHOW).map((m) => (

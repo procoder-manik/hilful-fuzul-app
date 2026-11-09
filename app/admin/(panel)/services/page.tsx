@@ -35,7 +35,7 @@ export default async function Services({ searchParams }: { searchParams: Record<
       </div>}
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 360px', alignItems: 'start' }}>
         <div className="card"><div className="scroll"><table className="tbl">
-          <thead><tr><th>তারিখ</th><th>সেবা</th><th>নাম</th><th>সংখ্যা</th><th></th></tr></thead>
+          <thead><tr><th>তারিখ<small className="en-hint">(Date)</small></th><th>সেবা<small className="en-hint">(Service)</small></th><th>নাম<small className="en-hint">(Name)</small></th><th>সংখ্যা<small className="en-hint">(Count)</small></th><th></th></tr></thead>
           <tbody>
             {rows.length === 0 && <Empty cols={5} text="এই সময়ে কোনো রেকর্ড নেই" />}
             {rows.slice(0, 400).map((r) => (
@@ -46,15 +46,15 @@ export default async function Services({ searchParams }: { searchParams: Record<
         </table></div></div>
         <ActionForm action={addServiceRecords} className="card" resetOnSuccess>
           <b>সেবা দেওয়ার রেকর্ড যোগ</b>
-          <label className="f" style={{ marginTop: 10 }}><span>সেবা</span><select name="program_id">{(programs ?? []).map((p) => <option key={p.id} value={p.id}>{p.icon} {p.title}</option>)}<option value="">অন্য (নিচে লিখুন)</option></select></label>
-          <label className="f"><span>অন্য সেবার নাম (তালিকায় না থাকলে)</span><input name="service" /></label>
-          <label className="f"><span>যারা সেবা নিলেন (প্রতি লাইনে একজন: নাম, মোবাইল)</span><textarea name="people" rows={6} placeholder={'মোঃ রফিক, 01711000000\nআয়েশা খাতুন'} required /></label>
+          <label className="f" style={{ marginTop: 10 }}><span>সেবা<small className="en-hint">(Service)</small></span><select name="program_id">{(programs ?? []).map((p) => <option key={p.id} value={p.id}>{p.icon} {p.title}</option>)}<option value="">অন্য (নিচে লিখুন)</option></select></label>
+          <label className="f"><span>অন্য সেবার নাম (তালিকায় না থাকলে)<small className="en-hint">(Other service name)</small></span><input name="service" /></label>
+          <label className="f"><span>যারা সেবা নিলেন (প্রতি লাইনে একজন: নাম, মোবাইল)<small className="en-hint">(People served)</small></span><textarea name="people" rows={6} placeholder={'মোঃ রফিক, 01711000000\nআয়েশা খাতুন'} required /></label>
           <div className="grid g2" style={{ gap: '0 8px' }}>
-            <label className="f"><span>তারিখ</span><input name="served_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
-            <label className="f"><span>প্রতিজন কতটি</span><input name="quantity" type="number" min={1} defaultValue={1} /></label>
+            <label className="f"><span>তারিখ<small className="en-hint">(Date)</small></span><input name="served_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
+            <label className="f"><span>প্রতিজন কতটি<small className="en-hint">(Quantity per person)</small></span><input name="quantity" type="number" min={1} defaultValue={1} /></label>
           </div>
-          <label className="f"><span>নোট (যেমন: সুগার ৮.২, কম্বল ১টি)</span><input name="note" /></label>
-          <Submit>রেকর্ড যোগ করুন</Submit>
+          <label className="f"><span>নোট (যেমন: সুগার ৮.২, কম্বল ১টি)<small className="en-hint">(Note)</small></span><input name="note" /></label>
+          <Submit>রেকর্ড যোগ করুন (Add record)</Submit>
         </ActionForm>
       </div>
     </>

@@ -23,7 +23,7 @@ export default async function Loans({ searchParams }: { searchParams: Record<str
   return (
     <>
       <PageHead title="করজে হাসানা" sub={`সব মিলিয়ে ${tk(s.total_loaned)} বিতরণ, ${tk(s.total_loaned - s.total_repaid)} বকেয়া, তহবিলে এখন ${tk(s.total_fund - s.total_loaned + s.total_repaid)}`}>
-        <Link className="btn pri" href="/admin/loans/new">নতুন ঋণ</Link>
+        <Link className="btn pri" href="/admin/loans/new">নতুন ঋণ (New loan)</Link>
       </PageHead>
       <FilterBar base="/admin/loans" range={range} extra={extra} exportKind="loans" search="নাম, মোবাইল, স্লিপ বা জামিনদার" />
       <Summary items={[['এই সময়ে ঋণ', `${bn(rows.length)}টি`, `${bn(new Set(rows.map((l) => l.member_id)).size)} জন নিয়েছেন`], ['মোট দেওয়া', tk(sum('amount'))], ['ফেরত এসেছে', tk(sum('repaid'))], ['বাকি', tk(sum('left'))]]} />
@@ -31,10 +31,10 @@ export default async function Loans({ searchParams }: { searchParams: Record<str
         {[['', 'সব'], ['running', 'চলমান'], ['overdue', 'মেয়াদোত্তীর্ণ'], ['paid', 'পরিশোধিত']].map(([k, t]) => (
           <Link key={k} className={(searchParams.st ?? '') === k ? 'on' : ''} href={`/admin/loans?${rangeQS(range, { st: k })}`}>{t}</Link>
         ))}
-        <a className="btn sm" style={{ marginLeft: 8 }} href={`/admin/export/repayments?${rangeQS(range, { format: 'xlsx' })}`} download>⬇ ঋণ ফেরতের তালিকা</a>
+        <a className="btn sm" style={{ marginLeft: 8 }} href={`/admin/export/repayments?${rangeQS(range, { format: 'xlsx' })}`} download>⬇ ঋণ ফেরতের তালিকা (Repayments list)</a>
       </div>
       <div className="card"><div className="scroll"><table className="tbl">
-        <thead><tr><th>স্লিপ</th><th>সদস্য</th><th>পরিমাণ</th><th>প্রদান / শেষ তারিখ</th><th>ফেরত / বাকি</th><th>অবস্থা</th></tr></thead>
+        <thead><tr><th>স্লিপ<small className="en-hint">(Slip)</small></th><th>সদস্য<small className="en-hint">(Member)</small></th><th>পরিমাণ<small className="en-hint">(Amount)</small></th><th>প্রদান / শেষ তারিখ<small className="en-hint">(Issued / due)</small></th><th>ফেরত / বাকি<small className="en-hint">(Repaid / balance)</small></th><th>অবস্থা<small className="en-hint">(Status)</small></th></tr></thead>
         <tbody>
           {rows.length === 0 && <Empty cols={6} text="এই সময়ে কোনো ঋণ নেই" />}
           {rows.map((l) => (

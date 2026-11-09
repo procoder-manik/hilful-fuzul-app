@@ -6,18 +6,20 @@ import { FooterView } from '@/components/site/FooterView';
 import { FOOTER_DEFAULT, HEADER_DEFAULT, type FooterCfg, type HeaderCfg } from '@/lib/layoutcfg';
 import type { MegaData, MenuNode } from '@/lib/menu';
 import type { ActionState } from '@/lib/guard';
+import { fieldHint } from '@/lib/adminlabels';
+import { Info } from '../../_components/Fld';
 
 type Org = { name: string; short: string | null; tagline: string | null; logo: string | null; established: string | null };
 type Contact = { phone: string | null; email: string | null; address: string | null; facebook: string | null; whatsapp: string | null };
 type Action = (p: ActionState, f: FormData) => Promise<ActionState>;
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="f"><span>{label}</span>{children}</label>; }
-function Check({ label, v, set }: { label: string; v: boolean; set: (b: boolean) => void }) { return <label className="chk"><input type="checkbox" checked={v} onChange={(e) => set(e.target.checked)} /> <span>{label}</span></label>; }
+function Field({ label, suffix, children }: { label: string; suffix?: string; children: React.ReactNode }) { const h = fieldHint(label); return <label className="f"><span>{label}{h.en && <small className="en-hint">{h.en}</small>}{suffix}</span>{children}{h.info && <Info>{h.info}</Info>}</label>; }
+function Check({ label, v, set }: { label: string; v: boolean; set: (b: boolean) => void }) { const h = fieldHint(label); return <label className="chk"><input type="checkbox" checked={v} onChange={(e) => set(e.target.checked)} /> <span className="chk-t">{label}{h.en && <small className="en-hint">{h.en}</small>}{h.info && <Info>{h.info}</Info>}</span></label>; }
 function Pick<T extends string | number>({ label, v, set, opts }: { label: string; v: T; set: (x: T) => void; opts: [T, string][] }) {
   return <Field label={label}><select value={v} onChange={(e) => set((typeof v === 'number' ? Number(e.target.value) : e.target.value) as T)}>{opts.map(([k, n]) => <option key={String(k)} value={k}>{n}</option>)}</select></Field>;
 }
 function Range({ label, v, set, min, max, unit = '' }: { label: string; v: number; set: (n: number) => void; min: number; max: number; unit?: string }) {
-  return <Field label={`${label}: ${v}${unit}`}><input type="range" min={min} max={max} value={v} onChange={(e) => set(Number(e.target.value))} /></Field>;
+  return <Field label={label} suffix={`: ${v}${unit}`}><input type="range" min={min} max={max} value={v} onChange={(e) => set(Number(e.target.value))} /></Field>;
 }
 function Txt({ label, v, set, max = 200 }: { label: string; v: string; set: (s: string) => void; max?: number }) { return <Field label={label}><input value={v} maxLength={max} onChange={(e) => set(e.target.value)} /></Field>; }
 function Col({ label, v, set }: { label: string; v: string; set: (s: string) => void }) { return <Field label={label}><input type="color" value={v} onChange={(e) => set(e.target.value)} style={{ padding: 2, height: 42 }} /></Field>; }
@@ -27,11 +29,11 @@ export function HeaderStudio({ initial, org, menu, mega, contact, action }: { in
   const u = <K extends keyof HeaderCfg>(k: K) => (v: HeaderCfg[K]) => setC((p) => ({ ...p, [k]: v }));
   return (
     <div>
-      <div className="card studio-pv"><div className="row" style={{ justifyContent: 'space-between' }}><b>লাইভ প্রিভিউ</b><span className="muted small">মেনুর ডানে তীর চাপলে ড্রপডাউন বা মেগা মেনু দেখা যাবে। মোবাইলে হেডার ছোট হয়ে নিচের ট্যাব বার আসে।</span></div>
+      <div className="card studio-pv"><div className="row" style={{ justifyContent: 'space-between' }}><b>লাইভ প্রিভিউ<small className="en-hint">(Live preview)</small></b><span className="muted small">মেনুর ডানে তীর চাপলে ড্রপডাউন বা মেগা মেনু দেখা যাবে। মোবাইলে হেডার ছোট হয়ে নিচের ট্যাব বার আসে।</span></div>
         <div className="pv-box"><HeaderView preview cfg={c} org={org} menu={menu} mega={mega} account={{ href: '#', label: 'লগইন' }} lang="bn" contact={{ phone: contact.phone, email: contact.email }} /></div></div>
       <ActionForm action={action} className="card" style={{ marginTop: 16 }}>
         <input type="hidden" name="cfg" value={JSON.stringify(c)} />
-        <h2 className="h2" style={{ marginTop: 0 }}>হেডারের ডিজাইন</h2>
+        <h2 className="h2" style={{ marginTop: 0 }}>হেডারের ডিজাইন<small className="en-hint">(Header design)</small></h2>
         <div className="grid g3" style={{ gap: '0 14px' }}>
           <Pick label="লেআউট" v={c.layout} set={u('layout')} opts={[['classic', 'ক্লাসিক: লোগো বাঁয়ে, মেনু ডানে'], ['centered', 'মাঝখানে লোগো, নিচে মেনু (বাটন ওপরের বারে)'], ['tworow', 'দুই সারি: নিচে আলাদা পট্টিতে মেনু'], ['floating', 'ভাসমান: গোল কোণার আধুনিক বার']]} />
           {c.layout === 'tworow' && <Pick label="মেনুর পট্টির রং" v={c.band} set={u('band')} opts={[['soft', 'হালকা ধূসর'], ['accent', 'থিমের মূল রং'], ['plain', 'হেডারের মতোই']]} />}
@@ -58,7 +60,7 @@ export function HeaderStudio({ initial, org, menu, mega, contact, action }: { in
             {c.ctaOn && <div className="grid g2" style={{ gap: '0 8px' }}><Txt label="বাটনের লেখা" v={c.ctaLabel} set={u('ctaLabel')} max={40} /><Txt label="Button text (English)" v={c.ctaLabelEn} set={u('ctaLabelEn')} max={40} /><Txt label="লিংক" v={c.ctaUrl} set={u('ctaUrl')} max={200} /></div>}
           </div>
         </div>
-        <h3 className="h2">ওপরের ঘোষণা-বার (টপবার)</h3>
+        <h3 className="h2">ওপরের ঘোষণা-বার (টপবার)<small className="en-hint">(Top announcement bar)</small></h3>
         <Check label="হেডারের ওপরে একটি ছোট বার দেখান" v={c.topbarOn} set={u('topbarOn')} />
         {c.topbarOn && (
           <div className="grid g3" style={{ gap: '0 14px' }}>
@@ -67,7 +69,7 @@ export function HeaderStudio({ initial, org, menu, mega, contact, action }: { in
             <Col label="ব্যাকগ্রাউন্ড" v={c.topbarBg} set={u('topbarBg')} /><Col label="লেখার রং" v={c.topbarColor} set={u('topbarColor')} />
           </div>
         )}
-        <div className="row" style={{ marginTop: 12 }}><Submit pendingText="সংরক্ষণ হচ্ছে...">হেডার সংরক্ষণ করুন</Submit><button type="button" className="btn" onClick={() => setC(HEADER_DEFAULT)}>ডিফল্টে ফিরুন</button></div>
+        <div className="row" style={{ marginTop: 12 }}><Submit pendingText="সংরক্ষণ হচ্ছে...">হেডার সংরক্ষণ করুন (Save header)</Submit><button type="button" className="btn" onClick={() => setC(HEADER_DEFAULT)}>ডিফল্টে ফিরুন (Reset)</button></div>
         <p className="muted small">"ডিফল্টে ফিরুন" চাপার পর "সংরক্ষণ করুন" না চাপলে কিছু বদলাবে না। মেনুর আইটেম বদলাতে <a href="/admin/menus">মেনু</a> পাতায় যান।</p>
       </ActionForm>
     </div>
@@ -79,10 +81,10 @@ export function FooterStudio({ initial, org, menus, contact, action }: { initial
   const u = <K extends keyof FooterCfg>(k: K) => (v: FooterCfg[K]) => setC((p) => ({ ...p, [k]: v }));
   return (
     <div>
-      <div className="card studio-pv"><b>লাইভ প্রিভিউ</b><div className="pv-box"><FooterView cfg={c} lang="bn" year="২০২৬" org={org} menus={menus} contact={contact} /></div></div>
+      <div className="card studio-pv"><b>লাইভ প্রিভিউ<small className="en-hint">(Live preview)</small></b><div className="pv-box"><FooterView cfg={c} lang="bn" year="২০২৬" org={org} menus={menus} contact={contact} /></div></div>
       <ActionForm action={action} className="card" style={{ marginTop: 16 }}>
         <input type="hidden" name="cfg" value={JSON.stringify(c)} />
-        <h2 className="h2" style={{ marginTop: 0 }}>ফুটারের ডিজাইন</h2>
+        <h2 className="h2" style={{ marginTop: 0 }}>ফুটারের ডিজাইন<small className="en-hint">(Footer design)</small></h2>
         <div className="grid g3" style={{ gap: '0 14px' }}>
           <Pick label="ব্যাকগ্রাউন্ড" v={c.bg} set={u('bg')} opts={[['surface', 'সাদা/গাঢ় (থিম অনুযায়ী)'], ['accent', 'থিমের মূল রং'], ['dark', 'গাঢ় সবুজ'], ['custom', 'নিজের রং']]} />
           {c.bg === 'custom' && <><Col label="ব্যাকগ্রাউন্ডের রং" v={c.bgColor} set={u('bgColor')} /><Col label="লেখার রং" v={c.textColor} set={u('textColor')} /></>}
@@ -111,19 +113,19 @@ export function FooterStudio({ initial, org, menus, contact, action }: { initial
             {c.showSocial && <Txt label="ইউটিউব চ্যানেলের লিংক (ঐচ্ছিক)" v={c.youtube} set={u('youtube')} max={200} />}
           </div>
         </div>
-        <h3 className="h2">লিংকের কলামের নাম (লিংকগুলো <a href="/admin/menus?loc=footer-1">মেনু</a> থেকে সাজান)</h3>
+        <h3 className="h2">লিংকের কলামের নাম<small className="en-hint">(Link column titles)</small></h3><p className="muted small" style={{ marginTop: -4 }}>কলামের ভেতরের লিংকগুলো <a href="/admin/menus?loc=footer-1">মেনু</a> পাতা থেকে সাজান।</p>
         <div className="grid g3" style={{ gap: '0 14px' }}>
           <Txt label="কলাম ১" v={c.col1Title} set={u('col1Title')} max={40} /><Txt label="Column 1 (English)" v={c.col1TitleEn} set={u('col1TitleEn')} max={40} /><div />
           <Txt label="কলাম ২" v={c.col2Title} set={u('col2Title')} max={40} /><Txt label="Column 2 (English)" v={c.col2TitleEn} set={u('col2TitleEn')} max={40} /><div />
           <Txt label="কলাম ৩ (মেনুতে আইটেম দিলে দেখাবে)" v={c.col3Title} set={u('col3Title')} max={40} /><Txt label="Column 3 (English)" v={c.col3TitleEn} set={u('col3TitleEn')} max={40} /><div />
         </div>
-        <h3 className="h2">নিজের লেখার কলাম (ঐচ্ছিক, যেমন: কুরআন ক্লাসের সময় বা ব্যাংক হিসাব)</h3>
+        <h3 className="h2">নিজের লেখার কলাম (ঐচ্ছিক)<small className="en-hint">(Custom text column)</small></h3><p className="muted small" style={{ marginTop: -4 }}>যেমন কুরআন ক্লাসের সময় বা ব্যাংক হিসাব। ফুটারে আলাদা একটি কলাম হয়ে বসবে।</p>
         <div className="grid g2" style={{ gap: '0 14px' }}>
           <Txt label="কলামের নাম" v={c.customTitle} set={u('customTitle')} max={40} /><Txt label="Column title (English)" v={c.customTitleEn} set={u('customTitleEn')} max={40} />
           <Field label="লেখা (লাইন ভেঙে লেখা যায়)"><textarea rows={3} value={c.customText} maxLength={500} onChange={(e) => u('customText')(e.target.value)} /></Field>
           <Field label="Text (English)"><textarea rows={3} value={c.customTextEn} maxLength={500} onChange={(e) => u('customTextEn')(e.target.value)} /></Field>
         </div>
-        <h3 className="h2">কপিরাইট ও ক্রেডিট</h3>
+        <h3 className="h2">কপিরাইট ও ক্রেডিট<small className="en-hint">(Copyright & credit)</small></h3>
         <div className="grid g2" style={{ gap: '0 14px' }}>
           <Txt label="কপিরাইট লেখা (ফাঁকা রাখলে স্বয়ংক্রিয়; {year} লিখলে চলতি বছর বসবে)" v={c.copyright} set={u('copyright')} /><Txt label="Copyright (English)" v={c.copyrightEn} set={u('copyrightEn')} />
           <Txt label="ক্রেডিটের আগের লেখা" v={c.creditPrefix} set={u('creditPrefix')} max={60} /><Txt label="Credit prefix (English)" v={c.creditPrefixEn} set={u('creditPrefixEn')} max={60} />
@@ -131,7 +133,7 @@ export function FooterStudio({ initial, org, menus, contact, action }: { initial
           <Txt label="নিচে বাড়তি এক লাইন (ঐচ্ছিক)" v={c.extraText} set={u('extraText')} max={300} /><Txt label="Extra line (English)" v={c.extraTextEn} set={u('extraTextEn')} max={300} />
         </div>
         <p className="muted small">ক্রেডিট কপিরাইটের ডানে দেখাবে, নামটিতে চাপলে লিংকে যাবে।</p>
-        <div className="row" style={{ marginTop: 12 }}><Submit pendingText="সংরক্ষণ হচ্ছে...">ফুটার সংরক্ষণ করুন</Submit><button type="button" className="btn" onClick={() => setC(FOOTER_DEFAULT)}>ডিফল্টে ফিরুন</button></div>
+        <div className="row" style={{ marginTop: 12 }}><Submit pendingText="সংরক্ষণ হচ্ছে...">ফুটার সংরক্ষণ করুন (Save footer)</Submit><button type="button" className="btn" onClick={() => setC(FOOTER_DEFAULT)}>ডিফল্টে ফিরুন (Reset)</button></div>
       </ActionForm>
     </div>
   );

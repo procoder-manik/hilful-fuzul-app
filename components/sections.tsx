@@ -51,10 +51,23 @@ export function Hero({ s, st, monthly, next }: { s: Settings; st: PublicStats; m
 
 export function Stats({ st }: { st: PublicStats }) {
   const t = getT();
-  const items: [number, string, boolean][] = [[st.total_fund, t('মোট তহবিল', 'Total fund'), true], [st.month_collected, t('এই মাসে সংগ্রহ', 'This month'), true], [st.total_loaned, t('মোট বিনা সুদে ঋণ', 'Interest-free loans'), true], [st.members, t('মোট সদস্য', 'Members'), false], [st.program_beneficiaries + st.borrowers, t('উপকৃত মানুষ', 'People helped'), false], [st.books, t('পাঠাগারে বই', 'Library books'), false]];
+  const items: [number, string, boolean, string][] = [
+    [st.total_fund, t('মোট তহবিল', 'Total fund'), true, 'coins'],
+    [st.month_collected, t('এই মাসে সংগ্রহ', 'This month'), true, 'chart'],
+    [st.total_loaned, t('মোট বিনা সুদে ঋণ', 'Interest-free loans'), true, 'handshake'],
+    [st.members, t('মোট সদস্য', 'Members'), false, 'users'],
+    [st.program_beneficiaries + st.borrowers, t('উপকৃত মানুষ', 'People helped'), false, 'heart'],
+    [st.books, t('পাঠাগারে বই', 'Library books'), false, 'book'],
+  ];
   return (
     <section style={{ padding: '10px 0 20px' }}>
-      <div className="wrap"><div className="stats load-in d3">{items.map(([v, l, m]) => <div className="stat" key={l}><b><CountUp value={v} money={m} /></b><span>{l}</span></div>)}</div></div>
+      <div className="wrap"><div className="stats stats-color load-in d3">{items.map(([v, l, m, ic], i) => (
+        <div className={`stat sc${i + 1}`} key={l}>
+          <span className="si" aria-hidden="true"><Icon name={ic} /></span>
+          <b><CountUp value={v} money={m} /></b>
+          <span className="sl">{l}</span>
+        </div>
+      ))}</div></div>
     </section>
   );
 }

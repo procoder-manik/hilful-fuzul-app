@@ -60,3 +60,17 @@ export async function runTranslations(_: ActionState, _f: FormData): Promise<Act
     return { error: errMsg(e) };
   }
 }
+
+/** ওয়েবসাইটের "আমাদের সদস্য" পাতার দুটি সুইচ (SQL 008 লাগে) */
+export async function saveMembersPage(_: ActionState, f: FormData): Promise<ActionState> {
+  try {
+    const { supabase, user } = await requireAction(ADMIN);
+    const { error } = await supabase.from('settings').update({ members_page_on: !!f.get('members_page_on'), members_show_money: !!f.get('members_show_money') }).eq('id', 1);
+    if (error) throw new Error(/column|schema cache/i.test(error.message) ? 'আগে Supabase এ supabase/migrations/008_public_members.sql চালান' : error.message);
+    await logActivity(supabase, user.id, 'ওয়েবসাইটের সদস্য পাতার সেটিংস হালনাগাদ করা হয়েছে');
+    revalidatePath('/members');
+    return { ok: 'সংরক্ষিত হয়েছে', ts: Date.now() };
+  } catch (e) {
+    return { error: errMsg(e) };
+  }
+}

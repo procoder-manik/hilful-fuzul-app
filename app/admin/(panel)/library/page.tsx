@@ -28,9 +28,9 @@ export default async function Library({ searchParams }: { searchParams: { q?: st
       <LibraryTabs on="books" />
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0,1fr) 340px', alignItems: 'start' }}>
         <div className="card">
-          <form className="row" style={{ marginBottom: 10, gap: 8 }}><input name="q" defaultValue={q} placeholder="বই, লেখক বা বিষয়" style={{ width: 240 }} aria-label="খুঁজুন" /><button className="btn">খুঁজুন</button></form>
+          <form className="row" style={{ marginBottom: 10, gap: 8 }}><input name="q" defaultValue={q} placeholder="বই, লেখক বা বিষয়" style={{ width: 240 }} aria-label="খুঁজুন" /><button className="btn">খুঁজুন (Search)</button></form>
           <div className="scroll"><table className="tbl">
-            <thead><tr><th>বই</th><th>বিষয়</th><th>পাঠাগারে / মোট</th><th>তাক</th><th>সংযোজন</th><th></th></tr></thead>
+            <thead><tr><th>বই<small className="en-hint">(Book)</small></th><th>বিষয়<small className="en-hint">(Subject)</small></th><th>পাঠাগারে / মোট<small className="en-hint">(In library / total)</small></th><th>তাক<small className="en-hint">(Shelf)</small></th><th>সংযোজন<small className="en-hint">(Added)</small></th><th></th></tr></thead>
             <tbody>
               {(books ?? []).length === 0 && <Empty cols={6} />}
               {(books ?? []).map((b) => (
@@ -46,16 +46,16 @@ export default async function Library({ searchParams }: { searchParams: { q?: st
         </div>
         <ActionForm key={edit?.id ?? 'new'} action={saveBook.bind(null, edit?.id ?? null)} className="card">
           <b>{edit ? 'বই সম্পাদনা' : 'নতুন বই'}</b>
-          <label className="f" style={{ marginTop: 10 }}><span>বইয়ের নাম *</span><input name="title" defaultValue={edit?.title} required /></label>
-          <label className="f"><span>লেখক</span><input name="author" defaultValue={edit?.author ?? ''} /></label>
-          <label className="f"><span>বিষয়</span><input name="category" defaultValue={edit?.category ?? ''} list="cats" /></label>
+          <label className="f" style={{ marginTop: 10 }}><span>বইয়ের নাম *<small className="en-hint">(Book title)</small></span><input name="title" defaultValue={edit?.title} required /></label>
+          <label className="f"><span>লেখক<small className="en-hint">(Author)</small></span><input name="author" defaultValue={edit?.author ?? ''} /></label>
+          <label className="f"><span>বিষয়<small className="en-hint">(Subject)</small></span><input name="category" defaultValue={edit?.category ?? ''} list="cats" /></label>
           <datalist id="cats">{cats.map((c) => <option key={c} value={c} />)}</datalist>
           <div className="grid g2" style={{ gap: '0 10px' }}>
-            <label className="f"><span>কপি</span><input name="copies" type="number" min={1} defaultValue={edit?.copies ?? 1} /></label>
-            <label className="f"><span>তাক</span><input name="shelf" defaultValue={edit?.shelf ?? ''} /></label>
+            <label className="f"><span>কপি<small className="en-hint">(Copies)</small></span><input name="copies" type="number" min={1} defaultValue={edit?.copies ?? 1} /></label>
+            <label className="f"><span>তাক<small className="en-hint">(Shelf)</small></span><input name="shelf" defaultValue={edit?.shelf ?? ''} /></label>
           </div>
-          <label className="f"><span>সংযোজনের তারিখ</span><input name="added_on" type="date" defaultValue={edit?.added_on ?? todayBD()} /></label>
-          <label className="f"><span>প্রচ্ছদের ছবি</span><input name="cover" type="file" accept="image/*" /></label>
+          <label className="f"><span>সংযোজনের তারিখ<small className="en-hint">(Date added)</small></span><input name="added_on" type="date" defaultValue={edit?.added_on ?? todayBD()} /></label>
+          <label className="f"><span>প্রচ্ছদের ছবি<small className="en-hint">(Cover image)</small></span><input name="cover" type="file" accept="image/*" /></label>
           <div className="row" style={{ gap: 8 }}><Submit>{edit ? 'পরিবর্তন সংরক্ষণ' : 'বই যোগ করুন'}</Submit>{edit && <Link className="btn" href="/admin/library">বাতিল</Link>}</div>
         </ActionForm>
       </div>

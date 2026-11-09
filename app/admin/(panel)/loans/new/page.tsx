@@ -24,24 +24,24 @@ export default async function NewLoan({ searchParams }: { searchParams: { member
     <>
       <PageHead title="নতুন করজে হাসানা" sub={`তহবিলে এখন ${tk(s.total_fund - s.total_loaned + s.total_repaid)} আছে। শুধু সক্রিয় ও চলমান ঋণ নেই এমন সদস্যদের দেখানো হচ্ছে।`} />
       <ActionForm action={createLoan} className="card" style={{ maxWidth: 820 }}>
-        <label className="f"><span>সদস্য *</span>
+        <label className="f"><span>সদস্য *<small className="en-hint">(Member)</small></span>
           <select name="member_id" defaultValue={searchParams.member} required>
             {eligible.map((m) => <option key={m.id} value={m.id}>{m.name} ({m.member_no})</option>)}
           </select>
         </label>
         {eligible.length === 0 && <div className="notice warn">ঋণ পাওয়ার মতো কোনো সদস্য নেই।</div>}
         <div className="grid g2" style={{ gap: '0 12px' }}>
-          <label className="f"><span>ঋণের পরিমাণ (৳) *</span><input name="amount" type="number" min={100} step={50} required /></label>
-          <label className="f"><span>মেয়াদ *</span><select name="term_months"><option value="3">৩ মাস</option><option value="6">৬ মাস</option><option value="12">১ বছর</option></select></label>
-          <label className="f"><span>ফেরতের ধরন</span><select name="mode"><option value="lump">মেয়াদ শেষে একবারে</option><option value="installment">মাসিক কিস্তিতে</option></select></label>
-          <label className="f"><span>প্রদানের তারিখ</span><input name="issued_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
-          <label className="f"><span>জামিনদারের নাম *</span><input name="guarantor_name" required /></label>
-          <label className="f"><span>জামিনদারের মোবাইল</span><input name="guarantor_phone" inputMode="tel" /></label>
+          <label className="f"><span>ঋণের পরিমাণ (৳) *<small className="en-hint">(Loan amount)</small></span><input name="amount" type="number" min={100} step={50} required /></label>
+          <label className="f"><span>মেয়াদ *<small className="en-hint">(Term)</small></span><select name="term_months"><option value="3">৩ মাস</option><option value="6">৬ মাস</option><option value="12">১ বছর</option></select></label>
+          <label className="f"><span>ফেরতের ধরন<small className="en-hint">(Repayment type)</small></span><select name="mode"><option value="lump">মেয়াদ শেষে একবারে</option><option value="installment">মাসিক কিস্তিতে</option></select></label>
+          <label className="f"><span>প্রদানের তারিখ<small className="en-hint">(Issue date)</small></span><input name="issued_on" type="date" defaultValue={todayBD()} max={todayBD()} /></label>
+          <label className="f"><span>জামিনদারের নাম *<small className="en-hint">(Guarantor name)</small></span><input name="guarantor_name" required /></label>
+          <label className="f"><span>জামিনদারের মোবাইল<small className="en-hint">(Guarantor mobile)</small></span><input name="guarantor_phone" inputMode="tel" /></label>
         </div>
-        <label className="f"><span>ঋণের উদ্দেশ্য</span><input name="purpose" placeholder="যেমন চিকিৎসা, পড়াশোনা, ছোট ব্যবসা" /></label>
+        <label className="f"><span>ঋণের উদ্দেশ্য<small className="en-hint">(Loan purpose)</small></span><input name="purpose" placeholder="যেমন চিকিৎসা, পড়াশোনা, ছোট ব্যবসা" /></label>
         <SignaturePad label="ঋণগ্রহীতার স্বাক্ষর (ঐচ্ছিক, প্রিন্ট করা রসিদেও হাতে সই নেওয়া যাবে)" />
         <label className="chk"><input type="checkbox" name="force" /> <span>তহবিলের বেশি হলেও দিন</span></label>
-        <Submit>ঋণ প্রদান ও রসিদ প্রিন্ট</Submit>
+        <Submit>ঋণ প্রদান ও রসিদ প্রিন্ট (Give loan & print receipt)</Submit>
       </ActionForm>
     </>
   );
