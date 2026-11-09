@@ -11,7 +11,7 @@ const display = Baloo_Da_2({ subsets: ['bengali', 'latin'], weight: ['500', '700
 
 export const viewport: Viewport = {
   width: 'device-width', initialScale: 1, viewportFit: 'cover',
-  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#eef2ee' }, { media: '(prefers-color-scheme: dark)', color: '#070b09' }],
+  themeColor: '#eef2ee',
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -34,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const s = await getSiteSettings();
   return (
-    <html lang={getLang()} data-skin={s.theme?.skin ?? 'mango'} className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
+    <html lang={getLang()} data-theme="light" data-skin={s.theme?.skin ?? 'mango'} className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
       <head><script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} /></head>
       <body>{children}</body>
     </html>

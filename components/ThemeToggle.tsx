@@ -4,14 +4,14 @@ import { Icon } from './Icon';
 import { useT } from './LangProvider';
 
 /** পেজ লোডের আগেই থিম বসানোর স্ক্রিপ্ট (ফ্ল্যাশ এড়াতে) */
-export const THEME_SCRIPT = `try{var t=localStorage.getItem('hf_theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch(e){}`;
+export const THEME_SCRIPT = `try{var t=localStorage.getItem('hf_theme');document.documentElement.dataset.theme=t==='dark'?'dark':'light'}catch(e){document.documentElement.dataset.theme='light'}`;
 
 export function ThemeToggle() {
   const { t } = useT();
   const [dark, setDark] = useState(false);
   useEffect(() => {
     const d = document.documentElement.dataset.theme;
-    setDark(d ? d === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches);
+    setDark(d === 'dark');
   }, []);
   const toggle = () => {
     const next = dark ? 'light' : 'dark';

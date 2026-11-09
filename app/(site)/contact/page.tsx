@@ -20,7 +20,16 @@ const SUBJECTS: [string, string][] = [['সাধারণ প্রশ্ন', 
 export default async function Contact() {
   const t = getT();
   const s = await getSiteSettings();
-  const cards = [['phone', t('ফোন', 'Phone'), s.phone && bn(s.phone), s.phone && `tel:${s.phone}`], ['mail', t('ইমেইল', 'Email'), s.email, s.email && `mailto:${s.email}`], ['pin', t('ঠিকানা', 'Address'), s.address, null], ['chat', t('হোয়াটসঅ্যাপ', 'WhatsApp'), s.whatsapp && bn(s.whatsapp), s.whatsapp && `https://wa.me/88${s.whatsapp}`]].filter(([, , v]) => v) as [string, string, string, string | null][];
+  const cards = [
+    ['phone', t('ফোন', 'Phone'), s.phone && bn(s.phone), s.phone && `tel:${s.phone}`],
+    ['phone', t('দ্বিতীয় ফোন', 'Second phone'), s.phone2 && bn(s.phone2), s.phone2 && `tel:${s.phone2}`],
+    ['mail', t('ইমেইল', 'Email'), s.email, s.email && `mailto:${s.email}`],
+    ['chat', t('হোয়াটসঅ্যাপ', 'WhatsApp'), s.whatsapp && bn(s.whatsapp), s.whatsapp && `https://wa.me/88${s.whatsapp.replace(/\D/g, '').replace(/^88/, '')}`],
+    ['pin', t('ঠিকানা', 'Address'), s.address, s.map_url ?? null],
+    ['clock', t('অফিসের সময়', 'Office hours'), s.office_hours, null],
+    ['globe', 'Facebook', s.facebook && s.facebook.replace(/^https?:\/\/(www\.)?/, ''), s.facebook],
+    ['globe', 'YouTube', s.youtube && s.youtube.replace(/^https?:\/\/(www\.)?/, ''), s.youtube],
+  ].filter(([, , v]) => v) as [string, string, string, string | null][];
   return (
     <>
       <JsonLd data={graph(s, [{ '@type': 'ContactPage', name: t('যোগাযোগ', 'Contact') }], [[t('যোগাযোগ', 'Contact'), '/contact']])} />
@@ -38,7 +47,7 @@ export default async function Contact() {
         <div className="grid" style={{ gap: 12 }}>
           {cards.map(([i, l, v, h]) => {
             const inner = <><span className="logo soft-logo"><Icon name={i} /></span><span><span className="muted small">{l}</span><b style={{ display: 'block' }}>{v}</b></span></>;
-            return h ? <a key={l} className="card row" style={{ flexWrap: 'nowrap', textDecoration: 'none' }} href={h}>{inner}</a> : <div key={l} className="card row" style={{ flexWrap: 'nowrap' }}>{inner}</div>;
+            return h ? <a key={l} className="card row" style={{ flexWrap: 'nowrap', textDecoration: 'none' }} href={h} target={h.startsWith('http') ? '_blank' : undefined} rel={h.startsWith('http') ? 'noopener noreferrer' : undefined}>{inner}</a> : <div key={l} className="card row" style={{ flexWrap: 'nowrap' }}>{inner}</div>;
           })}
         </div>
       </div></section>

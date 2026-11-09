@@ -40,7 +40,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       )}
       <main id="main">{children}</main>
       <FooterView cfg={footerCfg(s.footer_cfg)} lang={lang} year={year} org={{ name: s.org_name, tagline: s.tagline, established: s.established, logo: s.logo_url }}
-        menus={{ c1: f1, c2: f2, c3: f3, bottom: fb }} contact={{ phone: s.phone ? bn(s.phone) : null, email: s.email, address: s.address, facebook: s.facebook, whatsapp: s.whatsapp }} />
+        menus={{ c1: f1, c2: f2, c3: f3, bottom: fb }} contact={{ phone: s.phone ? bn(s.phone) : null, phone2: s.phone2 ? bn(s.phone2) : null, email: s.email, address: s.address, facebook: s.facebook, whatsapp: s.whatsapp, youtube: s.youtube, mapUrl: s.map_url, officeHours: s.office_hours }} />
       <ChatWidget who={!user ? 'guest' : isStaff ? 'staff' : 'member'} name={profile?.full_name ?? null} shortName={s.short_name ?? s.org_name} enabled={s.chat_enabled} />
       <TabBar account={account} accountLabel={acctLabel} menu={menu} />
     </LangProvider>

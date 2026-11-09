@@ -7,6 +7,7 @@ export type Settings = {
   logo_url: string | null; reg_fee: number; due_day: number; freeze_months: number; show_borrower_names: boolean;
   theme: { skin?: string }; home_sections: { k: string; on: boolean }[]; hero: Record<string, string>;
   ticker: string[]; member_terms: string[]; loan_terms: string[]; pay_info: string | null; quran_info: string | null;
+  phone2?: string | null; youtube?: string | null; map_url?: string | null; office_hours?: string | null;
   header_cfg: Record<string, unknown>; footer_cfg: Record<string, unknown>;
   pay_methods: PayMethod[]; notify_email: boolean; notify_sms: boolean; notify_last_run: string | null;
   chat_enabled: boolean; chat_provider: 'gemini' | 'openrouter'; chat_model: string | null; chat_notes: string | null;

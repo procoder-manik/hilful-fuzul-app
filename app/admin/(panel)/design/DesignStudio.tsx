@@ -33,7 +33,8 @@ export function HeaderStudio({ initial, org, menu, mega, contact, action }: { in
         <input type="hidden" name="cfg" value={JSON.stringify(c)} />
         <h2 className="h2" style={{ marginTop: 0 }}>হেডারের ডিজাইন</h2>
         <div className="grid g3" style={{ gap: '0 14px' }}>
-          <Pick label="লেআউট" v={c.layout} set={u('layout')} opts={[['classic', 'ক্লাসিক (লোগো বাঁয়ে, মেনু ডানে)'], ['centered', 'মাঝখানে লোগো, নিচে মেনু']]} />
+          <Pick label="লেআউট" v={c.layout} set={u('layout')} opts={[['classic', 'ক্লাসিক: লোগো বাঁয়ে, মেনু ডানে'], ['centered', 'মাঝখানে লোগো, নিচে মেনু (বাটন ওপরের বারে)'], ['tworow', 'দুই সারি: নিচে আলাদা পট্টিতে মেনু'], ['floating', 'ভাসমান: গোল কোণার আধুনিক বার']]} />
+          {c.layout === 'tworow' && <Pick label="মেনুর পট্টির রং" v={c.band} set={u('band')} opts={[['soft', 'হালকা ধূসর'], ['accent', 'থিমের মূল রং'], ['plain', 'হেডারের মতোই']]} />}
           <Range label="উচ্চতা" v={c.height} set={u('height')} min={48} max={110} unit="px" />
           <Range label="লোগোর মাপ" v={c.logoSize} set={u('logoSize')} min={28} max={72} unit="px" />
           <Pick label="ব্যাকগ্রাউন্ড" v={c.bg} set={u('bg')} opts={[['glass', 'কাঁচের মতো স্বচ্ছ'], ['solid', 'সাদা/গাঢ় (থিম অনুযায়ী)'], ['accent', 'থিমের মূল রং'], ['custom', 'নিজের রং']]} />
@@ -85,8 +86,16 @@ export function FooterStudio({ initial, org, menus, contact, action }: { initial
         <div className="grid g3" style={{ gap: '0 14px' }}>
           <Pick label="ব্যাকগ্রাউন্ড" v={c.bg} set={u('bg')} opts={[['surface', 'সাদা/গাঢ় (থিম অনুযায়ী)'], ['accent', 'থিমের মূল রং'], ['dark', 'গাঢ় সবুজ'], ['custom', 'নিজের রং']]} />
           {c.bg === 'custom' && <><Col label="ব্যাকগ্রাউন্ডের রং" v={c.bgColor} set={u('bgColor')} /><Col label="লেখার রং" v={c.textColor} set={u('textColor')} /></>}
-          <Pick label="সর্বোচ্চ কলাম (বড় পর্দায়)" v={c.columns} set={u('columns')} opts={[[2, '২টি'], [3, '৩টি'], [4, '৪টি']]} />
+          <Pick label="নকশা" v={c.style} set={u('style')} opts={[['columns', 'কলাম (লিংকের কয়েকটি কলাম)'], ['cta', 'ওপরে আহ্বানের পট্টি + কলাম'], ['centered', 'মাঝখানে সাজানো'], ['minimal', 'সাদামাটা এক সারি']]} />
         </div>
+        {c.style === 'cta' && (
+          <div className="grid g2" style={{ gap: '0 14px' }}>
+            <Txt label="আহ্বানের শিরোনাম" v={c.ctaTitle} set={u('ctaTitle')} max={120} /><Txt label="Title (English)" v={c.ctaTitleEn} set={u('ctaTitleEn')} max={120} />
+            <Txt label="ছোট লেখা" v={c.ctaText} set={u('ctaText')} max={240} /><Txt label="Text (English)" v={c.ctaTextEn} set={u('ctaTextEn')} max={240} />
+            <Txt label="বাটনের লেখা" v={c.ctaBtn} set={u('ctaBtn')} max={40} /><Txt label="Button (English)" v={c.ctaBtnEn} set={u('ctaBtnEn')} max={40} />
+            <Txt label="বাটনের লিংক" v={c.ctaUrl} set={u('ctaUrl')} max={200} />
+          </div>
+        )}
         <div className="grid g2" style={{ gap: '0 14px' }}>
           <div>
             <Check label="লোগো ও নাম দেখান" v={c.showLogo} set={u('showLogo')} />
@@ -108,10 +117,20 @@ export function FooterStudio({ initial, org, menus, contact, action }: { initial
           <Txt label="কলাম ২" v={c.col2Title} set={u('col2Title')} max={40} /><Txt label="Column 2 (English)" v={c.col2TitleEn} set={u('col2TitleEn')} max={40} /><div />
           <Txt label="কলাম ৩ (মেনুতে আইটেম দিলে দেখাবে)" v={c.col3Title} set={u('col3Title')} max={40} /><Txt label="Column 3 (English)" v={c.col3TitleEn} set={u('col3TitleEn')} max={40} /><div />
         </div>
-        <h3 className="h2">কপিরাইট লেখা</h3>
+        <h3 className="h2">নিজের লেখার কলাম (ঐচ্ছিক, যেমন: কুরআন ক্লাসের সময় বা ব্যাংক হিসাব)</h3>
         <div className="grid g2" style={{ gap: '0 14px' }}>
-          <Txt label="লেখা (ফাঁকা রাখলে স্বয়ংক্রিয়)" v={c.copyright} set={u('copyright')} /><Txt label="Text (English)" v={c.copyrightEn} set={u('copyrightEn')} />
+          <Txt label="কলামের নাম" v={c.customTitle} set={u('customTitle')} max={40} /><Txt label="Column title (English)" v={c.customTitleEn} set={u('customTitleEn')} max={40} />
+          <Field label="লেখা (লাইন ভেঙে লেখা যায়)"><textarea rows={3} value={c.customText} maxLength={500} onChange={(e) => u('customText')(e.target.value)} /></Field>
+          <Field label="Text (English)"><textarea rows={3} value={c.customTextEn} maxLength={500} onChange={(e) => u('customTextEn')(e.target.value)} /></Field>
         </div>
+        <h3 className="h2">কপিরাইট ও ক্রেডিট</h3>
+        <div className="grid g2" style={{ gap: '0 14px' }}>
+          <Txt label="কপিরাইট লেখা (ফাঁকা রাখলে স্বয়ংক্রিয়; {year} লিখলে চলতি বছর বসবে)" v={c.copyright} set={u('copyright')} /><Txt label="Copyright (English)" v={c.copyrightEn} set={u('copyrightEn')} />
+          <Txt label="ক্রেডিটের আগের লেখা" v={c.creditPrefix} set={u('creditPrefix')} max={60} /><Txt label="Credit prefix (English)" v={c.creditPrefixEn} set={u('creditPrefixEn')} max={60} />
+          <Txt label="নাম (যেমন: Manik Hossain), ফাঁকা রাখলে ক্রেডিট দেখাবে না" v={c.creditName} set={u('creditName')} max={60} /><Txt label="নামের ওপর লিংক (যেমন: https://আপনার-সাইট.com)" v={c.creditUrl} set={u('creditUrl')} max={200} />
+          <Txt label="নিচে বাড়তি এক লাইন (ঐচ্ছিক)" v={c.extraText} set={u('extraText')} max={300} /><Txt label="Extra line (English)" v={c.extraTextEn} set={u('extraTextEn')} max={300} />
+        </div>
+        <p className="muted small">ক্রেডিট কপিরাইটের ডানে দেখাবে, নামটিতে চাপলে লিংকে যাবে।</p>
         <div className="row" style={{ marginTop: 12 }}><Submit pendingText="সংরক্ষণ হচ্ছে...">ফুটার সংরক্ষণ করুন</Submit><button type="button" className="btn" onClick={() => setC(FOOTER_DEFAULT)}>ডিফল্টে ফিরুন</button></div>
       </ActionForm>
     </div>

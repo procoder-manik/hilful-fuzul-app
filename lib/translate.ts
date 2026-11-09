@@ -92,6 +92,7 @@ export async function translateSettings(s: Settings): Promise<Settings> {
     s.hero?.title ?? '', s.hero?.title2 ?? '', s.hero?.sub ?? '',
     ...s.ticker, ...s.member_terms, ...s.loan_terms,
     ...s.pay_methods.flatMap((m) => [m.label, m.note]),
+    s.office_hours ?? '',
   ];
   const tr = await translateMany(parts, 'en');
   let i = 0; const next = () => tr[i++];
@@ -103,6 +104,7 @@ export async function translateSettings(s: Settings): Promise<Settings> {
     pay_info: s.pay_info ? pay_info : null, quran_info: s.quran_info ? quran_info : null, hero,
     ticker: take(s.ticker.length), member_terms: take(s.member_terms.length), loan_terms: take(s.loan_terms.length),
     pay_methods: s.pay_methods.map((m) => { const [label, note] = take(2); return { ...m, label, note }; }),
+    office_hours: s.office_hours ? take(1)[0] : null,
   };
 }
 
