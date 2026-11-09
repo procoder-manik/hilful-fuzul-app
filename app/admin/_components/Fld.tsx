@@ -36,9 +36,9 @@ export function Tick({ name, bn, en, info, defaultChecked, checked, onChange }: 
 }
 
 /** ফর্মের ভাগের শিরোনাম: বাংলা, ইংরেজি ও এক লাইনের পরিচয় */
-export function Sec({ bn, en, info, first }: { bn: ReactNode; en?: string; info?: ReactNode; first?: boolean }) {
+export function Sec({ bn, en, info, first, id }: { bn: ReactNode; en?: string; info?: ReactNode; first?: boolean; id?: string }) {
   return (
-    <div className="sec-h" style={first ? { marginTop: 0 } : undefined}>
+    <div className="sec-h" id={id} style={{ scrollMarginTop: 90, ...(first ? { marginTop: 0 } : {}) }}>
       <h2 className="h2" style={{ margin: 0 }}><Bi bn={bn} en={en} /></h2>
       {info && <p className="muted small" style={{ margin: '4px 0 0' }}>{info}</p>}
     </div>

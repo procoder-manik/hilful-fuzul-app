@@ -1,4 +1,5 @@
 import { Sidebar } from '../_components/Sidebar';
+import { AdminSearch } from '../_components/AdminSearch';
 import { requirePage, ROLE_BN, STAFF } from '@/lib/guard';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +16,7 @@ export default async function PanelLayout({ children }: { children: React.ReactN
     <div className="wrap admin">
       <aside>
         <div className="side-user"><b>{profile.full_name || user.email}</b><span className="muted small">{ROLE_BN[profile.role]}</span></div>
+        <AdminSearch role={profile.role} />
         <Sidebar role={profile.role} pending={count ?? 0} claimed={claims.error ? 0 : claims.count ?? 0} unread={unread ?? 0} unanswered={unknown ?? 0} />
       </aside>
       <div style={{ minWidth: 0 }}>{children}</div>

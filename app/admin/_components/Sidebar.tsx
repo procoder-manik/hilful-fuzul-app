@@ -27,6 +27,7 @@ const GROUPS: { title: string; icon: string; items: Item[] }[] = [
   { title: 'ওয়েবসাইট', icon: 'globe', items: [
     { href: '/admin/content/programs', label: 'সেবার তালিকা', icon: 'layers', roles: ['admin', 'editor'] },
     { href: '/admin/content/committee', label: 'কমিটি ও টিম', icon: 'users', roles: ['admin', 'editor'] },
+    { href: '/admin/events', label: 'অনুষ্ঠান ও কর্মসূচি', icon: 'calendar', roles: ['admin', 'editor'] },
     { href: '/admin/content/posts', label: 'সংবাদ', icon: 'news', roles: ['admin', 'editor'] },
     { href: '/admin/menus', label: 'মেনু', icon: 'list', roles: ['admin', 'editor'] },
     { href: '/admin/design', label: 'হেডার ও ফুটার', icon: 'palette', roles: ['admin', 'editor'] },

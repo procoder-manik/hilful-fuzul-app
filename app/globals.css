@@ -767,3 +767,58 @@ label.f span .en-hint,.chk-t .en-hint,.h2 .en-hint,.lbl .en-hint,.kpi span .en-h
 .doc .ph{border:1.5px solid var(--dc);border-radius:10px;background:rgba(255,255,255,.7)}
 .doc .line{border-bottom:1px dotted var(--dc)}
 .doc b{color:#111}
+
+/* ---------- অনুষ্ঠান ব্যানারের প্যাটার্ন ও সম্পন্ন অনুষ্ঠান ---------- */
+.banner .bn-body{position:relative;z-index:1}
+.bn-pat{position:absolute;inset:0;background:currentColor;pointer-events:none;z-index:0}
+.bnp-geo{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.4'%3E%3Cpath d='M40 6l9.9 9.9H64v14.1L74 40l-10 9.9V64H49.9L40 74l-9.9-10H16V49.9L6 40l10-9.9V16h14.1z'/%3E%3Ccircle cx='40' cy='40' r='12'/%3E%3C/g%3E%3C/svg%3E") 0 0/80px 80px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='%23000' stroke-width='1.4'%3E%3Cpath d='M40 6l9.9 9.9H64v14.1L74 40l-10 9.9V64H49.9L40 74l-9.9-10H16V49.9L6 40l10-9.9V16h14.1z'/%3E%3Ccircle cx='40' cy='40' r='12'/%3E%3C/g%3E%3C/svg%3E") 0 0/80px 80px}
+.bnp-dots{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='11' cy='11' r='2.2' fill='%23000'/%3E%3C/svg%3E") 0 0/22px 22px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Ccircle cx='11' cy='11' r='2.2' fill='%23000'/%3E%3C/svg%3E") 0 0/22px 22px}
+.bnp-stripes{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M0 20L20 0M-5 5L5 -5M15 25L25 15' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 0 0/20px 20px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M0 20L20 0M-5 5L5 -5M15 25L25 15' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 0 0/20px 20px}
+.bnp-waves{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='20'%3E%3Cpath d='M0 10Q15 0 30 10T60 10' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 0 0/60px 20px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='20'%3E%3Cpath d='M0 10Q15 0 30 10T60 10' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") 0 0/60px 20px}
+.bnp-stars{-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 8l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' fill='%23000'/%3E%3C/svg%3E") 0 0/48px 48px;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 8l4 12 12 4-12 4-4 12-4-12-12-4 12-4z' fill='%23000'/%3E%3C/svg%3E") 0 0/48px 48px}
+.bn-note{background:rgba(255,255,255,.18);border-radius:14px;padding:8px 12px;margin-top:4px;line-height:1.4}.bn-note small{display:block;opacity:.8;font-size:.75rem}
+.bn-done .bn-tag{box-shadow:0 0 0 2px rgba(255,255,255,.5) inset}
+
+/* ---------- অ্যাডমিন: অনুষ্ঠান স্টুডিও ---------- */
+.ev-tpls{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.ev-tpl{appearance:none;font:inherit;color:inherit;cursor:pointer;text-align:left;background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px;transition:transform .15s,border-color .15s}
+.ev-tpl:hover{transform:translateY(-2px);border-color:var(--acc)}
+.ev-tpl span{font-size:1.4rem;line-height:1.2}.ev-tpl b{font-size:.92rem;line-height:1.35}.ev-tpl small{color:var(--muted);font-size:.72rem}
+.ev-pv{background:var(--surface2);border-radius:20px;padding:14px;margin:6px 0 8px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px);z-index:5;box-shadow:var(--shadow)}
+@media (max-width:900px){.ev-pv{position:static}}
+.ev-sw{display:flex;gap:8px;flex-wrap:wrap}
+.ev-swb{appearance:none;border:2px solid transparent;background:transparent;font:inherit;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;padding:3px;border-radius:14px}
+.ev-swb span{display:grid;place-items:center;width:58px;height:40px;border-radius:11px;font:700 .95rem var(--fb);box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)}
+.ev-swb small{font-size:.7rem}.ev-swb.on{border-color:var(--acc);color:var(--text)}
+.ev-icons{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0 12px}
+.ev-icons button{appearance:none;border:1px solid var(--line);background:var(--surface2);border-radius:12px;width:42px;height:42px;font-size:1.3rem;cursor:pointer}
+.ev-icons button.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--accSoft)}
+.ev-icons input{width:90px}
+.ev-list{display:grid;gap:8px;margin-top:10px}
+.ev-row{display:flex;gap:12px;align-items:center;padding:10px;border-radius:16px;background:var(--surface2)}
+.ev-row .acts{margin-left:auto;flex-wrap:wrap}
+.ev-dot{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-size:1.3rem}
+.ev-flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+
+/* ---------- অ্যাডমিন সার্চ ---------- */
+.as-btn{appearance:none;width:100%;display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:11px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surface);color:var(--muted);font:600 .95rem var(--fb);cursor:pointer;box-shadow:var(--shadow);text-align:left}
+.as-btn:hover{border-color:var(--acc);color:var(--text)}
+.as-btn span{flex:1}.as-btn .en-hint{margin-left:6px}
+.as-btn kbd{font:600 .68rem var(--fb);background:var(--surface2);border:1px solid var(--line);border-radius:7px;padding:2px 6px;color:var(--muted)}
+.as-back{position:fixed;inset:0;z-index:300;background:rgba(10,20,15,.5);backdrop-filter:blur(5px);display:grid;align-items:start;justify-items:center;padding:8vh 14px 14px;animation:mpfade .15s ease}
+.as-box{width:min(640px,100%);background:var(--surface);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.35);overflow:hidden}
+.as-in{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);color:var(--muted)}
+.as-in input{border:0;background:transparent;padding:4px 0;font-size:1rem;outline:none}
+.as-list{max-height:min(55vh,420px);overflow:auto;padding:6px}
+.as-item{appearance:none;width:100%;display:flex;gap:10px;align-items:center;text-align:left;border:0;background:transparent;color:var(--text);font:inherit;padding:10px 12px;border-radius:12px;cursor:pointer}
+.as-item.on{background:var(--accSoft)}
+.as-g{flex:none;font-size:.7rem;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--surface2);color:var(--muted)}
+.as-item.on .as-g{background:var(--acc);color:#fff}
+.as-foot{padding:10px 16px;border-top:1px solid var(--line)}
+@media (max-width:900px){.as-btn kbd{display:none}.as-btn{margin-bottom:8px}}
+.bn-guests div,.bn-note{background:color-mix(in srgb,currentColor 13%,transparent)}
+
+/* নিচের ট্যাব বারের লেখা সবসময় এক লাইনে */
+.tabbar a,.tabbar button{min-width:0}
+.tabbar a span,.tabbar button span{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.tabbar a,.tabbar button{white-space:nowrap}

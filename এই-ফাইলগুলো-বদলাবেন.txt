@@ -1,12 +1,11 @@
-এই ফোল্ডারে শুধু নতুন বা বদলানো ফাইল আছে (step8-2 ও step9 এর সব পরিবর্তনসহ, তাই আগের zip আলাদা বসাতে হবে না)। একই জায়গায় কপি করে Replace করুন, package.json বদলাবেন না।
-
-ঐচ্ছিক: supabase/migrations/008_public_members.sql Supabase এর SQL Editor এ চালালে সদস্য লুকানো ও টাকার অঙ্ক বন্ধের সুইচ কাজ করবে। না চালালেও /members পাতা চলবে।
+এই ফোল্ডারে শুধু নতুন বা বদলানো ফাইল আছে (আগের সব ধাপসহ)। একই জায়গায় কপি করে Replace করুন, package.json বদলাবেন না। নতুন SQL লাগবে না।
 তারপর Ctrl + C দিয়ে সার্ভার বন্ধ করে আবার npm run dev।
 
 README.md
 app/(site)/join/JoinForm.tsx
 app/(site)/join/actions.ts
 app/(site)/join/page.tsx
+app/(site)/layout.tsx
 app/(site)/members/MembersGrid.tsx
 app/(site)/members/page.tsx
 app/(site)/portal/form/page.tsx
@@ -17,6 +16,8 @@ app/admin/(panel)/contact-info/page.tsx
 app/admin/(panel)/design/DesignStudio.tsx
 app/admin/(panel)/design/page.tsx
 app/admin/(panel)/donations/page.tsx
+app/admin/(panel)/events/EventStudio.tsx
+app/admin/(panel)/events/page.tsx
 app/admin/(panel)/import/ImportForm.tsx
 app/admin/(panel)/layout.tsx
 app/admin/(panel)/library/LibraryTabs.tsx
@@ -40,19 +41,26 @@ app/admin/(panel)/services/page.tsx
 app/admin/(panel)/settings/page.tsx
 app/admin/(panel)/system/page.tsx
 app/admin/(panel)/users/page.tsx
+app/admin/_components/AdminSearch.tsx
 app/admin/_components/FilterBar.tsx
 app/admin/_components/Fld.tsx
 app/admin/_components/PaymentForm.tsx
 app/admin/_components/PrintButton.tsx
 app/admin/_components/Sidebar.tsx
+app/admin/actions/events.ts
 app/admin/actions/members.ts
 app/admin/actions/settings.ts
 app/admin/print/MemberFormDoc.tsx
 app/admin/print/application/[id]/page.tsx
 app/globals.css
 app/sitemap.ts
+components/EventBanner.tsx
+components/EventBannerView.tsx
+components/Icon.tsx
 components/sections.tsx
 lib/adminlabels.ts
+lib/adminsearch.ts
+lib/eventdesign.ts
 lib/public.ts
 lib/types.ts
 lib/ui.tsx
