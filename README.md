@@ -11,7 +11,7 @@
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth%20%2B%20Storage-3ecf8e?logo=supabase&logoColor=white)
 ![Language](https://img.shields.io/badge/UI-বাংলা%20%7C%20English-0e5a43)
 
-[লাইভ ডেমো](https://hilful-fuzul-app.vercel.app) · [ডেভেলপার পোর্টফোলিও](https://আপনার-পোর্টফোলিও-লিংক.com) · [সেটআপ](#১০-সেটআপ-প্রথমবার) · [আর্কিটেকচার](#৪-আর্কিটেকচার-ফ্রন্টএন্ড-ও-ব্যাকএন্ড-কীভাবে-কাজ-করে) · [পেজ বিল্ডার](#৭-পেজ-বিল্ডার-ও-কনটেন্ট-সিস্টেম)
+[লাইভ ডেমো](https://hilful-fuzul-app.vercel.app) · [ডেভেলপার পোর্টফোলিও](https://manikhossain.in/) · [সেটআপ](#১০-সেটআপ-প্রথমবার) · [আর্কিটেকচার](#৪-আর্কিটেকচার-ফ্রন্টএন্ড-ও-ব্যাকএন্ড-কীভাবে-কাজ-করে) · [পেজ বিল্ডার](#৭-পেজ-বিল্ডার-ও-কনটেন্ট-সিস্টেম)
 
 <sub>Designed and developed by <b>Manik Hossain</b> · <a href="https://আপনার-পোর্টফোলিও-লিংক.com">Portfolio</a> · <a href="https://github.com/procoder-manik">GitHub</a></sub>
 
