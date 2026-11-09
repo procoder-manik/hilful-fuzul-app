@@ -11,9 +11,9 @@
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth%20%2B%20Storage-3ecf8e?logo=supabase&logoColor=white)
 ![Language](https://img.shields.io/badge/UI-বাংলা%20%7C%20English-0e5a43)
 
-[লাইভ ডেমো](https://hilful-fuzul-app.vercel.app) · [ডেভেলপার পোর্টফোলিও](https://manikhossain.in/) · [সেটআপ](#১০-সেটআপ-প্রথমবার) · [আর্কিটেকচার](#৪-আর্কিটেকচার-ফ্রন্টএন্ড-ও-ব্যাকএন্ড-কীভাবে-কাজ-করে) · [পেজ বিল্ডার](#৭-পেজ-বিল্ডার-ও-কনটেন্ট-সিস্টেম)
+[লাইভ ডেমো](https://hilful-fuzul-app.vercel.app) · [ডেভেলপার পোর্টফোলিও](https://www.manikhossain.in/) · [সেটআপ](#১০-সেটআপ-প্রথমবার) · [আর্কিটেকচার](#৪-আর্কিটেকচার-ফ্রন্টএন্ড-ও-ব্যাকএন্ড-কীভাবে-কাজ-করে) · [পেজ বিল্ডার](#৭-পেজ-বিল্ডার-ও-কনটেন্ট-সিস্টেম)
 
-<sub>Designed and developed by <b>Manik Hossain</b> · <a href="https://আপনার-পোর্টফোলিও-লিংক.com">Portfolio</a> · <a href="https://github.com/procoder-manik">GitHub</a></sub>
+<sub>Designed and developed by <b>Manik Hossain</b> · <a href="https://www.manikhossain.in/">Portfolio</a> · <a href="https://github.com/procoder-manik">GitHub</a></sub>
 
 </div>
 
@@ -529,7 +529,7 @@ npm run dev       # http://localhost:3000
 ## ২০. লাইসেন্স ও ক্রেডিট
 
 * **লাইসেন্স:** এখনো নির্ধারিত নয়। GitHub এ প্রকাশের আগে একটি লাইসেন্স বেছে `LICENSE` ফাইল যোগ করুন (ব্যক্তিগত বা সংগঠনের একান্ত ব্যবহার হলে "All rights reserved" লিখুন, খোলা সোর্স করতে চাইলে MIT বা AGPL ভেবে দেখুন)।
-* **ডেভেলপার:** **Manik Hossain** · পোর্টফোলিও: [manikhossain.in](https://manikhossain.in/) · GitHub: [@procoder-manik](https://github.com/procoder-manik)
+* **ডেভেলপার:** **Manik Hossain** · পোর্টফোলিও: [manikhossain.in](https://www.manikhossain.in/) · GitHub: [@procoder-manik](https://github.com/procoder-manik)
 * **ব্যবহৃত খোলা সোর্স:** Next.js, React, Supabase, Chart.js, ExcelJS, Nodemailer ও তাদের নির্ভরতা।
 * ডেমো ডেটার সদস্য, ঋণ ও দান কাল্পনিক।
 
